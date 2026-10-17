@@ -10,6 +10,7 @@ Key facts:
 - Reconnect backs off from 1 s to 60 s and spends no retries while offline.
 - Tunnels may share a local port (for example production and development MySQL on 3306); switching one on switches the other off first.
 - On-demand tunnels hold the port and open the real tunnel when a client connects, then stop after 10 idle minutes.
+- The only network request Portkeep makes itself (from 0.4) is a daily GitHub latest-release check, which can be turned off; no analytics or crash reporting.
 - Portkeep never stores passwords, keys or tokens. It uses your existing ~/.ssh/config, AWS profiles and kubeconfig, so authentication must already work without typing.
 - Command line: `portkeep list | status | start | stop | toggle | start-group | stop-group | start-all | stop-all | open`, and the same actions as `portkeep://` URLs. From 0.4: `get | add | edit | remove | duplicate | test | logs | methods | discover` with `--json`.
 - AI assistants (from 0.4): `portkeep mcp` is an MCP server (list, add, update, test, start and stop tunnels; describe methods; discover SSH hosts, AWS profiles and kube contexts). Agent skill: https://github.com/rattamnoon/portkeep/tree/main/skills/portkeep
@@ -33,7 +34,8 @@ Or download the .dmg from https://github.com/rattamnoon/portkeep/releases/latest
 - [Status and troubleshooting](https://rattamnoon.github.io/portkeep/docs/status.html): every status and failure message with its fix, reconnect backoff, sleep and wake, logs, notifications
 - [Local ports and on demand](https://rattamnoon.github.io/portkeep/docs/ports.html): port conflict checks, shared ports for switching environments, start when an app connects
 - [Settings](https://rattamnoon.github.io/portkeep/docs/settings.html): sidebar and search, tunnel page, Groups & Tags, Tools paths, General (language, notifications, login item)
-- [Command line and URLs](https://rattamnoon.github.io/portkeep/docs/automation.html): portkeep commands, exit codes, status.json, portkeep:// URLs, Raycast and Shortcuts examples
+- [Command line and URLs](https://rattamnoon.github.io/portkeep/docs/automation.html): portkeep commands, --json output, adding and editing tunnels as JSON, exit codes, status.json, portkeep:// URLs, Raycast and Shortcuts examples
+- [AI assistants](https://rattamnoon.github.io/portkeep/docs/ai.html): MCP server setup for Claude Code, Claude Desktop and Cursor, the agent skill, the tools an assistant gets, and what stays private
 - [Import and export](https://rattamnoon.github.io/portkeep/docs/import-export.html): Export/Import Tunnels JSON, Import from SSH Config (Include, LocalForward, DynamicForward)
 - [Files, backup and privacy](https://rattamnoon.github.io/portkeep/docs/data.html): tunnels.json and the other files, backup, uninstall, what Portkeep stores and sends
 - [FAQ and limits](https://rattamnoon.github.io/portkeep/docs/faq.html): common questions and the limits of this version

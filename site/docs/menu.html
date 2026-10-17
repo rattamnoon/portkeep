@@ -114,6 +114,7 @@
       <li><a href="ports.html">Local ports &amp; on demand</a></li>
       <li><a href="settings.html">Settings</a></li>
       <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html">AI assistants</a></li>
       <li><a href="import-export.html">Import &amp; export</a></li>
       <li><a href="data.html">Files &amp; privacy</a></li>
       <li><a href="faq.html">FAQ &amp; limits</a></li>
@@ -187,13 +188,14 @@
   <thead><tr><th>Item</th><th>When</th><th>What it does</th></tr></thead>
   <tbody>
     <tr><td><span class="ui">Use Port N</span></td><td class="wrap">The local port is taken by another program, and Portkeep knows which.</td><td>Moves the tunnel to a free port (the first free one from your port + 10000 up, otherwise from 20000 up), saves it and switches it on.</td></tr>
-    <tr><td><span class="ui">Sign In to AWS…</span></td><td class="wrap">An AWS SSM tunnel stopped because the profile’s sign-in expired.</td><td>Runs <code>aws sso login --profile &lt;profile&gt;</code>, which opens your browser to sign in, then tries the tunnel again.</td></tr>
-    <tr><td><span class="ui">Retry Now</span></td><td class="wrap">The tunnel is waiting to reconnect, or stopped on any other failure.</td><td>Skips the wait and tries again straight away, with the backoff reset.</td></tr>
+    <tr><td><span class="ui">Sign In to AWS…</span></td><td class="wrap">An AWS SSM tunnel stopped because the profile’s sign-in expired, and its <a href="methods.html#ssm-sso">Offer AWS sign-in</a> setting is on.</td><td>Runs <code>aws sso login --profile &lt;profile&gt;</code>, which opens your browser to sign in, then tries the tunnel again.</td></tr>
+    <tr><td><span class="ui">Retry Now</span></td><td class="wrap">The tunnel is waiting to reconnect, stopped on a failure, or blocked by a taken port (after the fix above, if there is one).</td><td>Skips the wait and tries again straight away, with the backoff reset.</td></tr>
     <tr><td><span class="ui">Change Local Port…</span></td><td class="wrap">Always.</td><td>Asks for a new port (1 to 65535) and saves it. A running tunnel restarts on the new port.</td></tr>
     <tr><td><span class="ui">Copy Address</span></td><td class="wrap">Always.</td><td>Copies <code>127.0.0.1:&lt;port&gt;</code> for pasting into a client.</td></tr>
     <tr><td><span class="ui">Edit Tunnel…</span></td><td class="wrap">Always.</td><td>Opens the tunnel in the <a href="settings.html#tunnel-detail">Settings window</a>.</td></tr>
     <tr><td><span class="ui">Duplicate</span></td><td class="wrap">Always.</td><td>Adds a copy with every setting, named “&lt;name&gt; copy” (then “copy 2” and so on), switched off and placed right after the original, and opens it in Settings. The quick way to add Development next to Production.</td></tr>
     <tr><td><span class="ui">Show Log</span></td><td class="wrap">Always.</td><td>Opens a window with the last 500 lines the tunnel’s tool printed. See <a href="status.html#logs">Logs</a>.</td></tr>
+    <tr><td><span class="ui">Copy Diagnostics</span></td><td class="wrap">Always.</td><td>Copies the versions, the tunnel’s settings, state and last 50 log lines as Markdown for a bug report. See <a href="status.html#diagnostics">Diagnostics</a>.</td></tr>
   </tbody>
 </table></div>
 
@@ -217,7 +219,7 @@
     <a class="prev" href="./" rel="prev"><span>Previous</span><strong>Get started</strong></a>
     <a class="next" href="tunnels.html" rel="next"><span>Next</span><strong>Adding tunnels</strong></a>
   </nav>
-  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
   </main>
 </div>
 

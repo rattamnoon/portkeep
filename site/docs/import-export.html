@@ -114,6 +114,7 @@
       <li><a href="ports.html">Local ports &amp; on demand</a></li>
       <li><a href="settings.html">Settings</a></li>
       <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html">AI assistants</a></li>
       <li><a href="import-export.html" aria-current="page">Import &amp; export</a></li>
       <li><a href="data.html">Files &amp; privacy</a></li>
       <li><a href="faq.html">FAQ &amp; limits</a></li>
@@ -178,10 +179,10 @@ Host jump
 <div class="note warn"><p><strong>ssh opens every forward of a host.</strong> Your <code>LocalForward</code> lines stay in <code>~/.ssh/config</code>, and <code>ssh</code> opens all of a host’s forwards whenever it connects to that host. So when the <code>bastion 5432</code> tunnel runs, <code>ssh bastion</code> also takes port 6379, and the <code>bastion 6379</code> tunnel then finds its port in use. Tunnels from a host with several forwards therefore run one at a time. To run them side by side, remove those <code>LocalForward</code> lines from <code>~/.ssh/config</code> after adding the tunnels: Portkeep passes each forward on the command line itself.</p></div>
 
   <nav class="pager" aria-label="Previous and next pages">
-    <a class="prev" href="automation.html" rel="prev"><span>Previous</span><strong>Command line &amp; URLs</strong></a>
+    <a class="prev" href="ai.html" rel="prev"><span>Previous</span><strong>AI assistants</strong></a>
     <a class="next" href="data.html" rel="next"><span>Next</span><strong>Files &amp; privacy</strong></a>
   </nav>
-  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
   </main>
 </div>
 
