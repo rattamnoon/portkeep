@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Portkeep: keep your port forwards up, from the menu bar</title>
-<meta name="description" content="Portkeep is a free, open-source macOS menu bar app that keeps your SSH, AWS SSM, kubectl, GCP IAP and Cloudflare port forwards up, reconnects them on its own, and says why when one fails.">
+<title>Portkeep — keep SSH, AWS SSM and kubectl port forwards up on macOS</title>
+<meta name="description" content="Portkeep is a free, open-source SSH tunnel manager for the Mac menu bar. It keeps SSH, AWS SSM and kubectl port forwards up and says why one fails.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -13,15 +13,138 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Portkeep">
-<meta property="og:title" content="Portkeep">
-<meta property="og:description" content="Keep your port forwards up, from the menu bar. Free and open source for macOS.">
+<meta property="og:title" content="Portkeep — keep your port forwards up, from the menu bar">
+<meta property="og:description" content="Portkeep is a free, open-source SSH tunnel manager for the Mac menu bar. It keeps SSH, AWS SSM and kubectl port forwards up and says why one fails.">
 <meta property="og:url" content="https://rattamnoon.github.io/portkeep/">
 <meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Portkeep icon, a white bracket-and-dot mark on a graphite square, beside the name and tagline">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Portkeep — keep your port forwards up, from the menu bar">
+<meta name="twitter:description" content="Portkeep is a free, open-source SSH tunnel manager for the Mac menu bar. It keeps SSH, AWS SSM and kubectl port forwards up and says why one fails.">
+<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="twitter:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="preload" href="assets/icon.webp" as="image" type="image/webp">
 <link rel="stylesheet" href="assets/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "SoftwareApplication",
+   "@id": "https://rattamnoon.github.io/portkeep/#app",
+   "name": "Portkeep",
+   "description": "A macOS menu bar app that keeps SSH, AWS Session Manager, kubectl, Google Cloud IAP, Cloudflare Access and custom port forwards up, reconnects them on its own, and explains why one fails.",
+   "url": "https://rattamnoon.github.io/portkeep/",
+   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "operatingSystem": "macOS 14+",
+   "applicationCategory": "DeveloperApplication",
+   "softwareVersion": "0.3.0",
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+   },
+   "license": "https://opensource.org/licenses/MIT",
+   "downloadUrl": "https://github.com/rattamnoon/portkeep/releases/latest",
+   "installUrl": "https://github.com/rattamnoon/portkeep#install",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "sameAs": [
+    "https://github.com/rattamnoon/portkeep"
+   ],
+   "isAccessibleForFree": true
+  },
+  {
+   "@type": "SoftwareSourceCode",
+   "@id": "https://rattamnoon.github.io/portkeep/#code",
+   "name": "Portkeep",
+   "codeRepository": "https://github.com/rattamnoon/portkeep",
+   "programmingLanguage": "Swift",
+   "license": "https://opensource.org/licenses/MIT",
+   "targetProduct": {
+    "@id": "https://rattamnoon.github.io/portkeep/#app"
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "@id": "https://rattamnoon.github.io/portkeep/#faq",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "How do I keep an SSH tunnel alive on macOS?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Add it to Portkeep and switch it on. Portkeep restarts the tunnel after sleep, a network change or a dropped session, backing off from 1 s to 60 s between tries and spending none while you’re offline. It shows Connected only when the local port actually accepts connections, and tunnels that were on when it quit come back at the next launch."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is Portkeep an autossh alternative?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, for keeping port forwards up. Like autossh it restarts ssh when the connection drops, and it adds a menu bar switch and live status per tunnel, a check that the local port is free before starting, and a plain-language reason when a tunnel fails. It also drives AWS SSM, kubectl, Google Cloud IAP, Cloudflare Access and custom commands, not only SSH."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "How do I port forward to RDS through AWS SSM from my Mac?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Add a tunnel with the AWS Session Manager method, pick your AWS profile, enter the ID of an instance that can reach the database, and set the RDS endpoint and port as the remote host and port. Portkeep runs aws ssm start-session for you and keeps it up. You need the AWS CLI and session-manager-plugin; SSO profiles sign in again when they expire."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Why does kubectl port-forward keep disconnecting, and how does Portkeep handle it?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "kubectl port-forward exits when its connection to the pod breaks, for example when the pod restarts, the laptop sleeps or the network changes, and it does not restart on its own. Portkeep notices, says so in the menu, and runs it again with the same service, deployment or pod and kubeconfig context, backing off between tries."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does Portkeep store my passwords or keys?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Portkeep never stores passwords, keys or tokens. It runs the tools you already use with your existing ~/.ssh/config, AWS profiles and kubeconfig, so authentication must already work without typing; add passphrase keys with ssh-add --apple-use-keychain."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "How do I switch between production and development databases on the same port?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Give both tunnels the same local port, such as 3306. Switching one on switches the other off first, so changing environment is one click and your database client keeps the same address."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "How do I install Portkeep?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Run brew install --cask rattamnoon/tap/portkeep, or download the .dmg from GitHub Releases and drag Portkeep to Applications. It needs macOS 14 Sonoma or later, on Apple silicon or Intel. Releases aren’t notarized yet, so the first time, right-click Portkeep in Applications and choose Open."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is Portkeep free?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Portkeep is free and open source under the MIT License, and the code is on GitHub."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
@@ -42,6 +165,7 @@
     <div class="bar-links">
       <a href="#why">Features</a>
       <a href="#methods">Methods</a>
+      <a href="#faq">FAQ</a>
       <a href="#help">Help out</a>
       <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
     </div>
@@ -50,7 +174,7 @@
 
 <main>
   <section class="hero" aria-labelledby="hero-title">
-    <img class="hero-icon" src="assets/icon.png" width="160" height="160" alt="Portkeep app icon">
+    <img class="hero-icon" src="assets/icon.webp" width="160" height="160" alt="Portkeep app icon: a white bracket-and-dot mark on a graphite square" fetchpriority="high">
     <h1 id="hero-title">Portkeep</h1>
     <p class="hero-tagline">Keep your port forwards up, from the menu bar.</p>
 
@@ -72,7 +196,7 @@
     <p class="sr-only" aria-live="polite" id="copy-status"></p>
   </section>
 
-  <section class="stage" aria-label="The Portkeep menu">
+  <section class="stage" aria-labelledby="stage-title">
     <div class="desk">
       <div class="menubar" aria-hidden="true">
         <span class="menubar-glyph"><span>[</span><i></i><span>]</span></span>
@@ -80,12 +204,12 @@
       </div>
       <div class="desk-body">
         <div class="desk-copy">
-          <p class="desk-lead">Name each tunnel once. Switch it on when you need it. Portkeep keeps it alive.</p>
+          <h2 class="desk-lead" id="stage-title">Name each tunnel once. Switch it on when you need it. Portkeep keeps it alive.</h2>
           <p class="desk-text">For the databases, caches, dashboards and SOCKS proxies you reach through SSH jump hosts, AWS Session Manager, Kubernetes and more. When a tunnel drops, Portkeep says which one, why, and that it is already reconnecting.</p>
         </div>
         <picture class="menu-shot">
-          <source srcset="assets/menu-en-dark.png" media="(prefers-color-scheme: dark)">
-          <img src="assets/menu-en-light.png" width="360" height="540" alt="The Portkeep menu: tunnels grouped under Staging, Production and Other, each with its local port, status and a switch. Orders MySQL reads “Reconnecting… can't reach” its instance, and ClickHouse warns that port 8123 is in use by clickhouse-server.">
+          <source srcset="assets/menu-en-dark.webp" media="(prefers-color-scheme: dark)">
+          <img src="assets/menu-en-light.webp" width="360" height="540" alt="The Portkeep menu: tunnels grouped under Staging, Production and Other, each with its local port, status and a switch. Orders MySQL reads “Reconnecting… can't reach” its instance, and ClickHouse warns that port 8123 is in use by clickhouse-server.">
         </picture>
       </div>
     </div>
@@ -93,8 +217,8 @@
 
   <section class="why" id="why" aria-labelledby="why-title">
     <div class="wrap">
-      <h2 id="why-title">A terminal tab works until the laptop sleeps.</h2>
-      <p class="section-lede"><code>ssh -N -L 5432:db:5432 bastion</code> holds up until the Wi-Fi changes or the session times out, and then your database client is the first to find out. Portkeep replaces those tabs.</p>
+      <h2 id="why-title">Keep SSH tunnels alive, without a terminal tab.</h2>
+      <p class="section-lede">A terminal tab running <code>ssh -N -L 5432:db:5432 bastion</code> works until the laptop sleeps, the Wi-Fi changes or the session times out. Then your database client is the first to find out. Portkeep is an SSH tunnel manager for Mac that replaces those tabs.</p>
 
       <dl class="points">
         <div class="point">
@@ -134,8 +258,8 @@
 
   <section class="methods" id="methods" aria-labelledby="methods-title">
     <div class="wrap">
-      <h2 id="methods-title">Drives the tools you already use.</h2>
-      <p class="section-lede">Portkeep runs your existing CLIs with your existing config and credentials, and shows the exact command it runs. It never stores passwords, keys or tokens.</p>
+      <h2 id="methods-title">SSH, AWS SSM, kubectl and more.</h2>
+      <p class="section-lede">SSH tunnels, AWS SSM port forwarding, <code>kubectl port-forward</code>, Google Cloud IAP and Cloudflare Access, from one menu. Portkeep drives the tools you already use, with your existing config and credentials, and shows the exact command it runs. It never stores passwords, keys or tokens.</p>
 
       <ul class="method-list">
         <li><span class="m-name">SSH</span><span class="m-detail">Local <code>-L</code>, remote <code>-R</code>, SOCKS <code>-D</code> and ProxyJump, with hosts from <code>~/.ssh/config</code></span><code class="m-cmd">ssh</code></li>
@@ -147,7 +271,7 @@
       </ul>
 
       <figure class="window-shot">
-        <img src="assets/add-en-light.png" width="780" height="632" loading="lazy" alt="The Add Tunnel window: the connection methods in a sidebar, and the SSH form with name, group, tag, forwarding type, host, jump host, destination and local port.">
+        <img src="assets/add-en-light.webp" width="780" height="632" loading="lazy" alt="The Add Tunnel window: the connection methods in a sidebar, and the SSH form with name, group, tag, forwarding type, host, jump host, destination and local port.">
       </figure>
     </div>
   </section>
@@ -172,9 +296,49 @@ portkeep://open?name=Redis</code></pre>
     </div>
   </section>
 
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <h2 id="faq-title">Questions, answered.</h2>
+      <div class="qa-list">
+        <details class="qa">
+          <summary><h3>How do I keep an SSH tunnel alive on macOS?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p>Add it to Portkeep and switch it on. Portkeep restarts the tunnel after sleep, a network change or a dropped session, backing off from 1 s to 60 s between tries and spending none while you’re offline. It shows <em>Connected</em> only when the local port actually accepts connections, and tunnels that were on when it quit come back at the next launch.</p>
+        </details>
+        <details class="qa">
+          <summary><h3>Is Portkeep an autossh alternative?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p>Yes, for keeping port forwards up. Like autossh it restarts <code>ssh</code> when the connection drops, and it adds a menu bar switch and live status per tunnel, a check that the local port is free before starting, and a plain-language reason when a tunnel fails. It also drives AWS SSM, kubectl, Google Cloud IAP, Cloudflare Access and custom commands, not only SSH.</p>
+        </details>
+        <details class="qa">
+          <summary><h3>How do I port forward to RDS through AWS SSM from my Mac?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p>Add a tunnel with the AWS Session Manager method, pick your AWS profile, enter the ID of an instance that can reach the database, and set the RDS endpoint and port as the remote host and port. Portkeep runs <code>aws ssm start-session</code> for you and keeps it up. You need the AWS CLI and <code>session-manager-plugin</code>; SSO profiles sign in again when they expire.</p>
+        </details>
+        <details class="qa">
+          <summary><h3>Why does kubectl port-forward keep disconnecting, and how does Portkeep handle it?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p><code>kubectl port-forward</code> exits when its connection to the pod breaks, for example when the pod restarts, the laptop sleeps or the network changes, and it does not restart on its own. Portkeep notices, says so in the menu, and runs it again with the same service, deployment or pod and kubeconfig context, backing off between tries.</p>
+        </details>
+        <details class="qa">
+          <summary><h3>Does Portkeep store my passwords or keys?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p>No. Portkeep never stores passwords, keys or tokens. It runs the tools you already use with your existing <code>~/.ssh/config</code>, AWS profiles and kubeconfig, so authentication must already work without typing; add passphrase keys with <code>ssh-add --apple-use-keychain</code>.</p>
+        </details>
+        <details class="qa">
+          <summary><h3>How do I switch between production and development databases on the same port?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p>Give both tunnels the same local port, such as 3306. Switching one on switches the other off first, so changing environment is one click and your database client keeps the same address.</p>
+        </details>
+        <details class="qa">
+          <summary><h3>How do I install Portkeep?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p>Run <code>brew install --cask rattamnoon/tap/portkeep</code>, or download the .dmg from GitHub Releases and drag Portkeep to Applications. It needs macOS 14 Sonoma or later, on Apple silicon or Intel. Releases aren’t notarized yet, so the first time, right-click Portkeep in Applications and choose Open.</p>
+        </details>
+        <details class="qa">
+          <summary><h3>Is Portkeep free?</h3><svg class="ico qa-chev" aria-hidden="true"><use href="#i-arrow"/></svg></summary>
+          <p>Yes. Portkeep is free and open source under the MIT License, and the code is on GitHub.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
   <section class="get" aria-labelledby="get-title">
     <div class="wrap get-inner">
-      <img src="assets/icon.png" width="88" height="88" alt="" loading="lazy">
+      <img src="assets/icon.webp" width="88" height="88" alt="" loading="lazy">
       <h2 id="get-title">Get Portkeep.</h2>
       <p>Requires macOS 14 Sonoma or later, on Apple silicon or Intel. Releases aren’t notarized yet, so the first time, right-click Portkeep in Applications and choose <strong>Open</strong>.</p>
       <div class="install">

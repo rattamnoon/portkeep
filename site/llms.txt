@@ -1,0 +1,41 @@
+# Portkeep
+
+> Portkeep is a free, open-source (MIT) macOS menu bar app that keeps port forwards up. It runs SSH (-L, -R, -D, ProxyJump), AWS Session Manager, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, reconnects them after sleep, a network change or a dropped session, and says in plain language which tunnel failed, why, and that it is already reconnecting.
+
+Key facts:
+
+- Platform: macOS 14 Sonoma or later, Apple silicon or Intel. Current version: 0.3.0.
+- License: MIT. Price: free. Author: Rattamnoon Kiratipisut.
+- Status is honest: a tunnel shows Connected only when its local port accepts connections.
+- Reconnect backs off from 1 s to 60 s and spends no retries while offline.
+- Tunnels may share a local port (for example production and development MySQL on 3306); switching one on switches the other off first.
+- On-demand tunnels hold the port and open the real tunnel when a client connects, then stop after 10 idle minutes.
+- Portkeep never stores passwords, keys or tokens. It uses your existing ~/.ssh/config, AWS profiles and kubeconfig, so authentication must already work without typing.
+- Command line: `portkeep list | status | start | stop | toggle | start-group | stop-group | start-all | stop-all | open`, and the same actions as `portkeep://` URLs.
+- Interface languages: English, Thai, Simplified Chinese, Japanese.
+- Not on the Mac App Store (the sandbox would stop it running your CLIs). Releases are not notarized yet.
+
+Install:
+
+```
+brew install --cask rattamnoon/tap/portkeep
+```
+
+Or download the .dmg from https://github.com/rattamnoon/portkeep/releases/latest.
+
+## Docs
+
+- [README](https://github.com/rattamnoon/portkeep/blob/main/README.md): features, connection methods, install, usage, command line and URLs, file locations, limits
+- [FAQ](https://rattamnoon.github.io/portkeep/#faq): keeping an SSH tunnel alive on macOS, autossh, AWS SSM to RDS, kubectl port-forward reconnects, credentials, switching environments on one port, install, price
+- [Contributing](https://github.com/rattamnoon/portkeep/blob/main/CONTRIBUTING.md): build, test and pull request guidelines
+
+## Downloads
+
+- [Latest release](https://github.com/rattamnoon/portkeep/releases/latest)
+- [All releases](https://github.com/rattamnoon/portkeep/releases)
+
+## Optional
+
+- [Source code](https://github.com/rattamnoon/portkeep)
+- [Report a bug](https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml)
+- [Discussions](https://github.com/rattamnoon/portkeep/discussions)
