@@ -157,7 +157,7 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
                 return
             }
             current = process
-            reaper.record(pid: process.pid, executable: invocation.executable.path)
+            reaper.record(pid: process.pid, startTime: OrphanReaper.startTime(of: process.pid))
             state = .starting
 
             let outcome = await connect(process, port: port)

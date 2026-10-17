@@ -78,11 +78,17 @@ public struct SystemRunner: ProcessRunning {
         var attr: posix_spawnattr_t?
         posix_spawnattr_init(&attr)
         defer { posix_spawnattr_destroy(&attr) }
-        posix_spawnattr_setflags(&attr, Int16(POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_CLOEXEC_DEFAULT | POSIX_SPAWN_SETSIGDEF))
+        posix_spawnattr_setflags(&attr, Int16(
+            POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_CLOEXEC_DEFAULT | POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK))
         posix_spawnattr_setpgroup(&attr, 0)
+        // Default handlers and an empty mask: the spawning thread may block or ignore SIGTERM,
+        // and a child that inherits that can only be stopped with SIGKILL.
         var defaults = sigset_t()
         sigfillset(&defaults)
         posix_spawnattr_setsigdefault(&attr, &defaults)
+        var mask = sigset_t()
+        sigemptyset(&mask)
+        posix_spawnattr_setsigmask(&attr, &mask)
 
         var environment = ProcessInfo.processInfo.environment
         environment["PATH"] = path

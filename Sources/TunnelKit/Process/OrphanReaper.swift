@@ -3,6 +3,9 @@ import Foundation
 
 /// Remembers which children are running so a crashed or force-quit app can clean them up
 /// on its next launch (spec §8, `running.json`).
+///
+/// A pid is identified by its start time, not its executable: `exec` in a custom command and
+/// script-based CLIs (`aws` from Homebrew is Python) change what the process reports as its path.
 public final class OrphanReaper: @unchecked Sendable {
     private let file: URL
     private let lock = NSLock()
@@ -11,13 +14,13 @@ public final class OrphanReaper: @unchecked Sendable {
         self.file = file
     }
 
-    /// pid → executable path.
+    /// pid → start time (`OrphanReaper.startTime(of:)`), empty when it couldn't be read.
     public var recorded: [Int32: String] { lock.withLock { read() } }
 
-    public func record(pid: Int32, executable: String) {
+    public func record(pid: Int32, startTime: String?) {
         lock.withLock {
             var all = read()
-            all[pid] = executable
+            all[pid] = startTime ?? ""
             write(all)
         }
     }
@@ -30,26 +33,48 @@ public final class OrphanReaper: @unchecked Sendable {
         }
     }
 
-    /// Kills recorded pids that are still alive and still running the recorded executable,
-    /// so a pid reused by an unrelated process is never touched. Clears the record.
+    /// Kills each recorded pid whose process is still the one we started (same start time), so a pid
+    /// reused by an unrelated process is never touched. Its whole process group goes. Clears the record.
     public func reap(
-        isAlive: (Int32) -> Bool = { Darwin.kill($0, 0) == 0 },
-        executableOf: (Int32) -> String? = OrphanReaper.executablePath,
+        startTimeOf: (Int32) -> String? = OrphanReaper.startTime(of:),
         kill: (Int32) -> Void = { _ = Darwin.kill(-$0, SIGKILL); _ = Darwin.kill($0, SIGKILL) }
     ) {
         lock.withLock {
-            for (pid, executable) in read().sorted(by: { $0.key < $1.key })
-            where isAlive(pid) && executableOf(pid) == executable {
+            for (pid, started) in read().sorted(by: { $0.key < $1.key })
+            where !started.isEmpty && startTimeOf(pid) == started {
                 kill(pid)
             }
             write([:])
         }
     }
 
-    public static func executablePath(_ pid: Int32) -> String? {
-        var buffer = [CChar](repeating: 0, count: 4096)
-        guard proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0 else { return nil }
-        return String(cString: buffer)
+    /// Stops every recorded child synchronously: SIGTERM to each process group, SIGKILL to whatever is
+    /// left after `grace` seconds. Used at quit, where AppKit is waiting and async work may not run.
+    public func stopAll(grace: TimeInterval = 3) {
+        lock.withLock {
+            let pids = Array(read().keys)
+            for pid in pids { _ = Darwin.kill(-pid, SIGTERM); _ = Darwin.kill(pid, SIGTERM) }
+            let deadline = Date().addingTimeInterval(grace)
+            func running() -> [Int32] { pids.filter { Self.startTime(of: $0) != nil && !Self.isZombie($0) } }
+            while !running().isEmpty, Date() < deadline { usleep(50_000) }
+            for pid in running() { _ = Darwin.kill(-pid, SIGKILL); _ = Darwin.kill(pid, SIGKILL) }
+            write([:])
+        }
+    }
+
+    private static func isZombie(_ pid: Int32) -> Bool {
+        var info = proc_bsdinfo()
+        let size = Int32(MemoryLayout<proc_bsdinfo>.size)
+        guard proc_pidinfo(pid, PROC_PIDTBSDINFO, 0, &info, size) == size else { return true }
+        return info.pbi_status == SZOMB
+    }
+
+    /// Process start time as "seconds.microseconds", or nil if the pid doesn't exist.
+    public static func startTime(of pid: Int32) -> String? {
+        var info = proc_bsdinfo()
+        let size = Int32(MemoryLayout<proc_bsdinfo>.size)
+        guard proc_pidinfo(pid, PROC_PIDTBSDINFO, 0, &info, size) == size else { return nil }
+        return "\(info.pbi_start_tvsec).\(info.pbi_start_tvusec)"
     }
 
     private func read() -> [Int32: String] {

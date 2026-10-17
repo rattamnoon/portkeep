@@ -198,7 +198,7 @@ private struct Harness {
 @Test func recordsPidForReaper() async {
     let h = Harness()
     await h.connect()
-    #expect(h.reaper.recorded == [1000: "/opt/homebrew/bin/ssh"])
+    #expect(h.reaper.recorded.keys.sorted() == [1000])
 }
 
 @Test func remoteForwardUsesLiveness() async {

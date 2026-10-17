@@ -68,10 +68,38 @@ final class TunnelStore {
         }
     }
 
-    func shutdown() async {
-        await withTaskGroup(of: Void.self) { group in
-            for supervisor in supervisors.values { group.addTask { await supervisor.turnOff() } }
+    /// Sample tunnels with fixed states and no processes, for screenshots (BURROW_DEMO=1). Nothing is saved.
+    func loadDemo() {
+        readOnly = true
+        let now = Date.now
+        func ssh(_ host: String, _ dest: String, _ port: Int) -> TunnelMethod {
+            .ssh(SSHConfig(mode: .local, host: host, destination: Endpoint(host: dest, port: port)))
         }
+        let demo: [(Tunnel, TunnelState)] = [
+            (Tunnel(name: "Postgres", group: "Staging", localPort: 5432, method: ssh("bastion", "db.staging.internal", 5432)),
+             .connected(since: now.addingTimeInterval(-8040))),
+            (Tunnel(name: "Redis", group: "Staging", localPort: 16379, method: ssh("bastion", "redis.staging.internal", 6379)),
+             .connected(since: now.addingTimeInterval(-8040))),
+            (Tunnel(name: "Orders MySQL", group: "Production", localPort: 3306, method: .ssm(SSMConfig(
+                profile: "prod", region: "ap-southeast-1", target: "i-0a3f5c9e2b7d41f08",
+                forwardTo: .remoteHost(Endpoint(host: "orders.cluster-ro.internal", port: 3306))))),
+             .retrying(.hostUnreachable, attempt: 3, until: now.addingTimeInterval(8))),
+            (Tunnel(name: "ClickHouse", group: "Production", localPort: 8123, method: .kubernetes(KubeConfig(
+                context: "prod", namespace: "analytics", resource: "svc/clickhouse", remotePort: 8123))),
+             .blocked(PortOwner(pid: 4411, command: "clickhouse-server"))),
+            (Tunnel(name: "Grafana", group: "Production", localPort: 3000, method: .kubernetes(KubeConfig(
+                context: "prod", namespace: "monitoring", resource: "svc/grafana", remotePort: 3000))),
+             .connected(since: now.addingTimeInterval(-420))),
+            (Tunnel(name: "SOCKS Proxy", group: "Other", localPort: 1080, method: .ssh(SSHConfig(mode: .dynamic, host: "jump"))),
+             .off),
+        ]
+        file = TunnelFile(groups: ["Staging", "Production", "Other"], tunnels: demo.map(\.0))
+        states = Dictionary(uniqueKeysWithValues: demo.map { ($0.0.id, $0.1) })
+    }
+
+    /// Called at quit: stops every child process before the app exits.
+    func stopAllNow() {
+        reaper.stopAll()
     }
 
     private func makeSupervisor(for tunnel: Tunnel) {
@@ -182,6 +210,25 @@ final class TunnelStore {
         persist()
         let tools = self.tools
         for supervisor in supervisors.values { Task { await supervisor.setTools(tools) } }
+    }
+
+    /// Runs a tunnel once until it connects or fails, then stops it. Used by Test Connection.
+    func test(_ tunnel: Tunnel) async -> (state: TunnelState, log: [String]) {
+        var probe = tunnel
+        probe.id = UUID()
+        let supervisor = Supervisor(tunnel: probe, tools: tools, ports: ports, runner: runner,
+                                    reaper: reaper, clock: ContinuousClock())
+        await supervisor.turnOn()
+        for await state in supervisor.states {
+            switch state {
+            case .connected, .failed, .blocked, .retrying:
+                await supervisor.turnOff()
+                return (state, supervisor.log.lines)
+            default:
+                continue
+            }
+        }
+        return (.off, supervisor.log.lines)
     }
 
     func log(for id: UUID) -> [String] { supervisors[id]?.log.lines ?? [] }

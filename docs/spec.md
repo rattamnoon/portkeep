@@ -162,7 +162,7 @@ Stored at `~/Library/Application Support/Burrow/tunnels.json` (ADR-0005), writte
 - `method` is a tagged union: `ssh`, `ssm`, `kubernetes`, `iap`, `cloudflare`, `custom`, fields as in §4.
 - Unknown top-level keys are preserved on rewrite. A file with a higher `schemaVersion` opens read-only with a banner.
 - A file that fails to parse is never overwritten: it is renamed to `tunnels.json.broken-{yyyyMMdd-HHmmss}`, the app starts empty, and a banner names the backup.
-- PIDs of running children are recorded in `running.json` beside it. On launch, any recorded PID still alive whose executable matches the recorded one is terminated (crash leftovers), then the file is cleared.
+- PIDs of running children are recorded in `running.json` beside it. On launch, any recorded PID still alive with the recorded start time is terminated with its process group (crash leftovers), then the file is cleared.
 - No secrets are stored. Keys stay in the agent/keychain; AWS credentials stay in `~/.aws`.
 
 ## 9. Accessibility

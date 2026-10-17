@@ -42,6 +42,20 @@ private func sh(_ script: String) -> Invocation {
     #expect(kill(-process.pid, 0) != 0, "the process group, including sleep, is gone")
 }
 
+@Test func childGetsTermEvenIfSpawnerBlocksIt() async throws {
+    var blocked = sigset_t(), old = sigset_t()
+    sigemptyset(&blocked)
+    sigaddset(&blocked, SIGTERM)
+    pthread_sigmask(SIG_BLOCK, &blocked, &old)
+    let process = try SystemRunner(path: "/usr/bin:/bin").launch(
+        Invocation(executable: URL(fileURLWithPath: "/bin/sleep"), arguments: ["30"]), log: LogBuffer())
+    pthread_sigmask(SIG_SETMASK, &old, nil)
+
+    try await Task.sleep(for: .milliseconds(100))
+    kill(process.pid, SIGTERM)
+    #expect(await process.waitForExit() == 128 + SIGTERM)
+}
+
 @Test func logBufferKeeps500() {
     let log = LogBuffer()
     for i in 1...600 { log.append("line \(i)") }
