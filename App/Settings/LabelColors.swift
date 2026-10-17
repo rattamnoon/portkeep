@@ -26,12 +26,19 @@ struct TagChip: View {
     var selected = false
 
     var body: some View {
-        Text(tag)
-            .font(.system(size: 10, weight: .medium))
-            .lineLimit(1)
-            .padding(.horizontal, 6).padding(.vertical, 1.5)
-            .foregroundStyle(selected ? Color.white : Color(hex: hex))
-            .background(Capsule().fill(Color(hex: hex).opacity(selected ? 1 : 0.18)))
+        // A coloured dot carries the colour; the text stays in the system colour so dark tag
+        // colours remain readable on a dark menu.
+        HStack(spacing: 4) {
+            Circle().fill(Color(hex: hex)).frame(width: 6, height: 6)
+            Text(tag)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(selected ? Color.white : Color.primary.opacity(0.8))
+                .lineLimit(1)
+        }
+        .fixedSize()
+        .padding(.leading, 5).padding(.trailing, 7).padding(.vertical, 2)
+        .background(Capsule().fill(Color(hex: hex).opacity(selected ? 0.9 : 0.12)))
+        .overlay(Capsule().strokeBorder(Color(hex: hex).opacity(0.35), lineWidth: 0.5).allowsHitTesting(false))
     }
 }
 
