@@ -49,6 +49,7 @@ enum SettingsSelection: Hashable {
     case tunnel(UUID)
     case tools
     case general
+    case labels
 }
 
 @MainActor

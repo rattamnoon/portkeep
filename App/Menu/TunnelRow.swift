@@ -38,10 +38,18 @@ struct TunnelRow: View {
 
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 6) {
-                    Text(tunnel.name).lineLimit(1)
+                    Text(tunnel.name).lineLimit(1).layoutPriority(2)
                     Text(":\(String(tunnel.localPort))")
                         .font(.system(size: 11).monospacedDigit())
                         .foregroundStyle(.secondary)
+                        .layoutPriority(1)
+                    if let first = tunnel.tags.first {
+                        TagChip(tag: first, hex: store.file.tagColor(first))
+                    }
+                    if tunnel.tags.count > 1 {
+                        Text("+\(tunnel.tags.count - 1)").font(.system(size: 10)).foregroundStyle(.secondary)
+                            .help(tunnel.tags.dropFirst().joined(separator: ", "))
+                    }
                 }
                 TimelineView(.periodic(from: .now, by: 30)) { context in
                     Text(store.statusText(tunnel.id, now: context.date))

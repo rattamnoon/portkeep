@@ -58,6 +58,8 @@ struct TunnelDraft: Equatable {
     var group = "Other"
     var localPort = ""
     var connectAtLogin = false
+    /// Comma-separated, as typed.
+    var tags = ""
     var kind: MethodKind = .ssh
 
     var sshMode: SSHMode = .local
@@ -98,6 +100,7 @@ struct TunnelDraft: Equatable {
         group = tunnel.group
         localPort = String(tunnel.localPort)
         connectAtLogin = tunnel.connectAtLogin
+        tags = tunnel.tags.joined(separator: ", ")
         switch tunnel.method {
         case .ssh(let c):
             kind = .ssh
@@ -180,6 +183,6 @@ struct TunnelDraft: Equatable {
     var tunnel: Tunnel? {
         guard let name = filled(name), let local = port(localPort), let method else { return nil }
         return Tunnel(id: id, name: name, group: filled(group) ?? "Other", localPort: local,
-                      connectAtLogin: connectAtLogin, method: method)
+                      connectAtLogin: connectAtLogin, method: method, tags: Tunnel.parseTags(tags))
     }
 }

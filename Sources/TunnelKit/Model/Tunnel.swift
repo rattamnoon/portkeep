@@ -177,10 +177,12 @@ public struct Tunnel: Codable, Identifiable, Hashable, Sendable {
     public var localPort: Int
     public var connectAtLogin: Bool
     public var method: TunnelMethod
+    /// Free-form labels for filtering, e.g. "db", "readonly". Colours live in `TunnelFile.tagColors`.
+    public var tags: [String]
 
     public init(
         id: UUID = UUID(), name: String, group: String, localPort: Int,
-        connectAtLogin: Bool = false, method: TunnelMethod
+        connectAtLogin: Bool = false, method: TunnelMethod, tags: [String] = []
     ) {
         self.id = id
         self.name = name
@@ -188,5 +190,53 @@ public struct Tunnel: Codable, Identifiable, Hashable, Sendable {
         self.localPort = localPort
         self.connectAtLogin = connectAtLogin
         self.method = method
+        self.tags = tags
+    }
+
+    private enum CodingKeys: String, CodingKey { case id, name, group, localPort, connectAtLogin, method, tags }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        group = try c.decode(String.self, forKey: .group)
+        localPort = try c.decode(Int.self, forKey: .localPort)
+        connectAtLogin = try c.decodeIfPresent(Bool.self, forKey: .connectAtLogin) ?? false
+        method = try c.decode(TunnelMethod.self, forKey: .method)
+        // Files written before tags existed have none.
+        tags = try c.decodeIfPresent([String].self, forKey: .tags) ?? []
+    }
+}
+
+/// Colours for tags and groups. Any colour can be chosen; it is stored as "#RRGGBB".
+public enum LabelColor {
+    /// Starting colours, one picked per name so a new tag or group has a colour before anyone chooses.
+    public static let presets = ["#FF3B30", "#FF9500", "#FFCC00", "#34C759", "#00C7BE", "#007AFF", "#5856D6", "#AF52DE", "#FF2D55", "#8E8E93"]
+
+    public static func defaultHex(for name: String) -> String {
+        let sum = name.lowercased().unicodeScalars.reduce(0) { $0 &+ Int($1.value) }
+        return presets[sum % presets.count]
+    }
+
+    /// (red, green, blue) in 0...1, or nil when `hex` isn't "#RRGGBB" / "RRGGBB".
+    public static func components(_ hex: String) -> (Double, Double, Double)? {
+        let digits = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        guard digits.count == 6, let value = UInt32(digits, radix: 16) else { return nil }
+        return (Double((value >> 16) & 0xFF) / 255, Double((value >> 8) & 0xFF) / 255, Double(value & 0xFF) / 255)
+    }
+
+    public static func hex(red: Double, green: Double, blue: Double) -> String {
+        func byte(_ v: Double) -> Int { Int((min(max(v, 0), 1) * 255).rounded()) }
+        return String(format: "#%02X%02X%02X", byte(red), byte(green), byte(blue))
+    }
+}
+
+extension Tunnel {
+    /// Splits "db, readonly ,db" into ["db", "readonly"]: trimmed, de-duplicated, order kept.
+    public static func parseTags(_ text: String) -> [String] {
+        var seen = Set<String>()
+        return text.split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
     }
 }

@@ -47,19 +47,37 @@ public struct TunnelFile: Codable, Hashable, Sendable {
     public var groups: [String]
     public var tunnels: [Tunnel]
     public var toolPaths: [String: String]
+    /// Tag name → "#RRGGBB". A tag without an entry uses `LabelColor.defaultHex(for:)`.
+    public var tagColors: [String: String]
+    /// Group name → "#RRGGBB". A group without an entry has no colour.
+    public var groupColors: [String: String]
     /// Top-level keys from a newer or foreign writer, written back unchanged.
     public var extra: [String: JSONValue]
 
     public init(
         schemaVersion: Int = TunnelFile.currentSchemaVersion,
         groups: [String] = ["UAT", "Production", "Other"],
-        tunnels: [Tunnel] = [], toolPaths: [String: String] = [:], extra: [String: JSONValue] = [:]
+        tunnels: [Tunnel] = [], toolPaths: [String: String] = [:],
+        tagColors: [String: String] = [:], groupColors: [String: String] = [:],
+        extra: [String: JSONValue] = [:]
     ) {
         self.schemaVersion = schemaVersion
         self.groups = groups
         self.tunnels = tunnels
         self.toolPaths = toolPaths
+        self.tagColors = tagColors
+        self.groupColors = groupColors
         self.extra = extra
+    }
+
+    /// Every tag in use, in first-seen order.
+    public var allTags: [String] {
+        var seen = Set<String>()
+        return tunnels.flatMap(\.tags).filter { seen.insert($0.lowercased()).inserted }
+    }
+
+    public func tagColor(_ tag: String) -> String {
+        tagColors[tag] ?? LabelColor.defaultHex(for: tag)
     }
 
     private struct AnyKey: CodingKey {
@@ -70,7 +88,7 @@ public struct TunnelFile: Codable, Hashable, Sendable {
         init?(intValue: Int) { nil }
     }
 
-    private static let knownKeys: Set<String> = ["schemaVersion", "groups", "tunnels", "toolPaths"]
+    private static let knownKeys: Set<String> = ["schemaVersion", "groups", "tunnels", "toolPaths", "tagColors", "groupColors"]
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: AnyKey.self)
@@ -78,6 +96,8 @@ public struct TunnelFile: Codable, Hashable, Sendable {
         groups = try c.decodeIfPresent([String].self, forKey: AnyKey("groups")) ?? []
         tunnels = try c.decodeIfPresent([Tunnel].self, forKey: AnyKey("tunnels")) ?? []
         toolPaths = try c.decodeIfPresent([String: String].self, forKey: AnyKey("toolPaths")) ?? [:]
+        tagColors = try c.decodeIfPresent([String: String].self, forKey: AnyKey("tagColors")) ?? [:]
+        groupColors = try c.decodeIfPresent([String: String].self, forKey: AnyKey("groupColors")) ?? [:]
         var extra: [String: JSONValue] = [:]
         for key in c.allKeys where !Self.knownKeys.contains(key.stringValue) {
             extra[key.stringValue] = try c.decode(JSONValue.self, forKey: key)
@@ -92,6 +112,8 @@ public struct TunnelFile: Codable, Hashable, Sendable {
         try c.encode(groups, forKey: AnyKey("groups"))
         try c.encode(tunnels, forKey: AnyKey("tunnels"))
         try c.encode(toolPaths, forKey: AnyKey("toolPaths"))
+        try c.encode(tagColors, forKey: AnyKey("tagColors"))
+        try c.encode(groupColors, forKey: AnyKey("groupColors"))
     }
 
     public static func load(from url: URL, now: Date) -> LoadResult {
