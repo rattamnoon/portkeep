@@ -136,3 +136,5 @@
 "Renaming a group moves its tunnels with it. A group can be removed once it's empty." = "重命名分组时，其中的隧道会一起移动。分组为空后才能移除。";
 "Removing a tag takes it off every tunnel that has it." = "移除标签会将它从所有隧道上去掉。";
 "1 tunnel" = "1 个隧道";
+"Reopen tunnels that were on when Portkeep quit" = "重新打开退出 Portkeep 时处于开启状态的隧道";
+"Tunnels set to Connect at login always start." = "设为“登录时连接”的隧道总会启动。";
