@@ -23,11 +23,7 @@ struct SettingsView: View {
                     if !tunnels.isEmpty {
                         Section {
                             ForEach(tunnels) { tunnel in
-                                HStack(spacing: 6) {
-                                    Text(tunnel.name).lineLimit(1).layoutPriority(1)
-                                    Spacer(minLength: 4)
-                                    Text(String(tunnel.localPort)).foregroundStyle(.secondary).monospacedDigit()
-                                }
+                                Text(tunnel.name).lineLimit(1)
                                 .tag(SettingsSelection.tunnel(tunnel.id))
                                 .contextMenu {
                                     Button("Duplicate") { duplicate(tunnel.id) }
