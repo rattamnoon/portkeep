@@ -61,6 +61,8 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertTrue(savedJSON.contains("Smoke HTTP"))
 
         // Run it and wait until the port really answers.
+        // Closing the Add Tunnel window can leave the app inactive, and an inactive app's controls aren't hittable.
+        app.activate()
         row.click()
         // By identifier only: SwiftUI exposes a switch-style Toggle as a checkbox on some macOS versions.
         let toggle = element("detail.toggle")

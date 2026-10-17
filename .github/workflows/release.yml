@@ -1,0 +1,131 @@
+name: Release
+
+# Two ways to cut a release:
+#   - push a tag:            git tag v0.2.0 && git push origin v0.2.0
+#   - Actions › Release › Run workflow, enter 0.2.0 (creates the tag on the chosen commit)
+# Each run builds Burrow-<version>.dmg and publishes a GitHub Release with notes and a checksum.
+#
+# Signed and notarized when these repository secrets exist, unsigned otherwise:
+#   MACOS_CERTIFICATE_P12        base64 of the "Developer ID Application" .p12
+#   MACOS_CERTIFICATE_PASSWORD   its export password
+#   DEVELOPER_ID                 "Developer ID Application: Your Name (TEAMID)"
+#   TEAM_ID                      Apple team ID
+#   NOTARY_APPLE_ID              Apple ID used for notarization
+#   NOTARY_PASSWORD              app-specific password for it
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version without the v, e.g. 0.2.0"
+        required: true
+      prerelease:
+        description: "Mark as pre-release"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      HAS_SIGNING: ${{ secrets.MACOS_CERTIFICATE_P12 != '' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: version
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ]; then VERSION="$INPUT_VERSION"; else VERSION="${REF_NAME#v}"; fi
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::'$VERSION' is not a version like 1.2.3"; exit 1
+          fi
+          if [ "$EVENT" = workflow_dispatch ] && git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "::error::Tag v$VERSION already exists"; exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Unit tests
+        run: swift test
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Import signing certificate
+        if: env.HAS_SIGNING == 'true'
+        env:
+          P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          P12_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          NOTARY_APPLE_ID: ${{ secrets.NOTARY_APPLE_ID }}
+          NOTARY_PASSWORD: ${{ secrets.NOTARY_PASSWORD }}
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/release.keychain-db"
+          KEYCHAIN_PASSWORD="$(uuidgen)"
+          echo "$P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          rm "$RUNNER_TEMP/cert.p12"
+          xcrun notarytool store-credentials burrow-notary \
+            --apple-id "$NOTARY_APPLE_ID" --team-id "$TEAM_ID" --password "$NOTARY_PASSWORD" --keychain "$KEYCHAIN"
+          echo "NOTARY_KEYCHAIN=$KEYCHAIN" >> "$GITHUB_ENV"
+
+      - name: Build dmg
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          BUILD_NUMBER: ${{ github.run_number }}
+          DEVELOPER_ID: ${{ secrets.DEVELOPER_ID }}
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+        run: |
+          if [ "$HAS_SIGNING" != true ]; then export UNSIGNED=1; fi
+          scripts/release.sh "$VERSION" "$BUILD_NUMBER"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          TAG="v$VERSION"
+          NOTES="$RUNNER_TEMP/notes.md"
+          {
+            echo "## Install"
+            echo
+            echo "Download \`Burrow-$VERSION.dmg\`, open it and drag Burrow to Applications. Requires macOS 14 or later."
+            echo
+            if [ "$HAS_SIGNING" != true ]; then
+              echo "> **Unsigned build.** macOS will refuse to open it at first: right-click Burrow in Applications, choose **Open**, then **Open** again."
+              echo
+            fi
+            echo "SHA-256: \`$(cut -d' ' -f1 "build/release/Burrow-$VERSION.dmg.sha256")\`"
+          } > "$NOTES"
+          FLAGS=(--title "Burrow $VERSION" --notes-file "$NOTES" --generate-notes --verify-tag)
+          if [ "${{ github.event_name }}" = workflow_dispatch ]; then
+            FLAGS=(--title "Burrow $VERSION" --notes-file "$NOTES" --generate-notes --target "$GITHUB_SHA")
+          fi
+          if [ "$PRERELEASE" = true ] || [[ "$VERSION" == *-* ]]; then FLAGS+=(--prerelease); fi
+          gh release create "$TAG" "${FLAGS[@]}" \
+            "build/release/Burrow-$VERSION.dmg" "build/release/Burrow-$VERSION.dmg.sha256"
+
+      - name: Clean up keychain
+        if: always() && env.NOTARY_KEYCHAIN != ''
+        run: security delete-keychain "$NOTARY_KEYCHAIN"

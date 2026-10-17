@@ -114,7 +114,11 @@ xcodebuild test -scheme Burrow -destination 'platform=macOS'   # UI smoke tests
 
 UI smoke tests drive real windows; run them on a Mac you aren't using, or rely on CI. Demo data and screenshots: `BURROW_DEMO=1 BURROW_SHOW=menu,settings,add BURROW_DATA_DIR=$(mktemp -d) Burrow.app/Contents/MacOS/Burrow`.
 
-Design and decisions: [spec](docs/spec.md) · [ADRs](docs/adr/) · [v1 plan](docs/superpowers/plans/2026-10-17-tunnels-v1.md). Releases: `scripts/release.sh <version>` (Developer ID signing and notarization; see the script header).
+Design and decisions: [spec](docs/spec.md) · [ADRs](docs/adr/) · [v1 plan](docs/superpowers/plans/2026-10-17-tunnels-v1.md). 
+
+### Releases
+
+Push a tag (`git tag v0.2.0 && git push origin v0.2.0`) or run **Actions › Release › Run workflow** with a version. The [Release workflow](.github/workflows/release.yml) builds `Burrow-<version>.dmg`, creates the tag if needed, and publishes a GitHub Release with notes and a SHA-256. It signs and notarizes when the Developer ID secrets listed at the top of the workflow are set, and otherwise publishes an unsigned build labelled as such. Locally: `scripts/release.sh <version>` (or `UNSIGNED=1 scripts/release.sh <version>`).
 
 ## License
 
