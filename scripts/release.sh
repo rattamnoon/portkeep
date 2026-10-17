@@ -67,6 +67,7 @@ STAGE="$OUT/dmg"
 mkdir -p "$STAGE"
 cp -R "$APP" "$STAGE/"
 ln -s /Applications "$STAGE/Applications"
+cp "$ROOT/LICENSE" "$STAGE/LICENSE"
 hdiutil create -volname "Portkeep $VERSION" -srcfolder "$STAGE" -ov -format UDZO "$DMG"
 
 if [ "$UNSIGNED" != 1 ]; then
