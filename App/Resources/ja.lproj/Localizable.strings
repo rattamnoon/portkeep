@@ -142,3 +142,7 @@
 "Start or stop every tunnel in %@" = "%@ のすべてのトンネルを開始または停止";
 "Start All" = "すべて開始";
 "Stop All" = "すべて停止";
+"Start when an app connects" = "アプリが接続したときに開始";
+"Stop after minutes idle" = "アイドル何分後に停止";
+"Portkeep listens on the local port and starts the tunnel when the first connection arrives. 0 minutes keeps it running." = "Portkeep がローカルポートで待ち受け、最初の接続が来たときにトンネルを開始します。0 分にすると停止しません。";
+"Not available for remote forwarding, or for a command without {port}." = "リモートフォワーディングや {port} を含まないコマンドでは使えません。";

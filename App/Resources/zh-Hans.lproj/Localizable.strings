@@ -142,3 +142,7 @@
 "Start or stop every tunnel in %@" = "启动或停止 %@ 中的所有隧道";
 "Start All" = "全部启动";
 "Stop All" = "全部停止";
+"Start when an app connects" = "有应用连接时启动";
+"Stop after minutes idle" = "空闲多少分钟后停止";
+"Portkeep listens on the local port and starts the tunnel when the first connection arrives. 0 minutes keeps it running." = "Portkeep 自己监听本地端口，第一个连接到来时才启动隧道。填 0 分钟则一直运行。";
+"Not available for remote forwarding, or for a command without {port}." = "不适用于远程转发，或不含 {port} 的命令。";

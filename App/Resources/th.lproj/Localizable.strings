@@ -142,3 +142,7 @@
 "Start or stop every tunnel in %@" = "เปิดหรือปิดทุก tunnel ในกลุ่ม %@";
 "Start All" = "เปิดทั้งหมด";
 "Stop All" = "ปิดทั้งหมด";
+"Start when an app connects" = "เริ่มเมื่อมีแอปเชื่อมต่อ";
+"Stop after minutes idle" = "หยุดเมื่อไม่มีการใช้งาน (นาที)";
+"Portkeep listens on the local port and starts the tunnel when the first connection arrives. 0 minutes keeps it running." = "Portkeep จะรอรับการเชื่อมต่อที่พอร์ตในเครื่องเอง และเริ่ม tunnel เมื่อมีการเชื่อมต่อแรกเข้ามา ใส่ 0 นาทีเพื่อให้ทำงานต่อไม่หยุด";
+"Not available for remote forwarding, or for a command without {port}." = "ใช้ไม่ได้กับ remote forwarding หรือคำสั่งที่ไม่มี {port}";

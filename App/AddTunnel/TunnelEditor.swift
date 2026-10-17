@@ -130,9 +130,27 @@ struct TunnelEditor: View {
         }
     }
 
-    private var hasAdvanced: Bool { draft.kind == .ssh || draft.kind == .ssm }
+    // Every method has the on-demand options.
+    private var hasAdvanced: Bool { true }
 
     @ViewBuilder private var advancedFields: some View {
+        methodAdvancedFields
+        Toggle("Start when an app connects", isOn: $draft.startsOnConnect)
+            .disabled(!draft.supportsOnDemand)
+        if draft.startsOnConnect, draft.supportsOnDemand {
+            TextField("Stop after minutes idle", text: $draft.idleMinutes, prompt: Text(verbatim: "10"))
+        }
+        Group {
+            if draft.supportsOnDemand {
+                Text("Portkeep listens on the local port and starts the tunnel when the first connection arrives. 0 minutes keeps it running.")
+            } else {
+                Text("Not available for remote forwarding, or for a command without {port}.")
+            }
+        }
+        .font(.caption).foregroundStyle(.secondary)
+    }
+
+    @ViewBuilder private var methodAdvancedFields: some View {
         switch draft.kind {
         case .ssh:
             TextField("Identity file", text: $draft.identityFile, prompt: Text("Use ssh-agent"))

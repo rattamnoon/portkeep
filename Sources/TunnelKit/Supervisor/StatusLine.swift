@@ -42,6 +42,8 @@ public func statusLine(_ state: TunnelState, tunnel: Tunnel, now: Date) -> Strin
         return L10n.text("Port \(port) is in use")
     case .failed(let reason):
         return failureText(reason, tunnel: tunnel)
+    case .standingBy:
+        return L10n.text("Standing by · starts when an app connects")
     }
 }
 

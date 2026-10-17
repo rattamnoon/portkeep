@@ -246,7 +246,8 @@ final class TunnelStore {
                 _ = claims.claim(tunnel.localPort, by: tunnel.id)
             }
             // Only a change to how it connects restarts it; renaming or retagging doesn't.
-            if old.localPort != tunnel.localPort || old.method != tunnel.method {
+            if old.localPort != tunnel.localPort || old.method != tunnel.method
+                || old.startsOnConnect != tunnel.startsOnConnect || old.idleMinutes != tunnel.idleMinutes {
                 await supervisors[tunnel.id]?.update(tunnel)
             }
         } else {
@@ -365,6 +366,8 @@ final class TunnelStore {
     func test(_ tunnel: Tunnel) async -> (state: TunnelState, log: [String]) {
         var probe = tunnel
         probe.id = UUID()
+        // Connect now, even for a tunnel that would wait for an app.
+        probe.startsOnConnect = false
         let supervisor = Supervisor(tunnel: probe, tools: tools, ports: ports, runner: runner,
                                     reaper: reaper, clock: ContinuousClock())
         await supervisor.turnOn()

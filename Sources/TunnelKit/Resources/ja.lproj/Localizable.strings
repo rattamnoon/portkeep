@@ -24,3 +24,4 @@
 "%@h %@m" = "%1$@ 時間 %2$@ 分";
 "%@m" = "%@ 分";
 "just now" = "たった今";
+"Standing by · starts when an app connects" = "待機中 · アプリが接続すると開始";

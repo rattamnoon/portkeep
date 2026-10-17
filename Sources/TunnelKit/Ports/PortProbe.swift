@@ -96,6 +96,25 @@ public enum PortProbe {
         return nil
     }
 
+    /// A port on 127.0.0.1 nothing listens on, picked by the system: where an on-demand tunnel's
+    /// process listens while Portkeep holds the tunnel's own port.
+    public static func ephemeralPort() -> Int {
+        let fd = socket(AF_INET, SOCK_STREAM, 0)
+        guard fd >= 0 else { return 0 }
+        defer { close(fd) }
+        var addr = sockaddr_in()
+        addr.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        addr.sin_family = sa_family_t(AF_INET)
+        addr.sin_addr.s_addr = inet_addr("127.0.0.1")
+        var len = socklen_t(MemoryLayout<sockaddr_in>.size)
+        let ok = withUnsafeMutablePointer(to: &addr) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                Darwin.bind(fd, $0, len) == 0 && getsockname(fd, $0, &len) == 0
+            }
+        }
+        return ok ? Int(UInt16(bigEndian: addr.sin_port)) : 0
+    }
+
     /// The port to offer instead of a taken one (spec §5.4).
     public static func alternate(for port: Int, isFree: (Int) -> Bool) -> Int {
         if port + 10000 <= 65535, let free = (port + 10000...65535).first(where: isFree) {

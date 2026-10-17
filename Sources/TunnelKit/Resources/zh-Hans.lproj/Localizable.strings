@@ -24,3 +24,4 @@
 "%@h %@m" = "%1$@ 小时 %2$@ 分钟";
 "%@m" = "%@ 分钟";
 "just now" = "刚刚";
+"Standing by · starts when an app connects" = "待命 · 有应用连接时启动";

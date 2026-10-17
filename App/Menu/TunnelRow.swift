@@ -12,7 +12,7 @@ struct TunnelRow: View {
 
     private var active: Bool {
         switch state {
-        case .connected, .starting, .checking, .retrying: true
+        case .connected, .starting, .checking, .retrying, .standingBy: true
         default: false
         }
     }
