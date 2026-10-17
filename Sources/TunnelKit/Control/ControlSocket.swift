@@ -111,6 +111,7 @@ public final class ControlSocketServer: @unchecked Sendable {
     private let handler: Handler
     private let lock = NSLock()
     private var listener: Int32 = -1
+    private var stopped = false
 
     public init(path: String, handler: @escaping Handler) {
         self.path = path
@@ -147,29 +148,49 @@ public final class ControlSocketServer: @unchecked Sendable {
             unlink(path)
             throw ControlSocket.Failure(description: "Couldn’t listen on \(path): \(message)")
         }
-        lock.withLock { listener = fd }
+        lock.withLock {
+            listener = fd
+            stopped = false
+        }
         let thread = Thread { [self] in acceptLoop(fd) }
         thread.name = "Portkeep control socket"
         thread.start()
     }
 
-    /// Stops accepting and removes the socket file.
+    /// Stops accepting and removes the socket file. The accept loop notices within a fraction of
+    /// a second and closes the listening socket itself: closing it here could free its descriptor
+    /// number for another socket while the loop is about to call accept on it again.
     public func stop() {
         let fd = lock.withLock { () -> Int32 in
-            defer { listener = -1 }
+            defer {
+                listener = -1
+                stopped = true
+            }
             return listener
         }
         guard fd >= 0 else { return }
-        shutdown(fd, SHUT_RDWR)
-        close(fd)
         unlink(path)
     }
 
+    private var isStopped: Bool { lock.withLock { stopped } }
+
     private func acceptLoop(_ fd: Int32) {
+        defer { close(fd) }
         while true {
+            // accept() isn't woken by closing the socket on macOS, so wait in short polls and
+            // check for stop() between them.
+            var ready = pollfd(fd: fd, events: Int16(POLLIN), revents: 0)
+            let polled = poll(&ready, 1, 200)
+            if isStopped { return }
+            if polled < 0, errno != EINTR { return }
+            if polled <= 0 { continue }
             let client = accept(fd, nil, nil)
             if client < 0 {
-                if errno == EINTR || errno == ECONNABORTED { continue }
+                if errno == EINTR || errno == ECONNABORTED || errno == EWOULDBLOCK { continue }
+                return
+            }
+            if isStopped {
+                close(client)
                 return
             }
             // Belt and braces with the 0600 mode: only this user.
