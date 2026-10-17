@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Command line &amp; URLs — Portkeep docs</title>
+<meta name="description" content="Control Portkeep from the terminal with the portkeep command, read status.json, and use portkeep:// URLs from Raycast, Shortcuts and scripts.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/automation.html">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Portkeep">
+<meta property="og:title" content="Command line &amp; URLs — Portkeep docs">
+<meta property="og:description" content="Control Portkeep from the terminal with the portkeep command, read status.json, and use portkeep:// URLs from Raycast, Shortcuts and scripts.">
+<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/automation.html">
+<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Command line &amp; URLs — Portkeep docs">
+<meta name="twitter:description" content="Control Portkeep from the terminal with the portkeep command, read status.json, and use portkeep:// URLs from Raycast, Shortcuts and scripts.">
+<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://rattamnoon.github.io/portkeep/docs/automation.html#article",
+   "headline": "Command line and URLs",
+   "description": "Control Portkeep from the terminal with the portkeep command, read status.json, and use portkeep:// URLs from Raycast, Shortcuts and scripts.",
+   "url": "https://rattamnoon.github.io/portkeep/docs/automation.html",
+   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/automation.html",
+   "inLanguage": "en",
+   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "dateModified": "2026-10-17",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "about": {
+    "@id": "https://rattamnoon.github.io/portkeep/#app"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Portkeep",
+    "url": "https://rattamnoon.github.io/portkeep/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Portkeep",
+     "item": "https://rattamnoon.github.io/portkeep/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://rattamnoon.github.io/portkeep/docs/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Command line & URLs",
+     "item": "https://rattamnoon.github.io/portkeep/docs/automation.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5.5A2 2 0 0 0 11 3.5H5.5a2 2 0 0 0-2 2V11a2 2 0 0 0 2 2H7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></symbol>
+</svg>
+
+<header class="bar">
+  <nav class="bar-inner" aria-label="Site">
+    <a class="bar-brand" href="../" aria-label="Portkeep home"><img src="../assets/favicon.png" width="22" height="22" alt=""> Portkeep</a>
+    <div class="bar-links">
+      <a class="hide-narrow" href="./">Docs</a>
+      <a class="hide-narrow" href="../#faq">FAQ</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <button class="nav-toggle" type="button" aria-controls="docs-nav" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="docs">
+  <nav class="side" id="docs-nav" aria-label="Docs">
+    <p class="side-title">Documentation</p>
+    <ol>
+      <li><a href="./">Get started</a></li>
+      <li><a href="menu.html">The menu</a></li>
+      <li><a href="tunnels.html">Adding tunnels</a></li>
+      <li><a href="methods.html">Connection methods</a></li>
+      <li><a href="status.html">Status &amp; troubleshooting</a></li>
+      <li><a href="ports.html">Local ports &amp; on demand</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="automation.html" aria-current="page">Command line &amp; URLs</a></li>
+      <li><a href="import-export.html">Import &amp; export</a></li>
+      <li><a href="data.html">Files &amp; privacy</a></li>
+      <li><a href="faq.html">FAQ &amp; limits</a></li>
+    </ol>
+    <div class="side-foot">
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Report a bug</a>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+  <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
+  <h1>Command line and URLs</h1>
+  <p class="lede">Everything the switches do, you can also do from the terminal with the <code>portkeep</code> command, or from any app that opens links with a <code>portkeep://</code> URL. Scripts can read the same status the menu shows.</p>
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#install">Installing the command</a></li>
+      <li><a href="#commands">Commands</a></li>
+      <li><a href="#status-json">status.json</a></li>
+      <li><a href="#urls">portkeep:// URLs</a></li>
+      <li><a href="#examples">Examples</a></li>
+    </ol>
+  </nav>
+
+<h2 id="install">Installing the command<a class="anchor" href="#install" aria-label="Link to this section">#</a></h2>
+<p>If you installed Portkeep with Homebrew, <code>portkeep</code> is already on your <code>PATH</code>. Otherwise, use <span class="ui">Settings › General › Install Command Line Tool…</span>. It links the script inside the app (<code>Portkeep.app/Contents/Resources/bin/portkeep</code>) into:</p>
+<ul>
+  <li><code>/usr/local/bin</code> when Portkeep can write there, or else</li>
+  <li><code>~/.local/bin</code>, creating it if needed, and tells you if that folder isn’t on your <code>PATH</code> yet.</li>
+</ul>
+<p>If neither works it shows a <code>sudo ln -sf …</code> line to paste into Terminal, with a <span class="ui">Copy Command</span> button. The command uses only what ships with macOS (zsh, <code>open</code> and <code>osascript</code>).</p>
+
+<h2 id="commands">Commands<a class="anchor" href="#commands" aria-label="Link to this section">#</a></h2>
+<div class="code"><pre><code>portkeep list<span class="c-note">                        # every tunnel: name, group, port, state</span>
+portkeep status "Orders MySQL"<span class="c-note">       # one tunnel; exits 0 when connected</span>
+portkeep start "Orders MySQL"<span class="c-note">        # also stop, toggle</span>
+portkeep start-group Development<span class="c-note">     # also stop-group</span>
+portkeep start-all<span class="c-note">                   # also stop-all</span>
+portkeep open<span class="c-note">                        # open Settings</span>
+portkeep open Redis<span class="c-note">                  # open Settings on that tunnel</span>
+portkeep help</code></pre></div>
+<div class="table"><table>
+  <thead><tr><th>Command</th><th>Does</th></tr></thead>
+  <tbody>
+    <tr><td><code>list</code> (or <code>ls</code>)</td><td>Prints a table of every tunnel: NAME, GROUP, PORT, STATE and DETAIL. DETAIL is the status line, or “since 14:05” for a connected tunnel.</td></tr>
+    <tr><td><code>status &lt;name&gt;</code></td><td>The same table for one tunnel. Without a name, it is <code>list</code>.</td></tr>
+    <tr><td><code>start &lt;name&gt;</code></td><td>Switches the tunnel on (switching off any tunnel on the same port).</td></tr>
+    <tr><td><code>stop &lt;name&gt;</code></td><td>Switches it off.</td></tr>
+    <tr><td><code>toggle &lt;name&gt;</code></td><td>Switches it on if it is off, otherwise off.</td></tr>
+    <tr><td><code>start-group &lt;group&gt;</code><br><code>stop-group &lt;group&gt;</code></td><td>Every tunnel in the group, like the group switch in the menu.</td></tr>
+    <tr><td><code>start-all</code><br><code>stop-all</code></td><td>Every tunnel, like the master switch.</td></tr>
+    <tr><td><code>open [name]</code></td><td>Opens the Settings window, on that tunnel if you name one.</td></tr>
+  </tbody>
+</table></div>
+<ul>
+  <li>Names and groups match ignoring case. A tunnel’s <code>id</code> from <code>tunnels.json</code> works in place of its name. If several tunnels share a name, the command acts on all of them.</li>
+  <li><code>start</code>, <code>stop</code>, <code>toggle</code> and the group and all commands are sent to Portkeep in the background, launching it if it isn’t running; nothing comes to the front. A command sent while Portkeep is still starting up runs once it has loaded.</li>
+  <li>Before sending, the command checks the name or group against <code>status.json</code> and stops with <code>no tunnel named "…"</code> or <code>no group named "…"</code> if there isn’t one.</li>
+  <li><code>list</code> and <code>status</code> read <code>status.json</code>. If Portkeep isn’t running they show every tunnel as <code>off</code> with “Portkeep isn't running”.</li>
+</ul>
+
+<h3 id="states">States<a class="anchor" href="#states" aria-label="Link to this section">#</a></h3>
+<p>The STATE column (and <code>state</code> in <code>status.json</code>) is one word:</p>
+<div class="table"><table>
+  <thead><tr><th>State</th><th>In the menu</th></tr></thead>
+  <tbody>
+    <tr><td><code>off</code></td><td>Off</td></tr>
+    <tr><td><code>connecting</code></td><td>Connecting…</td></tr>
+    <tr><td><code>connected</code></td><td>Connected</td></tr>
+    <tr><td><code>standing-by</code></td><td>Standing by · starts when an app connects</td></tr>
+    <tr><td><code>reconnecting</code></td><td>Reconnecting…</td></tr>
+    <tr><td><code>blocked</code></td><td>Port … is in use</td></tr>
+    <tr><td><code>failed</code></td><td>A failure message</td></tr>
+  </tbody>
+</table></div>
+
+<h3 id="exit-codes">Exit codes<a class="anchor" href="#exit-codes" aria-label="Link to this section">#</a></h3>
+<div class="table"><table>
+  <thead><tr><th>Code</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td><code>0</code></td><td>Success. For <code>status</code>: the tunnel is connected.</td></tr>
+    <tr><td><code>1</code></td><td>For <code>status</code>: not connected. Also: no tunnel or group by that name, or no <code>status.json</code> yet (<code>list</code>/<code>status</code> say “no status yet; open Portkeep first.”).</td></tr>
+    <tr><td><code>2</code></td><td>For <code>status</code>: several tunnels have that name and only some are connected.</td></tr>
+    <tr><td><code>64</code></td><td>Unknown command, or a command missing its name or group.</td></tr>
+  </tbody>
+</table></div>
+<p><code>start</code> and <code>stop</code> return as soon as the request is sent; they don’t wait for the tunnel to connect. To wait, poll <code>status</code>:</p>
+<div class="code"><pre><code>portkeep start "Orders MySQL"
+until portkeep status "Orders MySQL" &gt;/dev/null; do sleep 1; done
+mysql -h 127.0.0.1 -P 3306 orders</code></pre></div>
+
+<h2 id="status-json">status.json<a class="anchor" href="#status-json" aria-label="Link to this section">#</a></h2>
+<p>Portkeep rewrites <code>~/Library/Application Support/Portkeep/status.json</code> shortly after every change, for the command and for your own scripts. It is written by the app and never read back. At quit it is written once more with <code>"running": false</code> and every state <code>off</code>.</p>
+<div class="code"><pre><code>{
+  "pid" : 4120,
+  "running" : true,
+  "tunnels" : [
+    {
+      "connectedSince" : "2026-10-17T06:12:40Z",
+      "group" : "Production",
+      "id" : "9F1C2A4E-6B3D-4C1A-9E57-2D8B0F6A1C33",
+      "name" : "Orders MySQL",
+      "port" : 3306,
+      "state" : "connected",
+      "status" : "Connected · 2h 14m"
+    }
+  ]
+}</code></pre></div>
+<ul>
+  <li><code>pid</code> is Portkeep’s process; if no process with that pid is running, the file is left over from a crash and every tunnel is off.</li>
+  <li><code>status</code> is the menu’s status line in the app’s language, as of the last change, so its duration goes stale. Use <code>connectedSince</code> (present only while connected) for timing.</li>
+</ul>
+<p>For example, with <code>jq</code>:</p>
+<div class="code"><pre><code>jq -r '.tunnels[] | select(.state != "off") | "\(.name)\t\(.state)"' \
+  ~/Library/Application\ Support/Portkeep/status.json</code></pre></div>
+
+<h2 id="urls">portkeep:// URLs<a class="anchor" href="#urls" aria-label="Link to this section">#</a></h2>
+<p>The same actions work as URLs, from anywhere that opens links: Shortcuts, Raycast, Alfred, a browser bookmark, or <code>open</code> in a script.</p>
+<div class="code"><pre><code>portkeep://start?name=Orders%20MySQL
+portkeep://stop?group=Production
+portkeep://toggle?all
+portkeep://open
+portkeep://open?name=Redis</code></pre></div>
+<ul>
+  <li>The action is <code>start</code>, <code>stop</code>, <code>toggle</code> or <code>open</code>.</li>
+  <li>The target is <code>name=</code> (a tunnel name or id), <code>group=</code>, or <code>all</code>. Names and groups match ignoring case. Encode spaces as <code>%20</code>.</li>
+  <li><code>toggle</code> on a group or <code>all</code> switches them all on if none is on, otherwise all off.</li>
+  <li><code>open</code> brings up Settings, selecting the named tunnel if given.</li>
+</ul>
+
+<h2 id="examples">Examples<a class="anchor" href="#examples" aria-label="Link to this section">#</a></h2>
+<h3 id="shell">In a shell script<a class="anchor" href="#shell" aria-label="Link to this section">#</a></h3>
+<p>Switch environments before running a migration, and back afterwards:</p>
+<div class="code"><pre><code>#!/bin/zsh
+portkeep start "Staging MySQL"<span class="c-note">       # switches off anything else on 3306</span>
+until portkeep status "Staging MySQL" &gt;/dev/null; do sleep 1; done
+./migrate --host 127.0.0.1 --port 3306
+portkeep stop "Staging MySQL"</code></pre></div>
+<p>Without waiting for the result, from anywhere:</p>
+<div class="code"><pre><code>open -g "portkeep://start?group=Development"</code></pre></div>
+
+<h3 id="raycast">Raycast<a class="anchor" href="#raycast" aria-label="Link to this section">#</a></h3>
+<p>Create a Quicklink (Raycast › Create Quicklink) with a link such as <code>portkeep://toggle?group=Production</code>. Or write a Script Command that calls <code>portkeep</code>:</p>
+<div class="code"><pre><code>#!/bin/zsh
+<span class="c-note"># @raycast.schemaVersion 1</span>
+<span class="c-note"># @raycast.title Start Orders MySQL</span>
+<span class="c-note"># @raycast.mode silent</span>
+portkeep start "Orders MySQL"</code></pre></div>
+<p>Raycast Script Commands may not load your shell profile; if <code>portkeep</code> isn’t found, use its full path (<code>/opt/homebrew/bin/portkeep</code> for Homebrew on Apple silicon, or wherever <code>which portkeep</code> points).</p>
+
+<h3 id="shortcuts">Shortcuts<a class="anchor" href="#shortcuts" aria-label="Link to this section">#</a></h3>
+<p>Add an <span class="ui">Open URLs</span> action with <code>portkeep://start?name=Orders%20MySQL</code>, or a <span class="ui">Run Shell Script</span> action that runs <code>portkeep status "Orders MySQL"</code> and uses its output. Portkeep has no Shortcuts actions of its own yet.</p>
+
+<div class="note"><p><strong>Coming in 0.4.</strong> More <code>portkeep</code> commands, and an MCP server so AI assistants can work with your tunnels.</p></div>
+
+  <nav class="pager" aria-label="Previous and next pages">
+    <a class="prev" href="settings.html" rel="prev"><span>Previous</span><strong>Settings</strong></a>
+    <a class="next" href="import-export.html" rel="next"><span>Next</span><strong>Import &amp; export</strong></a>
+  </nav>
+  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="foot-brand"><img src="../assets/favicon.png" width="18" height="18" alt=""> Portkeep</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Docs</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/blob/main/LICENSE">MIT License</a>
+    </nav>
+    <p class="foot-copy">© 2026 Rattamnoon Kiratipisut</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    var toggle = document.querySelector('.nav-toggle');
+    var side = document.getElementById('docs-nav');
+    toggle.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('.code').forEach(function (block) {
+      if (!navigator.clipboard) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>';
+      var label = button.querySelector('span');
+      var timer;
+      button.addEventListener('click', function () {
+        var text = block.querySelector('code').innerText.replace(/\n$/, '');
+        navigator.clipboard.writeText(text).then(function () {
+          button.classList.add('is-done');
+          label.textContent = 'Copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () { button.classList.remove('is-done'); label.textContent = 'Copy'; }, 2000);
+        });
+      });
+      block.appendChild(button);
+    });
+  })();
+</script>
+</body>
+</html>

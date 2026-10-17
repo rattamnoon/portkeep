@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ &amp; limits — Portkeep docs</title>
+<meta name="description" content="Answers to common questions about Portkeep, from keeping SSH tunnels alive to switching environments on one port, and the limits of this version.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/faq.html">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Portkeep">
+<meta property="og:title" content="FAQ &amp; limits — Portkeep docs">
+<meta property="og:description" content="Answers to common questions about Portkeep, from keeping SSH tunnels alive to switching environments on one port, and the limits of this version.">
+<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/faq.html">
+<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FAQ &amp; limits — Portkeep docs">
+<meta name="twitter:description" content="Answers to common questions about Portkeep, from keeping SSH tunnels alive to switching environments on one port, and the limits of this version.">
+<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://rattamnoon.github.io/portkeep/docs/faq.html#article",
+   "headline": "FAQ and limits",
+   "description": "Answers to common questions about Portkeep, from keeping SSH tunnels alive to switching environments on one port, and the limits of this version.",
+   "url": "https://rattamnoon.github.io/portkeep/docs/faq.html",
+   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/faq.html",
+   "inLanguage": "en",
+   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "dateModified": "2026-10-17",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "about": {
+    "@id": "https://rattamnoon.github.io/portkeep/#app"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Portkeep",
+    "url": "https://rattamnoon.github.io/portkeep/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Portkeep",
+     "item": "https://rattamnoon.github.io/portkeep/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://rattamnoon.github.io/portkeep/docs/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "FAQ & limits",
+     "item": "https://rattamnoon.github.io/portkeep/docs/faq.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5.5A2 2 0 0 0 11 3.5H5.5a2 2 0 0 0-2 2V11a2 2 0 0 0 2 2H7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></symbol>
+</svg>
+
+<header class="bar">
+  <nav class="bar-inner" aria-label="Site">
+    <a class="bar-brand" href="../" aria-label="Portkeep home"><img src="../assets/favicon.png" width="22" height="22" alt=""> Portkeep</a>
+    <div class="bar-links">
+      <a class="hide-narrow" href="./">Docs</a>
+      <a class="hide-narrow" href="../#faq">FAQ</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <button class="nav-toggle" type="button" aria-controls="docs-nav" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="docs">
+  <nav class="side" id="docs-nav" aria-label="Docs">
+    <p class="side-title">Documentation</p>
+    <ol>
+      <li><a href="./">Get started</a></li>
+      <li><a href="menu.html">The menu</a></li>
+      <li><a href="tunnels.html">Adding tunnels</a></li>
+      <li><a href="methods.html">Connection methods</a></li>
+      <li><a href="status.html">Status &amp; troubleshooting</a></li>
+      <li><a href="ports.html">Local ports &amp; on demand</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="import-export.html">Import &amp; export</a></li>
+      <li><a href="data.html">Files &amp; privacy</a></li>
+      <li><a href="faq.html" aria-current="page">FAQ &amp; limits</a></li>
+    </ol>
+    <div class="side-foot">
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Report a bug</a>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+  <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
+  <h1>FAQ and limits</h1>
+  <p class="lede">Short answers to the questions people ask most, with links to the full explanation, followed by what this version of Portkeep can’t do yet.</p>
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#basics">Basics</a></li>
+      <li><a href="#connecting">Connecting</a></li>
+      <li><a href="#ports">Ports</a></li>
+      <li><a href="#limits">Limits in this version</a></li>
+    </ol>
+  </nav>
+
+<h2 id="basics">Basics<a class="anchor" href="#basics" aria-label="Link to this section">#</a></h2>
+
+<h3 id="keep-alive">How do I keep an SSH tunnel alive on macOS?<a class="anchor" href="#keep-alive" aria-label="Link to this section">#</a></h3>
+<p>Add it to Portkeep and switch it on. Portkeep restarts the tunnel after sleep, a network change or a dropped session, backing off from 1&nbsp;s to 60&nbsp;s between tries and spending none while you’re offline. It shows <em>Connected</em> only when the local port actually accepts connections, and tunnels that were on when it quit come back at the next launch. See <a href="status.html#reconnect">Reconnecting</a>.</p>
+
+<h3 id="autossh">Is Portkeep an autossh alternative?<a class="anchor" href="#autossh" aria-label="Link to this section">#</a></h3>
+<p>Yes, for keeping port forwards up. Like autossh it restarts <code>ssh</code> when the connection drops, and it adds a menu bar switch and live status per tunnel, a check that the local port is free before starting, and a plain-language reason when a tunnel fails. It also drives AWS SSM, kubectl, Google Cloud IAP, Cloudflare Access and custom commands, not only SSH.</p>
+
+<h3 id="free">Is Portkeep free?<a class="anchor" href="#free" aria-label="Link to this section">#</a></h3>
+<p>Yes. Portkeep is free and open source under the MIT License, and the code is <a href="https://github.com/rattamnoon/portkeep">on GitHub</a>.</p>
+
+<h3 id="install">How do I install Portkeep?<a class="anchor" href="#install" aria-label="Link to this section">#</a></h3>
+<p>Run <code>brew install --cask rattamnoon/tap/portkeep</code>, or download the .dmg from GitHub Releases and drag Portkeep to Applications. It needs macOS 14 Sonoma or later, on Apple silicon or Intel. Releases aren’t notarized yet, so the first time, right-click Portkeep in Applications and choose <span class="ui">Open</span>. See <a href="./#install">Install</a>.</p>
+
+<h3 id="icon-hidden">I can’t find the menu bar icon.<a class="anchor" href="#icon-hidden" aria-label="Link to this section">#</a></h3>
+<p>On a Mac with a notch, a full menu bar can hide it. Open Portkeep again from Finder or Spotlight and the Settings window comes up; you can start and stop tunnels there too.</p>
+
+<h2 id="connecting">Connecting<a class="anchor" href="#connecting" aria-label="Link to this section">#</a></h2>
+
+<h3 id="rds">How do I port forward to RDS through AWS SSM from my Mac?<a class="anchor" href="#rds" aria-label="Link to this section">#</a></h3>
+<p>Add a tunnel with the AWS SSM method, pick your AWS profile, enter the ID of an instance that can reach the database, and set the RDS endpoint and port as the remote host and port. Portkeep runs <code>aws ssm start-session</code> for you and keeps it up. You need the AWS CLI and <code>session-manager-plugin</code>. There is a <a href="methods.html#ssm-example">step-by-step example</a>.</p>
+
+<h3 id="kubectl">Why does kubectl port-forward keep disconnecting, and how does Portkeep handle it?<a class="anchor" href="#kubectl" aria-label="Link to this section">#</a></h3>
+<p><code>kubectl port-forward</code> exits when its connection to the pod breaks, for example when the pod restarts, the laptop sleeps or the network changes, and it does not restart on its own. Portkeep notices, says so in the menu, and runs it again with the same service, deployment or pod and kubeconfig context, backing off between tries.</p>
+
+<h3 id="password">Can Portkeep type my SSH password or passphrase?<a class="anchor" href="#password" aria-label="Link to this section">#</a></h3>
+<p>No. Portkeep runs <code>ssh</code> with <code>BatchMode=yes</code> and no keyboard input, so anything that prompts fails with <span class="msg">bastion refused the key.</span> or a similar message. Use a key in your agent; for a key with a passphrase, add it once with <code>ssh-add --apple-use-keychain</code>. The same goes for OTP and other interactive sign-ins.</p>
+
+<h3 id="sso">My AWS SSO session expired. Do I have to open Terminal?<a class="anchor" href="#sso" aria-label="Link to this section">#</a></h3>
+<p>No. The tunnel stops with <span class="msg">AWS sign-in expired for profile prod.</span>; choose <span class="ui">Sign In to AWS…</span> in its <span class="ui">⋯</span> menu, finish signing in in your browser, and Portkeep tries again.</p>
+
+<h3 id="other-tool">My tool isn’t listed. Can Portkeep still run it?<a class="anchor" href="#other-tool" aria-label="Link to this section">#</a></h3>
+<p>Yes, with <a href="methods.html#custom">Custom Command</a>, as long as the command stays running and listens on the local port. Put <code>{port}</code> where the port goes and Portkeep fills it in.</p>
+
+<h3 id="password-store">Does Portkeep store my passwords or keys?<a class="anchor" href="#password-store" aria-label="Link to this section">#</a></h3>
+<p>No. Portkeep never stores passwords, keys or tokens. It runs the tools you already use with your existing <code>~/.ssh/config</code>, AWS profiles and kubeconfig, and makes no network connections of its own. See <a href="data.html#privacy">Privacy</a>.</p>
+
+<h2 id="ports">Ports<a class="anchor" href="#ports" aria-label="Link to this section">#</a></h2>
+
+<h3 id="same-port">How do I switch between production and development databases on the same port?<a class="anchor" href="#same-port" aria-label="Link to this section">#</a></h3>
+<p>Give both tunnels the same local port, such as 3306. Switching one on switches the other off first, so changing environment is one click and your database client keeps the same address. See <a href="ports.html#shared-ports">Shared ports</a>.</p>
+
+<h3 id="port-taken">It says the port is in use. By what?<a class="anchor" href="#port-taken" aria-label="Link to this section">#</a></h3>
+<p>The row names the process, such as <span class="msg">Port 8123 is in use by clickhouse-server</span>. Choose <span class="ui">Use Port 18123</span> in the <span class="ui">⋯</span> menu to move the tunnel to a free port, or stop the other program. See <a href="ports.html#conflicts">Port conflicts</a>.</p>
+
+<h3 id="ssh-config-forwards">I imported forwards from my SSH config and only one runs at a time.<a class="anchor" href="#ssh-config-forwards" aria-label="Link to this section">#</a></h3>
+<p><code>ssh</code> opens every <code>LocalForward</code> of a host whenever it connects to it, so the first tunnel takes all of that host’s ports. Remove those lines from <code>~/.ssh/config</code> after importing. See <a href="import-export.html#ssh-config">Import from SSH Config</a>.</p>
+
+<h3 id="idle">Can a tunnel run only while I’m using it?<a class="anchor" href="#idle" aria-label="Link to this section">#</a></h3>
+<p>Yes. Turn on <span class="ui">Start when an app connects</span> in Advanced Options. Portkeep holds the port, opens the real tunnel when your client connects, and stops it after 10 idle minutes (or your own number; 0 never stops). See <a href="ports.html#on-demand">On demand</a>.</p>
+
+<h2 id="limits">Limits in this version<a class="anchor" href="#limits" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li><strong>Sign-in must work without typing.</strong> Passwords, passphrase prompts and OTP aren’t supported yet. Add passphrase keys with <code>ssh-add --apple-use-keychain</code>.</li>
+  <li><strong>No sync between Macs</strong>, and no team sharing beyond <a href="import-export.html">exporting a file</a>.</li>
+  <li><strong>No Shortcuts actions</strong> of its own yet; a shortcut can open a <a href="automation.html#urls"><code>portkeep://</code> URL</a> or run the <code>portkeep</code> command.</li>
+  <li><strong>On-demand tunnels proxy TCP on 127.0.0.1 only</strong>, and an app that holds connections open keeps the tunnel up.</li>
+  <li><strong>One tag per tunnel.</strong></li>
+  <li><strong>Releases aren’t notarized yet</strong>, so macOS asks before the first launch. Builds from source are ad-hoc signed, and macOS warns when you open a copy on another Mac.</li>
+  <li><strong>Not on the Mac App Store</strong>, because the sandbox would stop it running your CLIs and reading your config.</li>
+  <li><strong>Failure messages come from the tool’s English output.</strong> A tool that prints something Portkeep doesn’t recognise shows its exit status instead; the log has the full text.</li>
+</ul>
+<p>Something else missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=feature_request.yml">Request a feature</a> or ask in <a href="https://github.com/rattamnoon/portkeep/discussions">Discussions</a>.</p>
+
+  <nav class="pager" aria-label="Previous and next pages">
+    <a class="prev" href="data.html" rel="prev"><span>Previous</span><strong>Files &amp; privacy</strong></a>
+  </nav>
+  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="foot-brand"><img src="../assets/favicon.png" width="18" height="18" alt=""> Portkeep</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Docs</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/blob/main/LICENSE">MIT License</a>
+    </nav>
+    <p class="foot-copy">© 2026 Rattamnoon Kiratipisut</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    var toggle = document.querySelector('.nav-toggle');
+    var side = document.getElementById('docs-nav');
+    toggle.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('.code').forEach(function (block) {
+      if (!navigator.clipboard) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>';
+      var label = button.querySelector('span');
+      var timer;
+      button.addEventListener('click', function () {
+        var text = block.querySelector('code').innerText.replace(/\n$/, '');
+        navigator.clipboard.writeText(text).then(function () {
+          button.classList.add('is-done');
+          label.textContent = 'Copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () { button.classList.remove('is-done'); label.textContent = 'Copy'; }, 2000);
+        });
+      });
+      block.appendChild(button);
+    });
+  })();
+</script>
+</body>
+</html>

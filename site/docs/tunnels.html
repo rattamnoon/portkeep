@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adding tunnels — Portkeep docs</title>
+<meta name="description" content="Every field in Portkeep&#x27;s Add Tunnel window and tunnel editor: name, group, tag, local port, Connect at login, Advanced Options, the Runs preview and Test Connection.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/tunnels.html">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Portkeep">
+<meta property="og:title" content="Adding tunnels — Portkeep docs">
+<meta property="og:description" content="Every field in Portkeep&#x27;s Add Tunnel window and tunnel editor: name, group, tag, local port, Connect at login, Advanced Options, the Runs preview and Test Connection.">
+<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/tunnels.html">
+<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Adding tunnels — Portkeep docs">
+<meta name="twitter:description" content="Every field in Portkeep&#x27;s Add Tunnel window and tunnel editor: name, group, tag, local port, Connect at login, Advanced Options, the Runs preview and Test Connection.">
+<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://rattamnoon.github.io/portkeep/docs/tunnels.html#article",
+   "headline": "Adding and editing tunnels",
+   "description": "Every field in Portkeep's Add Tunnel window and tunnel editor: name, group, tag, local port, Connect at login, Advanced Options, the Runs preview and Test Connection.",
+   "url": "https://rattamnoon.github.io/portkeep/docs/tunnels.html",
+   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/tunnels.html",
+   "inLanguage": "en",
+   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "dateModified": "2026-10-17",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "about": {
+    "@id": "https://rattamnoon.github.io/portkeep/#app"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Portkeep",
+    "url": "https://rattamnoon.github.io/portkeep/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Portkeep",
+     "item": "https://rattamnoon.github.io/portkeep/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://rattamnoon.github.io/portkeep/docs/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Adding tunnels",
+     "item": "https://rattamnoon.github.io/portkeep/docs/tunnels.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5.5A2 2 0 0 0 11 3.5H5.5a2 2 0 0 0-2 2V11a2 2 0 0 0 2 2H7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></symbol>
+</svg>
+
+<header class="bar">
+  <nav class="bar-inner" aria-label="Site">
+    <a class="bar-brand" href="../" aria-label="Portkeep home"><img src="../assets/favicon.png" width="22" height="22" alt=""> Portkeep</a>
+    <div class="bar-links">
+      <a class="hide-narrow" href="./">Docs</a>
+      <a class="hide-narrow" href="../#faq">FAQ</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <button class="nav-toggle" type="button" aria-controls="docs-nav" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="docs">
+  <nav class="side" id="docs-nav" aria-label="Docs">
+    <p class="side-title">Documentation</p>
+    <ol>
+      <li><a href="./">Get started</a></li>
+      <li><a href="menu.html">The menu</a></li>
+      <li><a href="tunnels.html" aria-current="page">Adding tunnels</a></li>
+      <li><a href="methods.html">Connection methods</a></li>
+      <li><a href="status.html">Status &amp; troubleshooting</a></li>
+      <li><a href="ports.html">Local ports &amp; on demand</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="import-export.html">Import &amp; export</a></li>
+      <li><a href="data.html">Files &amp; privacy</a></li>
+      <li><a href="faq.html">FAQ &amp; limits</a></li>
+    </ol>
+    <div class="side-foot">
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Report a bug</a>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+  <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
+  <h1>Adding and editing tunnels</h1>
+  <p class="lede">A tunnel is a name, a local port and a way to connect. You add one in the Add Tunnel window and change it later in Settings; both use the same form, described field by field here.</p>
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#add-window">The Add Tunnel window</a></li>
+      <li><a href="#basics">Name, group and tag</a></li>
+      <li><a href="#method-fields">Method fields</a></li>
+      <li><a href="#local-port">Local port</a></li>
+      <li><a href="#connect-at-login">Connect at login</a></li>
+      <li><a href="#advanced">Advanced Options</a></li>
+      <li><a href="#runs">The Runs preview</a></li>
+      <li><a href="#test">Test Connection</a></li>
+      <li><a href="#editing">Editing a tunnel</a></li>
+    </ol>
+  </nav>
+
+<figure class="shot">
+  <img src="../assets/add-en-light.webp" width="780" height="632" loading="lazy" alt="The Add Tunnel window: the connection methods in a sidebar on the left, and on the right the SSH form with Name, Group, Tag, Forwarding, Host, Jump through, Destination and Local port, the Runs preview, and Test Connection, Cancel and Add Tunnel buttons.">
+</figure>
+
+<h2 id="add-window">The Add Tunnel window<a class="anchor" href="#add-window" aria-label="Link to this section">#</a></h2>
+<p>Open it with <span class="ui">Add Tunnel…</span> in the menu, the <span class="ui">+</span> button under the Settings sidebar, or <span class="ui">Add Tunnel…</span> on the empty Settings page. The left side lists the methods under <span class="ui">Connect with</span>, each with the tool it runs:</p>
+<div class="table"><table>
+  <thead><tr><th>Method</th><th>Runs</th></tr></thead>
+  <tbody>
+    <tr><td>SSH</td><td><code>ssh -L / -R / -D</code></td></tr>
+    <tr><td>AWS SSM</td><td><code>aws ssm start-session</code></td></tr>
+    <tr><td>Kubernetes</td><td><code>kubectl port-forward</code></td></tr>
+    <tr><td>Google Cloud IAP</td><td><code>gcloud start-iap-tunnel</code></td></tr>
+    <tr><td>Cloudflare Access</td><td><code>cloudflared access tcp</code></td></tr>
+    <tr><td>Custom Command</td><td>Any command that holds a port open</td></tr>
+  </tbody>
+</table></div>
+<p>The right side is the form for the chosen method. You can switch methods while filling it in; what you typed for one method is kept if you come back to it. Grey text in an empty field, such as <span class="msg">e.g. Dashboard MySQL</span>, is an example, not a value.</p>
+
+<h2 id="basics">Name, group and tag<a class="anchor" href="#basics" aria-label="Link to this section">#</a></h2>
+<dl class="fields">
+  <div><dt>Name</dt><dd>What the tunnel is called in the menu, in notifications and on the command line. Required. Names don’t have to be unique, but the <a href="automation.html">command line</a> acts on every tunnel with the name you give it.</dd></div>
+  <div><dt>Group</dt><dd>The heading the tunnel sits under, such as Production or Development. Pick one from the list or type a new name. Empty means <span class="ui">Other</span>. Portkeep starts with Production, Staging, Development, Local and Other; manage them in <a href="settings.html#groups-tags">Groups &amp; Tags</a>.</dd></div>
+  <div><dt>Tag</dt><dd>One optional label, such as <code>db</code> or <code>readonly</code>. Pick one or type a new one; a coloured chip below the field previews it. A tunnel has at most one tag. Tags are searchable in the Settings sidebar.</dd></div>
+</dl>
+
+<h2 id="method-fields">Method fields<a class="anchor" href="#method-fields" aria-label="Link to this section">#</a></h2>
+<p>The next section is titled with the method’s name and holds its fields: host and destination for SSH, profile and instance for AWS SSM, and so on. Each method’s fields, defaults and the command they produce are on the <a href="methods.html">Connection methods</a> page.</p>
+<p>Fields that take a host, profile or context have a small picker button beside them with the values you already have:</p>
+<ul>
+  <li>SSH <span class="ui">Host</span> and <span class="ui">Jump through</span>: the <code>Host</code> aliases in <code>~/.ssh/config</code>, skipping wildcard patterns. Files pulled in with <code>Include</code> aren’t read for this list.</li>
+  <li>AWS SSM <span class="ui">Profile</span>: the <code>[default]</code> and <code>[profile …]</code> sections of <code>~/.aws/config</code>. Picking a profile fills in <span class="ui">Region</span> from it when Region is empty.</li>
+  <li>Kubernetes <span class="ui">Context</span>: the output of <code>kubectl config get-contexts -o name</code>.</li>
+</ul>
+
+<h2 id="local-port">Local port<a class="anchor" href="#local-port" aria-label="Link to this section">#</a></h2>
+<p>The port on your Mac that your client connects to, from 1 to 65535; point the client at <code>127.0.0.1</code> on this port. As you type, a hint beside the field says:</p>
+<ul>
+  <li><span class="msg">Available</span>: nothing is listening there.</li>
+  <li><span class="msg">In use</span>: another program is listening there. You can still save, but the tunnel won’t start until the port is free.</li>
+  <li><span class="msg">Shared with &lt;name&gt;</span>: another tunnel uses the same port. That is allowed, and switching one on switches the other off. See <a href="ports.html#shared-ports">Shared ports</a>.</li>
+</ul>
+<p>For SSH <a href="methods.html#ssh-remote">remote forwarding</a> this is the port opened on the server instead.</p>
+
+<h2 id="connect-at-login">Connect at login<a class="anchor" href="#connect-at-login" aria-label="Link to this section">#</a></h2>
+<p>When on, the tunnel starts every time Portkeep launches, whether or not it was on when Portkeep quit. While at least one tunnel has this on, Portkeep adds itself to your login items so it opens when you log in; when none do, it removes itself.</p>
+
+<h2 id="advanced">Advanced Options<a class="anchor" href="#advanced" aria-label="Link to this section">#</a></h2>
+<p>Click anywhere on the <span class="ui">Advanced Options</span> row to show or hide it. Every method has the on-demand options; SSH and AWS SSM have a few of their own, described on the <a href="methods.html">methods page</a>.</p>
+<dl class="fields">
+  <div><dt>Start when an app connects</dt><dd>Off by default. When on, switching the tunnel on makes Portkeep hold the local port itself and show <span class="msg">Standing by · starts when an app connects</span>; the real tunnel starts when a client connects. Not available for SSH remote forwarding, or for a custom command without <code>{port}</code>. See <a href="ports.html#on-demand">On demand</a>.</dd></div>
+  <div><dt>Stop after minutes idle</dt><dd>Shown when the option above is on. Default 10. After this many minutes with no connections the tunnel stops and goes back to standing by. <code>0</code> keeps it running once started.</dd></div>
+</dl>
+
+<h2 id="runs">The Runs preview<a class="anchor" href="#runs" aria-label="Link to this section">#</a></h2>
+<p>The <span class="ui">Runs</span> box shows the exact command Portkeep will run, built from the fields as you type, with the tool’s file name and every argument. You can select and copy it to try in a terminal. Below it, a line says what the method needs, such as <span class="msg">Needs the AWS CLI and session-manager-plugin.</span></p>
+<ul>
+  <li>Until every required field holds a valid value, the box reads <span class="msg">Fill in the fields above to see the command.</span></li>
+  <li>If the tool can’t be found it says so, with the install command: <span class="msg">kubectl not found. Install it with brew install kubectl.</span> Install it, or set its path in <a href="settings.html#tools">Settings › Tools</a>.</li>
+</ul>
+<p>Portkeep never runs your tunnel through a shell, except for <a href="methods.html#custom">Custom Command</a>: the arguments are passed to the tool as they appear.</p>
+
+<h2 id="test">Test Connection<a class="anchor" href="#test" aria-label="Link to this section">#</a></h2>
+<p><span class="ui">Test Connection</span> runs the tunnel once, without saving it, until it connects or fails, then stops it. The result appears next to the button:</p>
+<ul>
+  <li><span class="msg">Connected. Port 3306 is open.</span> when the local port accepted a connection;</li>
+  <li>otherwise the same message the menu would show, such as <span class="msg">Host key changed for bastion. Check it, then remove the old key from known_hosts.</span></li>
+</ul>
+<p>A tunnel set to start when an app connects is tested by connecting straight away. The test uses the local port you entered, so it reports the port as in use if another tunnel is running there.</p>
+<p><span class="ui">Add Tunnel</span> (or <kbd>Return</kbd>) saves the tunnel, switched off. It is enabled once the name, local port and the method’s required fields are filled in.</p>
+
+<h2 id="editing">Editing a tunnel<a class="anchor" href="#editing" aria-label="Link to this section">#</a></h2>
+<p>Pick a tunnel in the Settings sidebar, or use <span class="ui">Edit Tunnel…</span> in its <span class="ui">⋯</span> menu. The same form appears, with a <span class="ui">Connect with</span> picker to change the method. Then:</p>
+<ul>
+  <li><span class="ui">Save</span> (<kbd>⌘</kbd><kbd>S</kbd>) applies the changes. <span class="ui">Revert</span> puts the fields back as saved.</li>
+  <li>Changing the name, group or tag of a running tunnel doesn’t restart it.</li>
+  <li>Changing the local port, the connection fields or the on-demand options restarts a running tunnel with the new settings.</li>
+  <li>Moving a running tunnel onto a port another running tunnel holds switches that other tunnel off.</li>
+</ul>
+<p>To remove a tunnel, select it in the sidebar and press <span class="ui">−</span>. Portkeep asks first, and the tunnel stops if it is running.</p>
+
+  <nav class="pager" aria-label="Previous and next pages">
+    <a class="prev" href="menu.html" rel="prev"><span>Previous</span><strong>The menu</strong></a>
+    <a class="next" href="methods.html" rel="next"><span>Next</span><strong>Connection methods</strong></a>
+  </nav>
+  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="foot-brand"><img src="../assets/favicon.png" width="18" height="18" alt=""> Portkeep</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Docs</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/blob/main/LICENSE">MIT License</a>
+    </nav>
+    <p class="foot-copy">© 2026 Rattamnoon Kiratipisut</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    var toggle = document.querySelector('.nav-toggle');
+    var side = document.getElementById('docs-nav');
+    toggle.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('.code').forEach(function (block) {
+      if (!navigator.clipboard) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>';
+      var label = button.querySelector('span');
+      var timer;
+      button.addEventListener('click', function () {
+        var text = block.querySelector('code').innerText.replace(/\n$/, '');
+        navigator.clipboard.writeText(text).then(function () {
+          button.classList.add('is-done');
+          label.textContent = 'Copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () { button.classList.remove('is-done'); label.textContent = 'Copy'; }, 2000);
+        });
+      });
+      block.appendChild(button);
+    });
+  })();
+</script>
+</body>
+</html>

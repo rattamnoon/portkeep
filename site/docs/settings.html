@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings — Portkeep docs</title>
+<meta name="description" content="Portkeep&#x27;s Settings window: the tunnel sidebar and search, the tunnel detail pane, Groups &amp; Tags, Tools paths, and General options such as language and notifications.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/settings.html">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Portkeep">
+<meta property="og:title" content="Settings — Portkeep docs">
+<meta property="og:description" content="Portkeep&#x27;s Settings window: the tunnel sidebar and search, the tunnel detail pane, Groups &amp; Tags, Tools paths, and General options such as language and notifications.">
+<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/settings.html">
+<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Settings — Portkeep docs">
+<meta name="twitter:description" content="Portkeep&#x27;s Settings window: the tunnel sidebar and search, the tunnel detail pane, Groups &amp; Tags, Tools paths, and General options such as language and notifications.">
+<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://rattamnoon.github.io/portkeep/docs/settings.html#article",
+   "headline": "The Settings window",
+   "description": "Portkeep's Settings window: the tunnel sidebar and search, the tunnel detail pane, Groups & Tags, Tools paths, and General options such as language and notifications.",
+   "url": "https://rattamnoon.github.io/portkeep/docs/settings.html",
+   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/settings.html",
+   "inLanguage": "en",
+   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "dateModified": "2026-10-17",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "about": {
+    "@id": "https://rattamnoon.github.io/portkeep/#app"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Portkeep",
+    "url": "https://rattamnoon.github.io/portkeep/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Portkeep",
+     "item": "https://rattamnoon.github.io/portkeep/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://rattamnoon.github.io/portkeep/docs/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Settings",
+     "item": "https://rattamnoon.github.io/portkeep/docs/settings.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5.5A2 2 0 0 0 11 3.5H5.5a2 2 0 0 0-2 2V11a2 2 0 0 0 2 2H7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></symbol>
+</svg>
+
+<header class="bar">
+  <nav class="bar-inner" aria-label="Site">
+    <a class="bar-brand" href="../" aria-label="Portkeep home"><img src="../assets/favicon.png" width="22" height="22" alt=""> Portkeep</a>
+    <div class="bar-links">
+      <a class="hide-narrow" href="./">Docs</a>
+      <a class="hide-narrow" href="../#faq">FAQ</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <button class="nav-toggle" type="button" aria-controls="docs-nav" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="docs">
+  <nav class="side" id="docs-nav" aria-label="Docs">
+    <p class="side-title">Documentation</p>
+    <ol>
+      <li><a href="./">Get started</a></li>
+      <li><a href="menu.html">The menu</a></li>
+      <li><a href="tunnels.html">Adding tunnels</a></li>
+      <li><a href="methods.html">Connection methods</a></li>
+      <li><a href="status.html">Status &amp; troubleshooting</a></li>
+      <li><a href="ports.html">Local ports &amp; on demand</a></li>
+      <li><a href="settings.html" aria-current="page">Settings</a></li>
+      <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="import-export.html">Import &amp; export</a></li>
+      <li><a href="data.html">Files &amp; privacy</a></li>
+      <li><a href="faq.html">FAQ &amp; limits</a></li>
+    </ol>
+    <div class="side-foot">
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Report a bug</a>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+  <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
+  <h1>The Settings window</h1>
+  <p class="lede">The Settings window is where you edit tunnels and manage everything else: groups, tags and colours, the command-line tools Portkeep runs, and app-wide options.</p>
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#sidebar">Sidebar and search</a></li>
+      <li><a href="#tunnel-detail">A tunnel’s page</a></li>
+      <li><a href="#groups-tags">Groups &amp; Tags</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#general">General</a></li>
+    </ol>
+  </nav>
+
+<p>Open it with <span class="ui">Settings</span> in the menu, <span class="ui">Edit Tunnel…</span> on a row, or by opening Portkeep again from Finder or Spotlight while it runs.</p>
+<figure class="shot">
+  <picture>
+    <source srcset="../assets/settings-en-dark.webp" media="(prefers-color-scheme: dark)">
+    <img src="../assets/settings-en-light.webp" width="820" height="672" loading="lazy" alt="The Settings window: a sidebar with a search field, tunnels under Staging, Production and Other, and Groups & Tags, Tools and General below. Orders MySQL is selected; its status card reads “Reconnecting… can't reach i-0a3f5c9e2b7d41f08” with Show Log and Stop buttons, above the AWS SSM fields and Duplicate, Revert and Save buttons.">
+  </picture>
+</figure>
+
+<h2 id="sidebar">Sidebar and search<a class="anchor" href="#sidebar" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li>Tunnels are listed by name under their group, groups in the order set in <a href="#groups-tags">Groups &amp; Tags</a>.</li>
+  <li>The search field filters by name, local port, group and tag, ignoring case.</li>
+  <li>Right-click a group heading for <span class="ui">Start All</span> and <span class="ui">Stop All</span> in that group, or a tunnel for <span class="ui">Duplicate</span>.</li>
+  <li><span class="ui">+</span> at the bottom opens Add Tunnel; <span class="ui">−</span> removes the selected tunnel after asking (<span class="msg">The tunnel stops if it's running.</span>).</li>
+  <li>Below the tunnels are <span class="ui">Groups &amp; Tags</span>, <span class="ui">Tools</span> and <span class="ui">General</span>.</li>
+</ul>
+
+<h2 id="tunnel-detail">A tunnel’s page<a class="anchor" href="#tunnel-detail" aria-label="Link to this section">#</a></h2>
+<p>Selecting a tunnel shows a status card and the tunnel’s editor:</p>
+<ul>
+  <li>The card shows the live status line, the address and method (<span class="msg">127.0.0.1:3306 · AWS SSM</span>), <span class="ui">Show Log</span>, and <span class="ui">Start</span> or <span class="ui">Stop</span> (<kbd>⌘</kbd><kbd>Return</kbd>).</li>
+  <li>The editor has every field from <a href="tunnels.html">Adding tunnels</a>, plus a <span class="ui">Connect with</span> picker to change the method.</li>
+  <li>At the bottom: <span class="ui">Duplicate</span>, <span class="ui">Revert</span>, and <span class="ui">Save</span> (<kbd>⌘</kbd><kbd>S</kbd>). Renaming, regrouping or retagging a running tunnel doesn’t restart it; changing how it connects does.</li>
+</ul>
+
+<h2 id="groups-tags">Groups &amp; Tags<a class="anchor" href="#groups-tags" aria-label="Link to this section">#</a></h2>
+<figure class="shot">
+  <img src="../assets/labels-en-light.webp" width="820" height="672" loading="lazy" alt="Groups & Tags settings: each group and tag has a colour well, a preset-colour button, an editable name, a tunnel count such as “2 tunnels” or “Unused”, and a trash button, with a New group row and an Add button at the end of the groups.">
+</figure>
+<p>A new install starts with five groups and six tags, each with a colour:</p>
+<ul>
+  <li><strong>Groups:</strong> Production, Staging, Development, Local, Other.</li>
+  <li><strong>Tags:</strong> db, cache, analytics, web, internal, readonly.</li>
+</ul>
+<p>Each row has a colour well (any colour, through the system colour picker), a button with ten preset colours, the name, how many tunnels use it (<span class="msg">Unused</span>, <span class="msg">1 tunnel</span>, <span class="msg">3 tunnels</span>), and a trash button.</p>
+<ul>
+  <li><strong>Add:</strong> type a name in the <span class="ui">New group</span> or <span class="ui">New tag</span> row, pick a colour (one is suggested from the name), and press <span class="ui">Add</span>. Names must be new, ignoring case.</li>
+  <li><strong>Rename:</strong> edit the name and press <kbd>Return</kbd>. Tunnels move with it. Renaming to a name that already exists merges the two.</li>
+  <li><strong>Remove a group:</strong> only once it is empty. Until then the trash button is greyed out with <span class="msg">Move its tunnels to another group first</span>.</li>
+  <li><strong>Remove a tag:</strong> any time. It is taken off every tunnel that has it.</li>
+</ul>
+<p>You can also type a new group or tag straight into a tunnel’s form. A group typed there has no colour until you give it one here; a tag gets a colour picked from its name. Group colours appear as dots in the menu, the group tabs and this sidebar.</p>
+<p>None of this restarts a tunnel: groups and tags are labels only.</p>
+
+<h2 id="tools">Tools<a class="anchor" href="#tools" aria-label="Link to this section">#</a></h2>
+<p>Lists the six tools Portkeep can run: <code>ssh</code>, <code>aws</code>, <code>session-manager-plugin</code>, <code>kubectl</code>, <code>gcloud</code> and <code>cloudflared</code>. For each:</p>
+<ul>
+  <li>a ✓ when the tool was found and is executable, or ⚠ when it wasn’t;</li>
+  <li>the path found on your login shell’s <code>PATH</code>, shown greyed in the field (<span class="msg">Not found</span> when there is none);</li>
+  <li>a field to type a different path (press <kbd>Return</kbd> to apply), <span class="ui">Choose…</span> to pick the file, and <span class="ui">Reset</span> to go back to the one found. A set path is marked <span class="msg">Custom</span>, and a path that isn’t an executable file is flagged in orange.</li>
+</ul>
+<p>Portkeep reads your login shell’s <code>PATH</code> once at launch (falling back to <code>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</code> if the shell doesn’t answer within 5 seconds). If you install a tool while Portkeep is running, quit and reopen it, or set the path here. A changed path applies the next time each tunnel starts.</p>
+
+<h2 id="general">General<a class="anchor" href="#general" aria-label="Link to this section">#</a></h2>
+<dl class="fields">
+  <div><dt>Reopen tunnels that were on when Portkeep quit</dt><dd>On by default. At launch, Portkeep switches back on the tunnels that were on, including after a crash or a restart. Tunnels set to <span class="ui">Connect at login</span> always start, whatever this says.</dd></div>
+  <div><dt>Notify when a tunnel drops</dt><dd>On by default. See <a href="status.html#notifications">Notifications</a>. If notifications for Portkeep are turned off in System Settings, a line says so with an <span class="ui">Open System Settings</span> button.</dd></div>
+  <div><dt>Tunnels</dt><dd><span class="ui">Export Tunnels…</span>, <span class="ui">Import Tunnels…</span> and <span class="ui">Import from SSH Config…</span>. See <a href="import-export.html">Import and export</a>.</dd></div>
+  <div><dt>Command line tool</dt><dd><span class="ui">Install Command Line Tool…</span> puts <code>portkeep</code> on your <code>PATH</code>. See <a href="automation.html#install">Command line</a>.</dd></div>
+  <div><dt>Language</dt><dd><span class="ui">Same as macOS</span> (the default), English, ไทย, 简体中文 or 日本語. Changing it shows <span class="msg">Portkeep needs to relaunch to switch language.</span> with a <span class="ui">Relaunch Now</span> button. You can also set the language per app in System Settings › General › Language &amp; Region.</dd></div>
+</dl>
+
+<h3 id="login-item">Opening at login<a class="anchor" href="#login-item" aria-label="Link to this section">#</a></h3>
+<p>There is no separate “open at login” switch. Portkeep adds itself to your login items while at least one tunnel has <a href="tunnels.html#connect-at-login">Connect at login</a> on, and removes itself when none do. If macOS refuses, Portkeep shows <span class="msg">Couldn’t update the login item: …</span> at the top of the menu.</p>
+
+  <nav class="pager" aria-label="Previous and next pages">
+    <a class="prev" href="ports.html" rel="prev"><span>Previous</span><strong>Local ports &amp; on demand</strong></a>
+    <a class="next" href="automation.html" rel="next"><span>Next</span><strong>Command line &amp; URLs</strong></a>
+  </nav>
+  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="foot-brand"><img src="../assets/favicon.png" width="18" height="18" alt=""> Portkeep</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Docs</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/blob/main/LICENSE">MIT License</a>
+    </nav>
+    <p class="foot-copy">© 2026 Rattamnoon Kiratipisut</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    var toggle = document.querySelector('.nav-toggle');
+    var side = document.getElementById('docs-nav');
+    toggle.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('.code').forEach(function (block) {
+      if (!navigator.clipboard) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>';
+      var label = button.querySelector('span');
+      var timer;
+      button.addEventListener('click', function () {
+        var text = block.querySelector('code').innerText.replace(/\n$/, '');
+        navigator.clipboard.writeText(text).then(function () {
+          button.classList.add('is-done');
+          label.textContent = 'Copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () { button.classList.remove('is-done'); label.textContent = 'Copy'; }, 2000);
+        });
+      });
+      block.appendChild(button);
+    });
+  })();
+</script>
+</body>
+</html>

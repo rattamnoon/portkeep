@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Files &amp; privacy — Portkeep docs</title>
+<meta name="description" content="Where Portkeep keeps tunnels.json, session.json, running.json and status.json, how to back up and uninstall it, and what it does and does not store or send.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/data.html">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Portkeep">
+<meta property="og:title" content="Files &amp; privacy — Portkeep docs">
+<meta property="og:description" content="Where Portkeep keeps tunnels.json, session.json, running.json and status.json, how to back up and uninstall it, and what it does and does not store or send.">
+<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/data.html">
+<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Files &amp; privacy — Portkeep docs">
+<meta name="twitter:description" content="Where Portkeep keeps tunnels.json, session.json, running.json and status.json, how to back up and uninstall it, and what it does and does not store or send.">
+<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://rattamnoon.github.io/portkeep/docs/data.html#article",
+   "headline": "Files, backup and privacy",
+   "description": "Where Portkeep keeps tunnels.json, session.json, running.json and status.json, how to back up and uninstall it, and what it does and does not store or send.",
+   "url": "https://rattamnoon.github.io/portkeep/docs/data.html",
+   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/data.html",
+   "inLanguage": "en",
+   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "dateModified": "2026-10-17",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "about": {
+    "@id": "https://rattamnoon.github.io/portkeep/#app"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Portkeep",
+    "url": "https://rattamnoon.github.io/portkeep/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Portkeep",
+     "item": "https://rattamnoon.github.io/portkeep/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://rattamnoon.github.io/portkeep/docs/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Files & privacy",
+     "item": "https://rattamnoon.github.io/portkeep/docs/data.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5.5A2 2 0 0 0 11 3.5H5.5a2 2 0 0 0-2 2V11a2 2 0 0 0 2 2H7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></symbol>
+</svg>
+
+<header class="bar">
+  <nav class="bar-inner" aria-label="Site">
+    <a class="bar-brand" href="../" aria-label="Portkeep home"><img src="../assets/favicon.png" width="22" height="22" alt=""> Portkeep</a>
+    <div class="bar-links">
+      <a class="hide-narrow" href="./">Docs</a>
+      <a class="hide-narrow" href="../#faq">FAQ</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <button class="nav-toggle" type="button" aria-controls="docs-nav" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="docs">
+  <nav class="side" id="docs-nav" aria-label="Docs">
+    <p class="side-title">Documentation</p>
+    <ol>
+      <li><a href="./">Get started</a></li>
+      <li><a href="menu.html">The menu</a></li>
+      <li><a href="tunnels.html">Adding tunnels</a></li>
+      <li><a href="methods.html">Connection methods</a></li>
+      <li><a href="status.html">Status &amp; troubleshooting</a></li>
+      <li><a href="ports.html">Local ports &amp; on demand</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="import-export.html">Import &amp; export</a></li>
+      <li><a href="data.html" aria-current="page">Files &amp; privacy</a></li>
+      <li><a href="faq.html">FAQ &amp; limits</a></li>
+    </ol>
+    <div class="side-foot">
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Report a bug</a>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+  <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
+  <h1>Files, backup and privacy</h1>
+  <p class="lede">Portkeep keeps a handful of plain files in one folder, stores no secrets, and makes no network connections of its own. This page lists the files, how to back them up, and how to remove Portkeep completely.</p>
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#files">Where things live</a></li>
+      <li><a href="#tunnels-json">tunnels.json</a></li>
+      <li><a href="#backup">Backup and moving to another Mac</a></li>
+      <li><a href="#uninstall">Uninstall</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+    </ol>
+  </nav>
+
+<h2 id="files">Where things live<a class="anchor" href="#files" aria-label="Link to this section">#</a></h2>
+<p>Everything is in <code>~/Library/Application Support/Portkeep/</code>:</p>
+<div class="table"><table>
+  <thead><tr><th>File</th><th>What it holds</th></tr></thead>
+  <tbody>
+    <tr><td><code>tunnels.json</code></td><td>Your tunnels, groups, tags, colours and tool paths. Plain JSON, safe to back up, and safe to edit while Portkeep is quit.</td></tr>
+    <tr><td><code>session.json</code></td><td>Which tunnels are switched on, so the next launch can turn the same ones back on. Written the moment you switch one, so it survives a crash or a forced restart.</td></tr>
+    <tr><td><code>running.json</code></td><td>The process IDs Portkeep started, so after a crash the next launch can stop any that are still running. It only stops a process whose start time matches, so it never touches an unrelated process that reused the ID.</td></tr>
+    <tr><td><code>status.json</code></td><td>What each tunnel is doing right now, for the <a href="automation.html#status-json"><code>portkeep</code> command</a> and your scripts. Written by the app, never read back.</td></tr>
+  </tbody>
+</table></div>
+<p>App preferences (language, notifications, reopening tunnels, the last group tab) are in the usual macOS preferences for <code>com.rattamnoon.portkeep</code>. Tunnel logs are kept in memory only.</p>
+
+<h2 id="tunnels-json">tunnels.json<a class="anchor" href="#tunnels-json" aria-label="Link to this section">#</a></h2>
+<p>The file Portkeep reads at launch and rewrites whenever you change something. A trimmed example:</p>
+<div class="code"><pre><code>{
+  "groupColors" : { "Production" : "#FF3B30" },
+  "groups" : [ "Production", "Staging", "Development", "Local", "Other" ],
+  "schemaVersion" : 1,
+  "tagColors" : { "db" : "#007AFF" },
+  "tags" : [ "db" ],
+  "toolPaths" : { "kubectl" : "/opt/homebrew/bin/kubectl" },
+  "tunnels" : [
+    {
+      "connectAtLogin" : false,
+      "group" : "Production",
+      "id" : "9F1C2A4E-6B3D-4C1A-9E57-2D8B0F6A1C33",
+      "idleMinutes" : 10,
+      "localPort" : 3306,
+      "method" : {
+        "ssm" : {
+          "forwardTo" : { "remoteHost" : { "host" : "orders.cluster-ro.internal", "port" : 3306 } },
+          "profile" : "prod",
+          "region" : "ap-southeast-1",
+          "ssoAutoLogin" : true,
+          "target" : "i-0a3f5c9e2b7d41f08"
+        }
+      },
+      "name" : "Orders MySQL",
+      "startsOnConnect" : false,
+      "tags" : [ "db" ]
+    }
+  ]
+}</code></pre></div>
+<p><code>method</code> has exactly one key: <code>ssh</code>, <code>ssm</code>, <code>kubernetes</code>, <code>iap</code>, <code>cloudflare</code> or <code>custom</code>, holding that method’s fields.</p>
+<ul>
+  <li><strong>If the file can’t be read</strong> (for example, a hand edit broke the JSON), Portkeep doesn’t overwrite it. It moves it aside to <code>tunnels.json.broken-&lt;date&gt;</code>, such as <code>tunnels.json.broken-20261017-091500</code>, starts empty, and says so at the top of the menu. Fix the file, quit Portkeep, and move it back.</li>
+  <li><strong>If it was written by a newer Portkeep</strong>, it is opened read-only, with <span class="msg">tunnels.json was written by a newer Portkeep. Changes won’t be saved.</span></li>
+  <li>Top-level keys Portkeep doesn’t know are kept when it saves.</li>
+</ul>
+
+<h2 id="backup">Backup and moving to another Mac<a class="anchor" href="#backup" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li>Back up <code>tunnels.json</code>; it is the only file you need. The others only record what is running.</li>
+  <li>To move tunnels, use <a href="import-export.html">Export and Import Tunnels</a>, which adds to what is already there and leaves out tool paths that only make sense on this Mac. Copying <code>tunnels.json</code> into the folder instead replaces everything there; do it while Portkeep is quit.</li>
+  <li>There is no sync between Macs.</li>
+</ul>
+
+<h2 id="uninstall">Uninstall<a class="anchor" href="#uninstall" aria-label="Link to this section">#</a></h2>
+<p>Quit Portkeep first (<span class="ui">Quit</span> in its menu), which stops every tunnel. Then:</p>
+<ul>
+  <li><strong>Homebrew:</strong> <code>brew uninstall --cask portkeep</code> removes the app and the <code>portkeep</code> command. Add <code>--zap</code> to also delete the data folder and preferences:</li>
+</ul>
+<div class="code"><pre><code>brew uninstall --zap --cask portkeep</code></pre></div>
+<ul>
+  <li><strong>Otherwise:</strong> move Portkeep from Applications to the Trash, then delete <code>~/Library/Application Support/Portkeep</code> and <code>~/Library/Preferences/com.rattamnoon.portkeep.plist</code>. If you used <span class="ui">Install Command Line Tool…</span>, remove the <code>portkeep</code> link from <code>/usr/local/bin</code> or <code>~/.local/bin</code>.</li>
+</ul>
+<p>If any tunnel had <span class="ui">Connect at login</span>, switch it off before uninstalling so Portkeep removes itself from your login items, or remove it in System Settings › General › Login Items.</p>
+
+<h2 id="privacy">Privacy<a class="anchor" href="#privacy" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li><strong>No secrets.</strong> Portkeep stores no passwords, keys or tokens. Sign-in is left to the tools it runs and the agent, keychain, SSO cache or kubeconfig they already use.</li>
+  <li><strong>No network connections of its own.</strong> Portkeep has no analytics, no crash reporting and no update check. The only network traffic is what the tools you configure (<code>ssh</code>, <code>aws</code>, <code>kubectl</code> and so on) send, plus local connections on <code>127.0.0.1</code> to check that ports are open and, for on-demand tunnels, to pass your connections through.</li>
+  <li><strong>What it reads.</strong> To fill its pickers it reads <code>~/.ssh/config</code> (and, for Import from SSH Config, the files it includes), <code>~/.aws/config</code>, and the output of <code>kubectl config get-contexts</code>. It runs <code>lsof</code> to name the process holding a taken port.</li>
+  <li>It isn’t sandboxed, which is why it isn’t on the Mac App Store: the sandbox would stop it running your CLIs and reading your config.</li>
+</ul>
+
+  <nav class="pager" aria-label="Previous and next pages">
+    <a class="prev" href="import-export.html" rel="prev"><span>Previous</span><strong>Import &amp; export</strong></a>
+    <a class="next" href="faq.html" rel="next"><span>Next</span><strong>FAQ &amp; limits</strong></a>
+  </nav>
+  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="foot-brand"><img src="../assets/favicon.png" width="18" height="18" alt=""> Portkeep</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Docs</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/blob/main/LICENSE">MIT License</a>
+    </nav>
+    <p class="foot-copy">© 2026 Rattamnoon Kiratipisut</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    var toggle = document.querySelector('.nav-toggle');
+    var side = document.getElementById('docs-nav');
+    toggle.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('.code').forEach(function (block) {
+      if (!navigator.clipboard) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>';
+      var label = button.querySelector('span');
+      var timer;
+      button.addEventListener('click', function () {
+        var text = block.querySelector('code').innerText.replace(/\n$/, '');
+        navigator.clipboard.writeText(text).then(function () {
+          button.classList.add('is-done');
+          label.textContent = 'Copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () { button.classList.remove('is-done'); label.textContent = 'Copy'; }, 2000);
+        });
+      });
+      block.appendChild(button);
+    });
+  })();
+</script>
+</body>
+</html>

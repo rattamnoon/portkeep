@@ -6,7 +6,7 @@
 
 <p align="center"><strong>Keep your port forwards up, from the menu bar.</strong></p>
 
-<p align="center"><a href="https://rattamnoon.github.io/portkeep/">rattamnoon.github.io/portkeep</a></p>
+<p align="center"><a href="https://rattamnoon.github.io/portkeep/">rattamnoon.github.io/portkeep</a> · <a href="https://rattamnoon.github.io/portkeep/docs/">Documentation</a></p>
 
 Portkeep is a macOS menu bar app for the tunnels you open every day: databases, caches, dashboards and SOCKS proxies behind SSH jump hosts, AWS Session Manager, Kubernetes and more. Name each tunnel once and switch it on when you need it. Portkeep keeps it alive. When a tunnel drops, Portkeep says which one, why, and that it is already reconnecting.
 
