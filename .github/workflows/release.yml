@@ -107,7 +107,18 @@ jobs:
         run: |
           TAG="v$VERSION"
           NOTES="$RUNNER_TEMP/notes.md"
+          # The CHANGELOG.md section for this version, from "## [X.Y.Z]" up to the next "## [".
+          CHANGES="$RUNNER_TEMP/changes.md"
+          awk -v head="## [$VERSION]" '
+            index($0, "## [") == 1 { if (found) exit; if (index($0, head) == 1) { found = 1; next } }
+            /^\[[^]]+\]: / { if (found) exit }
+            found
+          ' CHANGELOG.md | sed -e '/./,$!d' > "$CHANGES"
           {
+            if [ -s "$CHANGES" ]; then
+              cat "$CHANGES"
+              echo
+            fi
             echo "## Install"
             echo
             echo "Download \`Portkeep-$VERSION.dmg\`, open it and drag Portkeep to Applications. Requires macOS 14 or later."
@@ -118,10 +129,12 @@ jobs:
             fi
             echo "SHA-256: \`$(cut -d' ' -f1 "build/release/Portkeep-$VERSION.dmg.sha256")\`"
           } > "$NOTES"
-          FLAGS=(--title "Portkeep $VERSION" --notes-file "$NOTES" --generate-notes --verify-tag)
+          FLAGS=(--title "Portkeep $VERSION" --notes-file "$NOTES" --verify-tag)
           if [ "${{ github.event_name }}" = workflow_dispatch ]; then
-            FLAGS=(--title "Portkeep $VERSION" --notes-file "$NOTES" --generate-notes --target "$GITHUB_SHA")
+            FLAGS=(--title "Portkeep $VERSION" --notes-file "$NOTES" --target "$GITHUB_SHA")
           fi
+          # No CHANGELOG section for this version: fall back to GitHub's generated notes.
+          if [ ! -s "$CHANGES" ]; then FLAGS+=(--generate-notes); fi
           if [ "$PRERELEASE" = true ] || [[ "$VERSION" == *-* ]]; then FLAGS+=(--prerelease); fi
           gh release create "$TAG" "${FLAGS[@]}" \
             "build/release/Portkeep-$VERSION.dmg" "build/release/Portkeep-$VERSION.dmg.sha256"

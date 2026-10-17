@@ -41,6 +41,7 @@ The tunnel logic lives in `Sources/TunnelKit` and is covered by `swift test`; th
 - **New strings are localized** in all four languages: `en`, `th`, `zh-Hans` and `ja` (`App/Resources/*.lproj` and `Sources/TunnelKit/Resources/*.lproj`). If you can't translate one, say so in the PR.
 - **It behaves like a Mac app.** System font, native controls, light and dark appearance, and status that never relies on colour alone. Include screenshots for UI changes.
 - **No secrets.** Portkeep never stores passwords, keys or tokens; changes keep it that way.
+- **User-visible changes get a line in [CHANGELOG.md](CHANGELOG.md)** under `## [Unreleased]`, in the Added, Changed or Fixed list. That section becomes the release notes when the next version is tagged.
 
 PRs are squash-merged, so the title becomes the commit on `main`: write it as what the change does.
 
