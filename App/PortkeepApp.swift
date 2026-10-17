@@ -41,7 +41,8 @@ struct PortkeepApp: App {
 @MainActor @Observable
 final class Navigation {
     var selection: SettingsSelection?
-
+    /// Opens (or brings forward) the one Settings window.
+    @ObservationIgnored var showSettings: () -> Void = {}
 }
 
 enum SettingsSelection: Hashable {
@@ -85,13 +86,62 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         default: break
         }
 
+        navigation.showSettings = { [weak self] in self?.showSettings() }
+
         if environment["PORTKEEP_DEMO"] == "1" {
             store.loadDemo()
         } else {
             events = SystemEvents(store: store)
-            Task { await store.start() }
+            Task {
+                await store.start()
+                // First launch: nothing in the menu bar says much yet, so show where to start.
+                if store.tunnels.isEmpty, environment["PORTKEEP_SHOW"] == nil { showSettings() }
+            }
         }
         if let show = environment["PORTKEEP_SHOW"] { showPreview(show) }
+    }
+
+    private var settingsWindow: NSWindow?
+
+    /// The Settings window. Opening the app again (Finder, Dock, `open`) shows it, since a
+    /// menu bar app otherwise gives no sign that it is running, and the icon can sit under the notch.
+    func showSettings() {
+        AppActivation.bringForward()
+        if let settingsWindow {
+            settingsWindow.makeKeyAndOrderFront(nil)
+            return
+        }
+        if navigation.selection == nil, let first = store.tunnels.first { navigation.selection = .tunnel(first.id) }
+        let hosting = NSHostingController(rootView: SettingsView().environment(store).environment(navigation))
+        // Only enforce the minimum; otherwise the split view's ideal size grows the window to the screen.
+        hosting.sizingOptions = []
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 860, height: 640),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            backing: .buffered, defer: false)
+        window.contentViewController = hosting
+        // Sidebar runs up under the title bar, as in System Settings.
+        window.toolbar = NSToolbar(identifier: "settings")
+        window.toolbarStyle = .unified
+        window.title = String(localized: "Settings")
+        window.isReleasedWhenClosed = false
+        let restored = window.setFrameUsingName("PortkeepSettings")
+        window.setFrameAutosaveName("PortkeepSettings")
+        window.makeKeyAndOrderFront(nil)
+        if !restored {
+            // After the first layout pass: SwiftUI sizes the window to the split view's ideal size,
+            // which is the whole screen.
+            DispatchQueue.main.async {
+                window.setContentSize(NSSize(width: 860, height: 640))
+                window.center()
+            }
+        }
+        settingsWindow = window
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        showSettings()
+        return false
     }
 
     /// Opens a view in an ordinary window so it can be captured with `screencapture -l`.

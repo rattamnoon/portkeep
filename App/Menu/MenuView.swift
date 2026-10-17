@@ -4,7 +4,6 @@ import TunnelKit
 struct MenuView: View {
     @Environment(TunnelStore.self) private var store
     @Environment(Navigation.self) private var navigation
-    @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -98,7 +97,7 @@ struct MenuView: View {
             openWindow(id: "add")
         } else {
             navigation.selection = selection
-            openSettings()
+            navigation.showSettings()
         }
     }
 }

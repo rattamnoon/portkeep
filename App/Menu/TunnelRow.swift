@@ -5,7 +5,6 @@ struct TunnelRow: View {
     let tunnel: Tunnel
     @Environment(TunnelStore.self) private var store
     @Environment(Navigation.self) private var navigation
-    @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
     @State private var hovering = false
 
@@ -82,7 +81,7 @@ struct TunnelRow: View {
             Button("Edit Tunnel…") {
                 navigation.selection = .tunnel(tunnel.id)
                 AppActivation.bringForward()
-                openSettings()
+                navigation.showSettings()
             }
             Button("Show Log") {
                 AppActivation.bringForward()
