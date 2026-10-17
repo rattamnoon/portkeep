@@ -12,7 +12,7 @@ struct TunnelEditor: View {
     var body: some View {
         Form {
             Section {
-                TextField("Name", text: $draft.name, prompt: Text("Dashboard MySQL")).accessibilityIdentifier("editor.name")
+                TextField("Name", text: $draft.name, prompt: Text("e.g. Dashboard MySQL")).accessibilityIdentifier("editor.name")
                 Picker("Group", selection: $draft.group) {
                     ForEach(groupChoices, id: \.self) { Text($0).tag($0) }
                 }
@@ -28,7 +28,7 @@ struct TunnelEditor: View {
                 LabeledContent("Local port") {
                     HStack {
                         Text(portStatus.text).font(.caption).foregroundStyle(portStatus.color)
-                        TextField("Local port", text: $draft.localPort, prompt: Text("3306")).accessibilityIdentifier("editor.localPort")
+                        TextField("Local port", text: $draft.localPort, prompt: Text("e.g. 3306")).accessibilityIdentifier("editor.localPort")
                             .labelsHidden()
                             .frame(width: 80)
                             .multilineTextAlignment(.trailing)
@@ -76,44 +76,44 @@ struct TunnelEditor: View {
                 Text("SOCKS").tag(SSHMode.dynamic)
             }
             .pickerStyle(.segmented)
-            ComboField("Host", text: $draft.sshHost, choices: sources.sshHosts, prompt: "jump")
+            ComboField("Host", text: $draft.sshHost, choices: sources.sshHosts, prompt: "e.g. jump")
             ComboField("Jump through", text: $draft.sshJump, choices: sources.sshHosts, prompt: "None")
             if draft.sshMode != .dynamic {
                 hostPort("Destination", host: $draft.destHost, port: $draft.destPort,
-                         hostPrompt: "mysql.internal", portPrompt: "3306")
+                         hostPrompt: "e.g. mysql.internal", portPrompt: "3306")
             }
         case .ssm:
-            ComboField("Profile", text: $draft.profile, choices: sources.awsProfiles.map(\.name), prompt: "default")
+            ComboField("Profile", text: $draft.profile, choices: sources.awsProfiles.map(\.name), prompt: "e.g. default")
                 .onChange(of: draft.profile) { _, name in
                     if draft.region.isEmpty, let region = sources.awsProfiles.first(where: { $0.name == name })?.region {
                         draft.region = region
                     }
                 }
-            TextField("Region", text: $draft.region, prompt: Text("ap-southeast-1"))
-            TextField("Instance ID", text: $draft.target, prompt: Text("i-0123456789abcdef0"))
+            TextField("Region", text: $draft.region, prompt: Text("e.g. ap-southeast-1"))
+            TextField("Instance ID", text: $draft.target, prompt: Text("e.g. i-0123456789abcdef0"))
             Picker("Forward to", selection: $draft.ssmToRemoteHost) {
                 Text("Remote host").tag(true)
                 Text("The instance").tag(false)
             }
             .pickerStyle(.segmented)
             if draft.ssmToRemoteHost {
-                TextField("Remote host", text: $draft.remoteHost, prompt: Text("mysql.prod.internal"))
+                TextField("Remote host", text: $draft.remoteHost, prompt: Text("e.g. mysql.prod.internal"))
             }
-            TextField("Remote port", text: $draft.remotePort, prompt: Text("3306"))
+            TextField("Remote port", text: $draft.remotePort, prompt: Text("e.g. 3306"))
         case .kubernetes:
-            ComboField("Context", text: $draft.context, choices: sources.kubeContexts, prompt: "my-cluster")
-            TextField("Namespace", text: $draft.namespace, prompt: Text("default"))
-            TextField("Resource", text: $draft.resource, prompt: Text("svc/grafana"))
-            TextField("Remote port", text: $draft.remotePort, prompt: Text("3000"))
+            ComboField("Context", text: $draft.context, choices: sources.kubeContexts, prompt: "e.g. my-cluster")
+            TextField("Namespace", text: $draft.namespace, prompt: Text("e.g. default"))
+            TextField("Resource", text: $draft.resource, prompt: Text("e.g. svc/grafana"))
+            TextField("Remote port", text: $draft.remotePort, prompt: Text("e.g. 3000"))
         case .iap:
-            TextField("Project", text: $draft.project, prompt: Text("my-project"))
-            TextField("Zone", text: $draft.zone, prompt: Text("asia-southeast1-a"))
-            TextField("Instance", text: $draft.instance, prompt: Text("db-1"))
-            TextField("Remote port", text: $draft.remotePort, prompt: Text("5432"))
+            TextField("Project", text: $draft.project, prompt: Text("e.g. my-project"))
+            TextField("Zone", text: $draft.zone, prompt: Text("e.g. asia-southeast1-a"))
+            TextField("Instance", text: $draft.instance, prompt: Text("e.g. db-1"))
+            TextField("Remote port", text: $draft.remotePort, prompt: Text("e.g. 5432"))
         case .cloudflare:
-            TextField("Hostname", text: $draft.hostname, prompt: Text("db.example.com"))
+            TextField("Hostname", text: $draft.hostname, prompt: Text("e.g. db.example.com"))
         case .custom:
-            TextField("Command", text: $draft.command, prompt: Text("tsh proxy db --port {port} mydb"), axis: .vertical).accessibilityIdentifier("editor.command")
+            TextField("Command", text: $draft.command, prompt: Text("e.g. tsh proxy db --port {port} mydb"), axis: .vertical).accessibilityIdentifier("editor.command")
                 .font(.system(size: 12, design: .monospaced))
             Text("Use {port} where the local port goes.").font(.caption).foregroundStyle(.secondary)
         }
@@ -159,8 +159,11 @@ struct TunnelEditor: View {
     }
 
     private var commandPreview: String {
+        guard let tunnel = draft.tunnel else {
+            return String(localized: "Fill in the fields above to see the command.")
+        }
         do {
-            let inv = try CommandBuilder.invocation(for: draft.preview, tools: store.tools)
+            let inv = try CommandBuilder.invocation(for: tunnel, tools: store.tools)
             return ([inv.executable.lastPathComponent] + inv.arguments.map(Self.quoted)).joined(separator: " ")
         } catch {
             return String(localized: "\(error.tool) not found. Install it with \(error.installHint).")

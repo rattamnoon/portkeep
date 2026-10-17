@@ -24,11 +24,16 @@ final class SettingsSmokeTests: XCTestCase {
         (try? String(contentsOf: dataDir.appendingPathComponent("tunnels.json"), encoding: .utf8)) ?? ""
     }
 
+    private func openAddSheet() {
+        let add = app.buttons["sidebar.add"].firstMatch
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        add.click()
+        XCTAssertTrue(app.staticTexts["Custom Command"].firstMatch.waitForExistence(timeout: 5), "Add Tunnel window should open")
+    }
+
     private func replace(_ field: XCUIElement, with text: String) {
         XCTAssertTrue(field.waitForExistence(timeout: 3))
-        // Click by coordinate: XCUITest can't compute hit points for fields inside a Form on a
-        // display placed above the main one (negative coordinates).
-        field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
+        field.click()
         field.typeKey("a", modifierFlags: .command)
         field.typeText(text)
     }
@@ -37,13 +42,9 @@ final class SettingsSmokeTests: XCTestCase {
         let port = Int.random(in: 30000...40000)
 
         // Add a custom-command tunnel.
-        app.buttons["sidebar.add"].firstMatch.click()
+        openAddSheet()
         app.staticTexts["Custom Command"].firstMatch.click()
         XCTAssertTrue(app.textFields["editor.command"].firstMatch.waitForExistence(timeout: 3))
-        let shot = URL(fileURLWithPath: "/private/tmp/burrow-uitest-shot.png")
-        try? XCUIScreen.main.screenshot().pngRepresentation.write(to: shot)
-        print("SHOT \(shot.path) SCREENS \(XCUIScreen.screens.count)")
-        print("FIELD \(app.textFields["editor.name"].firstMatch.debugDescription.prefix(600))")
         replace(app.textFields["editor.name"].firstMatch, with: "Smoke HTTP")
         replace(app.textFields["editor.command"].firstMatch, with: "exec python3 -m http.server {port} --bind 127.0.0.1")
         replace(app.textFields["editor.localPort"].firstMatch, with: String(port))
@@ -71,6 +72,9 @@ final class SettingsSmokeTests: XCTestCase {
 
         // Delete.
         app.buttons["sidebar.remove"].firstMatch.click()
+        let confirmRemove = app.buttons["sidebar.confirmRemove"].firstMatch
+        XCTAssertTrue(confirmRemove.waitForExistence(timeout: 3))
+        confirmRemove.click()
         let gone = NSPredicate(format: "exists == false")
         expectation(for: gone, evaluatedWith: app.staticTexts["Smoke HTTP 2"].firstMatch)
         waitForExpectations(timeout: 5)
@@ -78,7 +82,7 @@ final class SettingsSmokeTests: XCTestCase {
     }
 
     func testEveryMethodShowsItsFields() throws {
-        app.buttons["sidebar.add"].firstMatch.click()
+        openAddSheet()
         let expected: [(String, String)] = [
             ("SSH", "Host"), ("AWS SSM", "Instance ID"), ("Kubernetes", "Namespace"),
             ("Google Cloud IAP", "Zone"), ("Cloudflare Access", "Hostname"), ("Custom Command", "Command"),

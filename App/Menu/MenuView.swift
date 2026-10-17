@@ -5,6 +5,7 @@ struct MenuView: View {
     @Environment(TunnelStore.self) private var store
     @Environment(Navigation.self) private var navigation
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -68,10 +69,13 @@ struct MenuView: View {
     }
 
     private func open(_ selection: SettingsSelection?, add: Bool) {
-        navigation.selection = selection
-        navigation.showingAdd = add
-        NSApp.activate(ignoringOtherApps: true)
-        openSettings()
+        AppActivation.bringForward()
+        if add {
+            openWindow(id: "add")
+        } else {
+            navigation.selection = selection
+            openSettings()
+        }
     }
 }
 

@@ -4,6 +4,7 @@ import TunnelKit
 /// Method list on the left, its fields on the right (design canvas: "Add tunnel · connection methods").
 struct AddTunnelView: View {
     @Environment(TunnelStore.self) private var store
+    @Environment(Navigation.self) private var navigation
     @Environment(\.dismiss) private var dismiss
     @State private var draft = TunnelDraft()
     @State private var testing = false
@@ -45,6 +46,8 @@ struct AddTunnelView: View {
                     guard let tunnel = draft.tunnel else { return }
                     Task {
                         await store.save(tunnel)
+                        navigation.selection = .tunnel(tunnel.id)
+                        draft = TunnelDraft()
                         dismiss()
                     }
                 }

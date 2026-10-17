@@ -81,12 +81,11 @@ struct TunnelRow: View {
             }
             Button("Edit Tunnel…") {
                 navigation.selection = .tunnel(tunnel.id)
-                navigation.showingAdd = false
-                NSApp.activate(ignoringOtherApps: true)
+                AppActivation.bringForward()
                 openSettings()
             }
             Button("Show Log") {
-                NSApp.activate(ignoringOtherApps: true)
+                AppActivation.bringForward()
                 openWindow(id: "log", value: tunnel.id)
             }
         } label: {

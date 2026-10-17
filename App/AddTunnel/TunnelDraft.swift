@@ -182,20 +182,4 @@ struct TunnelDraft: Equatable {
         return Tunnel(id: id, name: name, group: filled(group) ?? "Other", localPort: local,
                       connectAtLogin: connectAtLogin, method: method)
     }
-
-    /// The tunnel with placeholders where fields are still empty, for the command preview.
-    var preview: Tunnel {
-        var draft = self
-        if draft.name.isEmpty { draft.name = "preview" }
-        if port(draft.localPort) == nil { draft.localPort = "1" }
-        for keyPath in [\TunnelDraft.sshHost, \.destHost, \.region, \.target, \.remoteHost, \.context,
-                        \.resource, \.project, \.zone, \.instance, \.hostname, \.command]
-        where draft[keyPath: keyPath].isEmpty {
-            draft[keyPath: keyPath] = "…"
-        }
-        for keyPath in [\TunnelDraft.destPort, \.remotePort] where port(draft[keyPath: keyPath]) == nil {
-            draft[keyPath: keyPath] = "1"
-        }
-        return draft.tunnel ?? Tunnel(name: "preview", group: "Other", localPort: 1, method: .custom(CustomConfig(command: "…")))
-    }
 }

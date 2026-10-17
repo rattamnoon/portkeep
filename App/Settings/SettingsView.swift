@@ -5,7 +5,14 @@ import TunnelKit
 struct SettingsView: View {
     @Environment(TunnelStore.self) private var store
     @Environment(Navigation.self) private var navigation
+    @Environment(\.openWindow) private var openWindow
     @State private var search = ""
+    @State private var confirmingDelete = false
+
+    private func openAddWindow() {
+        AppActivation.bringForward()
+        openWindow(id: "add")
+    }
 
     var body: some View {
         @Bindable var navigation = navigation
@@ -35,20 +42,19 @@ struct SettingsView: View {
             .navigationSplitViewColumnWidth(min: 200, ideal: 220)
             .safeAreaInset(edge: .bottom) {
                 HStack(spacing: 2) {
-                    Button { navigation.showingAdd = true } label: { Image(systemName: "plus") }
-                        .accessibilityLabel("Add Tunnel").accessibilityIdentifier("sidebar.add")
-                    Button {
-                        if case .tunnel(let id) = navigation.selection {
-                            navigation.selection = nil
-                            Task { await store.delete(id) }
-                        }
-                    } label: { Image(systemName: "minus") }
-                        .accessibilityLabel("Remove Tunnel").accessibilityIdentifier("sidebar.remove")
-                        .disabled(selectedID == nil)
+                    Button { openAddWindow() } label: {
+                        Image(systemName: "plus").frame(width: 24, height: 22).contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Add Tunnel").accessibilityIdentifier("sidebar.add")
+                    Button { confirmingDelete = true } label: {
+                        Image(systemName: "minus").frame(width: 24, height: 22).contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Remove Tunnel").accessibilityIdentifier("sidebar.remove")
+                    .disabled(selectedID == nil)
                     Spacer()
                 }
                 .buttonStyle(.borderless)
-                .padding(8)
+                .padding(6)
             }
         } detail: {
             switch navigation.selection {
@@ -67,7 +73,20 @@ struct SettingsView: View {
             }
         }
         .frame(minWidth: 760, minHeight: 540)
-        .sheet(isPresented: $navigation.showingAdd) { AddTunnelView() }
+        // On macOS a confirmation dialog is a sheet; keep it at the top so no child presentation hides it.
+        .confirmationDialog(
+            "Remove \(selectedID.flatMap { store.tunnel($0)?.name } ?? "")?",
+            isPresented: $confirmingDelete
+        ) {
+            Button("Remove", role: .destructive) {
+                guard let id = selectedID else { return }
+                navigation.selection = nil
+                Task { await store.delete(id) }
+            }
+            .accessibilityIdentifier("sidebar.confirmRemove")
+        } message: {
+            Text("The tunnel stops if it's running.")
+        }
     }
 
     private var selectedID: UUID? {
@@ -86,7 +105,7 @@ struct SettingsView: View {
         ContentUnavailableView {
             Label("No Tunnel Selected", systemImage: "point.3.connected.trianglepath.dotted")
         } actions: {
-            Button("Add Tunnel…") { navigation.showingAdd = true }
+            Button("Add Tunnel…") { openAddWindow() }
         }
     }
 }
@@ -139,7 +158,7 @@ struct TunnelDetailView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
-            Button("Show Log") { openWindow(id: "log", value: tunnel.id) }
+            Button("Show Log") { AppActivation.bringForward(); openWindow(id: "log", value: tunnel.id) }
             Toggle("On", isOn: Binding(
                 get: { state.isOn },
                 set: { _ in Task { await store.toggle(tunnel.id) } }))
