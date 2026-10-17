@@ -117,6 +117,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             if name == "menu" { window.styleMask = [.borderless]; window.hasShadow = true }
             window.isReleasedWhenClosed = false
             window.makeKeyAndOrderFront(nil)
+            // Top-left of its screen and no larger than it: CI runners have small displays, and a
+            // control past the screen edge can't be clicked by UI tests.
+            if let visible = window.screen?.visibleFrame ?? NSScreen.main?.visibleFrame {
+                var frame = window.frame
+                frame.size.width = min(frame.width, visible.width)
+                frame.size.height = min(frame.height, visible.height)
+                frame.origin = NSPoint(x: visible.minX, y: visible.maxY - frame.height)
+                window.setFrame(frame, display: true)
+            }
             previewWindows.append(window)
             if let dir = environment["BURROW_DATA_DIR"] {
                 try? "\(window.windowNumber)".write(toFile: "\(dir)/window-\(name).txt", atomically: true, encoding: .utf8)
