@@ -20,7 +20,7 @@ Portkeep is a macOS menu bar app for the tunnels you open every day: databases, 
 
 A terminal tab running `ssh -N -L 5432:db:5432 bastion` works until the laptop sleeps, the Wi-Fi changes or the session times out. Then your database client is the first to find out. Portkeep replaces those tabs:
 
-- **A switch per tunnel.** Each tunnel sits under a group (Production, Development, …) with its local port, live status and tags.
+- **A switch per tunnel.** Each tunnel sits under a group (Production, Development, …) with its local port, live status and a tag.
 - **Honest status.** A tunnel shows *Connected* only when its local port actually accepts connections; a running process isn't enough.
 - **Automatic reconnect.** It reconnects after sleep, a network change or a dropped session. Retries back off from 1 s to 60 s, and no retries are spent while you're offline.
 - **It remembers.** Tunnels that were on when Portkeep quit come back on at the next launch, including after a restart.
@@ -78,7 +78,7 @@ Install the CLIs for the methods you use, for example `brew install awscli kubec
 
 1. Click the tunnel icon in the menu bar, then **Add Tunnel…**
 2. Pick a method and fill in the fields. Hosts from `~/.ssh/config`, AWS profiles and kube contexts you already have are offered in pickers.
-3. Choose a local port, a group, and any tags. The **Runs** box shows the exact command.
+3. Choose a local port, a group and a tag (one per tunnel). The **Runs** box shows the exact command.
 4. Press **Test Connection** to check it, then **Add Tunnel**.
 5. Use a tunnel's switch in the menu to start or stop it. The switch at the top starts or stops them all.
 
