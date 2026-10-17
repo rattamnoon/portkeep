@@ -1,6 +1,7 @@
 import AppKit
 
-/// Settings › General › Install Command Line Tool…: links the `portkeep` script inside the app onto PATH.
+/// Settings › General › Install Command Line Tool…: links the `portkeep` tool inside the app onto PATH,
+/// and the AI assistants section's MCP setup, which runs the same tool.
 @MainActor
 enum CommandLineTool {
     static var script: URL? {
@@ -22,6 +23,29 @@ enum CommandLineTool {
         } else {
             report(installedAt: nil, onPath: false, script: script)
         }
+    }
+
+    // MARK: AI assistants
+
+    /// The MCP server entry for Claude Desktop, Cursor and other assistants: the bundled tool, run as `portkeep mcp`.
+    static var mcpConfig: String? {
+        guard let script else { return nil }
+        let config: [String: Any] = ["mcpServers": ["portkeep": ["command": script.path, "args": ["mcp"]]]]
+        guard let data = try? JSONSerialization.data(
+            withJSONObject: config, options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]) else { return nil }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    /// The same for Claude Code, as a command.
+    static var claudeCommand: String? {
+        guard let script else { return nil }
+        let path = script.path.contains(" ") ? "'\(script.path)'" : script.path
+        return "claude mcp add portkeep -- \(path) mcp"
+    }
+
+    static func copy(_ text: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
     }
 
     private static func link(_ script: URL, in directory: URL, create: Bool = false) throws -> URL {
@@ -54,9 +78,6 @@ enum CommandLineTool {
         }
         alert.addButton(withTitle: String(localized: "OK"))
         if link == nil || !onPath { alert.addButton(withTitle: String(localized: "Copy Command")) }
-        if alert.runModal() == .alertSecondButtonReturn {
-            NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(command, forType: .string)
-        }
+        if alert.runModal() == .alertSecondButtonReturn { copy(command) }
     }
 }

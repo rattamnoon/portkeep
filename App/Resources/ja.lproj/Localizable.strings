@@ -188,3 +188,9 @@
 "It isn’t a Portkeep export or tunnels.json." = "Portkeep の書き出しファイルでも tunnels.json でもありません。";
 "Imported %@, skipped %@" = "%1$@ 件読み込み、%2$@ 件スキップ";
 "Skipped tunnels are already here with the same settings." = "スキップしたトンネルは同じ設定ですでにあります。";
+"AI assistants" = "AI アシスタント";
+"MCP server" = "MCP サーバ";
+"Copy MCP Config" = "MCP 設定をコピー";
+"Copied" = "コピーしました";
+"Claude Code" = "Claude Code";
+"Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code." = "Claude、Cursor など MCP に対応したアシスタントが、トンネルの一覧・追加・テスト・開始を行えるようにします。設定をアシスタントの MCP 設定に貼り付けるか、Claude Code ではこのコマンドを実行してください。";

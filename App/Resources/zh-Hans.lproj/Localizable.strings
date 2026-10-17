@@ -188,3 +188,9 @@
 "It isn’t a Portkeep export or tunnels.json." = "它不是 Portkeep 导出文件或 tunnels.json。";
 "Imported %@, skipped %@" = "已导入 %1$@ 个，跳过 %2$@ 个";
 "Skipped tunnels are already here with the same settings." = "跳过的隧道已存在且设置相同。";
+"AI assistants" = "AI 助手";
+"MCP server" = "MCP 服务器";
+"Copy MCP Config" = "拷贝 MCP 配置";
+"Copied" = "已拷贝";
+"Claude Code" = "Claude Code";
+"Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code." = "让 Claude、Cursor 等支持 MCP 的助手列出、添加、测试和启动你的隧道。将配置粘贴到助手的 MCP 设置中，或为 Claude Code 运行该命令。";

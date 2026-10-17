@@ -15,6 +15,7 @@ struct GeneralView: View {
     @State private var notificationsDenied = false
     @State private var sshForwards: [SSHConfigForward]?
     @State private var launched = GeneralView.current
+    @State private var copied: String?
 
     var body: some View {
         Form {
@@ -70,6 +71,28 @@ struct GeneralView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {
+                LabeledContent("MCP server") {
+                    Button(copied == "mcp" ? "Copied" : "Copy MCP Config") { copy(CommandLineTool.mcpConfig, as: "mcp") }
+                        .disabled(CommandLineTool.mcpConfig == nil)
+                        .accessibilityIdentifier("general.copyMCPConfig")
+                }
+                if let command = CommandLineTool.claudeCommand {
+                    LabeledContent {
+                        Button(copied == "claude" ? "Copied" : "Copy Command") { copy(command, as: "claude") }
+                    } label: {
+                        Text("Claude Code")
+                        Text(verbatim: command)
+                            .font(.system(size: 11, design: .monospaced))
+                            .textSelection(.enabled)
+                    }
+                }
+            } header: {
+                Text("AI assistants")
+            } footer: {
+                Text("Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
                 Picker("Language", selection: $selection) {
                     Text("Same as macOS").tag("")
                     Divider()
@@ -97,6 +120,16 @@ struct GeneralView: View {
         .task { notificationsDenied = await DropNotifications.isDenied }
         .sheet(isPresented: Binding(get: { sshForwards != nil }, set: { if !$0 { sshForwards = nil } })) {
             SSHImportView(forwards: sshForwards ?? []).environment(store)
+        }
+    }
+
+    private func copy(_ text: String?, as which: String) {
+        guard let text else { return }
+        CommandLineTool.copy(text)
+        copied = which
+        Task {
+            try? await Task.sleep(for: .seconds(2))
+            if copied == which { copied = nil }
         }
     }
 

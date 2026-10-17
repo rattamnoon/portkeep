@@ -188,3 +188,9 @@
 "It isn’t a Portkeep export or tunnels.json." = "ไฟล์นี้ไม่ใช่ไฟล์ส่งออกของ Portkeep หรือ tunnels.json";
 "Imported %@, skipped %@" = "นำเข้า %1$@ ข้าม %2$@";
 "Skipped tunnels are already here with the same settings." = "tunnel ที่ข้ามมีอยู่แล้วด้วยการตั้งค่าเดียวกัน";
+"AI assistants" = "ผู้ช่วย AI";
+"MCP server" = "เซิร์ฟเวอร์ MCP";
+"Copy MCP Config" = "คัดลอกการตั้งค่า MCP";
+"Copied" = "คัดลอกแล้ว";
+"Claude Code" = "Claude Code";
+"Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code." = "ให้ Claude, Cursor และผู้ช่วยอื่นที่รองรับ MCP ดูรายการ เพิ่ม ทดสอบ และเปิด tunnel ของคุณได้ วางการตั้งค่าในหน้าตั้งค่า MCP ของผู้ช่วย หรือรันคำสั่งนี้สำหรับ Claude Code";
