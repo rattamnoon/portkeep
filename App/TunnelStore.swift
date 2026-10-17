@@ -252,6 +252,41 @@ final class TunnelStore {
         persist()
     }
 
+    func addGroup(_ name: String, hex: String) {
+        let name = name.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty, !groups.contains(name) else { return }
+        file.groups.append(name)
+        file.groupColors[name] = hex
+        persist()
+    }
+
+    /// Removes a group no tunnel is in.
+    func deleteGroup(_ name: String) {
+        guard !file.tunnels.contains(where: { $0.group == name }) else { return }
+        file.groups.removeAll { $0 == name }
+        file.groupColors[name] = nil
+        persist()
+    }
+
+    func addTag(_ name: String, hex: String) {
+        guard let name = Tunnel.parseTags(name).first,
+              !file.allTags.contains(where: { $0.lowercased() == name.lowercased() }) else { return }
+        file.tags.append(name)
+        file.tagColors[name] = hex
+        persist()
+    }
+
+    /// Removes a tag from the list and from every tunnel that has it.
+    func deleteTag(_ name: String) {
+        file.tags.removeAll { $0 == name }
+        for index in file.tunnels.indices { file.tunnels[index].tags.removeAll { $0 == name } }
+        file.tagColors[name] = nil
+        persist()
+    }
+
+    func tunnelCount(inGroup group: String) -> Int { file.tunnels.filter { $0.group == group }.count }
+    func tunnelCount(withTag tag: String) -> Int { file.tunnels.filter { $0.tags.contains(tag) }.count }
+
     func renameGroup(_ old: String, to new: String) {
         guard old != new else { return }
         for index in file.tunnels.indices where file.tunnels[index].group == old { file.tunnels[index].group = new }
@@ -267,6 +302,9 @@ final class TunnelStore {
         for index in file.tunnels.indices {
             file.tunnels[index].tags = Tunnel.parseTags(
                 file.tunnels[index].tags.map { $0 == old ? new : $0 }.joined(separator: ","))
+        }
+        if let i = file.tags.firstIndex(of: old) {
+            if file.tags.contains(new) { file.tags.remove(at: i) } else { file.tags[i] = new }
         }
         if let color = file.tagColors.removeValue(forKey: old), file.tagColors[new] == nil { file.tagColors[new] = color }
         persist()

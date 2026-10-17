@@ -9,19 +9,33 @@ import Testing
     """
     let file = try JSONDecoder().decode(TunnelFile.self, from: Data(json.utf8))
     #expect(file.tunnels[0].tags == [])
-    #expect(file.tagColors == [:])
-    #expect(file.groupColors == [:])
+    #expect(file.tags == TunnelFile.defaultTags, "old files get the starter tags")
+    #expect(file.tagColors == TunnelFile.defaultTagColors)
+    #expect(file.groupColors == [:], "no starter group here, so no starter colour")
 }
 
 @Test func tagsAndColoursRoundTrip() throws {
     let file = TunnelFile(
         tunnels: [Tunnel(name: "ch", group: "TH", localPort: 8123, method: .custom(CustomConfig(command: "x")), tags: ["db", "olap"])],
-        tagColors: ["db": "#112233"], groupColors: ["TH": "#AABBCC"])
+        tags: [], tagColors: ["db": "#112233"], groupColors: ["TH": "#AABBCC"])
     let again = try JSONDecoder().decode(TunnelFile.self, from: JSONEncoder().encode(file))
     #expect(again == file)
     #expect(again.tagColor("db") == "#112233")
     #expect(again.tagColor("olap") == LabelColor.defaultHex(for: "olap"))
     #expect(again.allTags == ["db", "olap"])
+}
+
+@Test func newFileStartsWithDefaultsAndDefinedTagsStayWithoutTunnels() throws {
+    var file = TunnelFile()
+    #expect(file.groups == ["Production", "Staging", "Development", "Local", "Other"])
+    #expect(file.groupColors["Production"] == "#FF3B30")
+    #expect(file.tags.contains("db"))
+    #expect(file.usedTags.isEmpty, "defined but unused tags aren't 'used'")
+    file.tunnels = [Tunnel(name: "x", group: "Local", localPort: 1, method: .custom(CustomConfig(command: "x")), tags: ["db", "extra"])]
+    #expect(file.usedTags == ["db", "extra"])
+    #expect(file.allTags.last == "extra", "typed tags join the defined ones")
+    let again = try JSONDecoder().decode(TunnelFile.self, from: JSONEncoder().encode(file))
+    #expect(again.tags == file.tags)
 }
 
 @Test func parseTagsTrimsAndDeduplicates() {

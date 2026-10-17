@@ -24,12 +24,8 @@ struct SettingsView: View {
                         Section {
                             ForEach(tunnels) { tunnel in
                                 HStack(spacing: 6) {
-                                    Text(tunnel.name).lineLimit(1)
-                                    ForEach(tunnel.tags.prefix(1), id: \.self) { tag in
-                                        Circle().fill(Color(hex: store.file.tagColor(tag))).frame(width: 7, height: 7)
-                                            .help(tag)
-                                    }
-                                    Spacer()
+                                    Text(tunnel.name).lineLimit(1).layoutPriority(1)
+                                    Spacer(minLength: 4)
                                     Text(String(tunnel.localPort)).foregroundStyle(.secondary).monospacedDigit()
                                 }
                                 .tag(SettingsSelection.tunnel(tunnel.id))
@@ -46,7 +42,7 @@ struct SettingsView: View {
                 }
             }
             .searchable(text: $search, placement: .sidebar)
-            .navigationSplitViewColumnWidth(min: 220, ideal: 250)
+            .navigationSplitViewColumnWidth(min: 230, ideal: 260, max: 340)
             // Like System Settings: the sidebar always shows, and its toggle crowded the window buttons.
             .toolbar(removing: .sidebarToggle)
             .safeAreaInset(edge: .bottom) {

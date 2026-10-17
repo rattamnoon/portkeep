@@ -158,6 +158,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             case "settings":
                 navigation.selection = store.tunnels.dropFirst(2).first.map { .tunnel($0.id) }
                 view = AnyView(SettingsView().environment(store).environment(navigation).frame(width: 820, height: 640))
+            case "labels":
+                navigation.selection = .labels
+                view = AnyView(SettingsView().environment(store).environment(navigation).frame(width: 820, height: 640))
             case "add":
                 view = AnyView(AddTunnelView().environment(store).environment(navigation))
             default:

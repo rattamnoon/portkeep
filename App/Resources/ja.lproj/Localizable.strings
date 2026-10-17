@@ -126,3 +126,13 @@
 "Reset" = "リセット";
 "%@ isn't an executable file." = "%@ は実行可能ファイルではありません。";
 "Choose the %@ executable" = "%@ の実行ファイルを選択";
+"New group" = "新しいグループ";
+"New tag" = "新しいタグ";
+"Add" = "追加";
+"Unused" = "未使用";
+"%lld tunnels" = "%lld 件のトンネル";
+"Move its tunnels to another group first" = "先にトンネルを別のグループへ移動してください";
+"Remove %@" = "%@ を削除";
+"Renaming a group moves its tunnels with it. A group can be removed once it's empty." = "グループ名を変更すると、そのトンネルも一緒に移動します。空になったグループは削除できます。";
+"Removing a tag takes it off every tunnel that has it." = "タグを削除すると、そのタグが付いたすべてのトンネルから外れます。";
+"1 tunnel" = "1 件のトンネル";

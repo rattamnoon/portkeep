@@ -126,3 +126,13 @@
 "Reset" = "重置";
 "%@ isn't an executable file." = "%@ 不是可执行文件。";
 "Choose the %@ executable" = "选择 %@ 可执行文件";
+"New group" = "新分组";
+"New tag" = "新标签";
+"Add" = "添加";
+"Unused" = "未使用";
+"%lld tunnels" = "%lld 个隧道";
+"Move its tunnels to another group first" = "请先将其中的隧道移到其他分组";
+"Remove %@" = "移除 %@";
+"Renaming a group moves its tunnels with it. A group can be removed once it's empty." = "重命名分组时，其中的隧道会一起移动。分组为空后才能移除。";
+"Removing a tag takes it off every tunnel that has it." = "移除标签会将它从所有隧道上去掉。";
+"1 tunnel" = "1 个隧道";

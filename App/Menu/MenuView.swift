@@ -17,7 +17,7 @@ struct MenuView: View {
                     .padding(.horizontal, 4)
             }
 
-            if !store.file.allTags.isEmpty { tagFilter }
+            if !store.file.usedTags.isEmpty { tagFilter }
 
             VStack(alignment: .leading, spacing: 0) {
                 if store.tunnels.isEmpty {
@@ -73,7 +73,7 @@ struct MenuView: View {
     private var tagFilter: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 5) {
-                ForEach(store.file.allTags, id: \.self) { tag in
+                ForEach(store.file.usedTags, id: \.self) { tag in
                     Button { tagFilterValue = tagFilterValue == tag ? nil : tag } label: {
                         TagChip(tag: tag, hex: store.file.tagColor(tag), selected: tagFilterValue == tag)
                     }

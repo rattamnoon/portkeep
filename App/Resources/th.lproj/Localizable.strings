@@ -126,3 +126,13 @@
 "Reset" = "รีเซ็ต";
 "%@ isn't an executable file." = "%@ ไม่ใช่ไฟล์ที่รันได้";
 "Choose the %@ executable" = "เลือกไฟล์ %@";
+"New group" = "กลุ่มใหม่";
+"New tag" = "แท็กใหม่";
+"Add" = "เพิ่ม";
+"Unused" = "ยังไม่ได้ใช้";
+"%lld tunnels" = "%lld tunnel";
+"Move its tunnels to another group first" = "ย้าย tunnel ในกลุ่มนี้ไปกลุ่มอื่นก่อน";
+"Remove %@" = "ลบ %@";
+"Renaming a group moves its tunnels with it. A group can be removed once it's empty." = "เปลี่ยนชื่อกลุ่มแล้ว tunnel จะย้ายตาม ลบกลุ่มได้เมื่อไม่มี tunnel เหลืออยู่";
+"Removing a tag takes it off every tunnel that has it." = "ลบแท็กแล้ว tunnel ที่มีแท็กนี้จะถูกเอาแท็กออกด้วย";
+"1 tunnel" = "1 tunnel";
