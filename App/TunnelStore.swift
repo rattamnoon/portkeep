@@ -127,7 +127,7 @@ final class TunnelStore {
             (Tunnel(name: "SOCKS Proxy", group: "Other", localPort: 1080, method: .ssh(SSHConfig(mode: .dynamic, host: "jump"))),
              .off),
         ]
-        let demoTags: [[String]] = [["db"], ["cache"], ["db", "readonly"], ["olap"], ["metrics"], []]
+        let demoTags: [[String]] = [["postgres"], ["redis"], ["mysql"], ["clickhouse"], ["metrics"], []]
         var tunnels = demo.map(\.0)
         for index in tunnels.indices { tunnels[index].tags = demoTags[index] }
         file = TunnelFile(groups: ["Staging", "Production", "Other"], tunnels: tunnels,

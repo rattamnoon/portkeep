@@ -15,32 +15,12 @@ struct TunnelEditor: View {
                 TextField("Name", text: $draft.name, prompt: example("Dashboard MySQL")).accessibilityIdentifier("editor.name")
                 // Type a new group or pick an existing one.
                 ComboField("Group", text: $draft.group, choices: groupChoices, prompt: example("Production"))
-                LabeledContent("Tags") {
-                    HStack(spacing: 4) {
-                        TextField("Tags", text: $draft.tags, prompt: example("db, readonly"))
-                            .labelsHidden()
-                            .multilineTextAlignment(.trailing)
-                        let unused = store.file.allTags.filter { !Tunnel.parseTags(draft.tags).contains($0) }
-                        if !unused.isEmpty {
-                            Menu {
-                                ForEach(unused, id: \.self) { tag in
-                                    Button(tag) {
-                                        draft.tags = (Tunnel.parseTags(draft.tags) + [tag]).joined(separator: ", ")
-                                    }
-                                }
-                            } label: { Image(systemName: "tag") }
-                            .menuStyle(.borderlessButton)
-                            .menuIndicator(.hidden)
-                            .fixedSize()
-                            .help("Add an existing tag")
-                        }
-                    }
-                }
-                let tags = Tunnel.parseTags(draft.tags)
-                if !tags.isEmpty {
-                    HStack(spacing: 4) {
+                // One tag per tunnel: type a new one or pick an existing one.
+                ComboField("Tag", text: $draft.tag, choices: store.file.allTags, prompt: example("db"))
+                if let tag = Tunnel.parseTags(draft.tag).first {
+                    HStack {
                         Spacer()
-                        ForEach(tags, id: \.self) { TagChip(tag: $0, hex: store.file.tagColor($0)) }
+                        TagChip(tag: tag, hex: store.file.tagColor(tag))
                     }
                 }
                 if showsMethodPicker {
