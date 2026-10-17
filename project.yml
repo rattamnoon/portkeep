@@ -13,18 +13,20 @@ targets:
     platform: macOS
     sources:
       - path: App
-        excludes:
-          - CLI
     dependencies:
       - package: TunnelKit
+      - target: PortkeepCLI
+        embed: false
+        link: false
     postCompileScripts:
-      # The `portkeep` command line tool, kept executable at Contents/Resources/bin/portkeep.
+      # The `portkeep` command line tool and MCP server, at Contents/Resources/bin/portkeep: Homebrew
+      # and Install Command Line Tool… link that path, so it stays put. Already signed by its target.
       - name: Copy command line tool
         script: |
           mkdir -p "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/bin"
-          install -m 755 "$SRCROOT/App/CLI/portkeep" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/bin/portkeep"
+          install -m 755 "$BUILT_PRODUCTS_DIR/portkeep-cli" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/bin/portkeep"
         inputFiles:
-          - $(SRCROOT)/App/CLI/portkeep
+          - $(BUILT_PRODUCTS_DIR)/portkeep-cli
         outputFiles:
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/bin/portkeep
     settings:
@@ -41,6 +43,24 @@ targets:
         CODE_SIGN_ENTITLEMENTS: App/Resources/Portkeep.entitlements
         INFOPLIST_FILE: App/Resources/Info.plist
         GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+  PortkeepCLI:
+    # Sources/PortkeepCLI, also the SwiftPM executable `portkeep`. Copied into the app, not installed on its own.
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/PortkeepCLI
+    dependencies:
+      - package: TunnelKit
+    settings:
+      base:
+        PRODUCT_NAME: portkeep-cli
+        PRODUCT_BUNDLE_IDENTIFIER: com.rattamnoon.portkeep.cli
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        ENABLE_HARDENED_RUNTIME: YES
+        SKIP_INSTALL: YES
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "-"
   PortkeepUITests:
