@@ -51,25 +51,37 @@ public enum ToolLocator {
         return path.isEmpty ? fallbackPath : path
     }
 
-    /// Runs a command to completion and returns its stdout.
+    /// Runs a command to completion and returns its stdout. Cancelling the task terminates the command,
+    /// so callers can put a timeout on it.
     public static let captureOutput: Run = { executable, arguments in
-        try await withCheckedThrowingContinuation { continuation in
-            let process = Process()
-            process.executableURL = executable
-            process.arguments = arguments
-            process.standardInput = FileHandle.nullDevice
-            process.standardError = FileHandle.nullDevice
-            let pipe = Pipe()
-            process.standardOutput = pipe
-            process.terminationHandler = { _ in
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                continuation.resume(returning: String(decoding: data, as: UTF8.self))
+        let process = Process()
+        process.executableURL = executable
+        process.arguments = arguments
+        process.standardInput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        let box = ProcessBox(process)
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                process.terminationHandler = { _ in
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    continuation.resume(returning: String(decoding: data, as: UTF8.self))
+                }
+                do {
+                    try process.run()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
-            do {
-                try process.run()
-            } catch {
-                continuation.resume(throwing: error)
-            }
+        } onCancel: {
+            box.terminate()
         }
     }
+}
+
+private final class ProcessBox: @unchecked Sendable {
+    let process: Process
+    init(_ process: Process) { self.process = process }
+    func terminate() { if process.isRunning { process.terminate() } }
 }

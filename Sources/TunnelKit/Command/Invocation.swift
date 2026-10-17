@@ -11,7 +11,7 @@ public struct Invocation: Equatable, Sendable {
     }
 }
 
-public struct ToolMissing: Error, Equatable, Sendable {
+public struct ToolMissing: Error, Hashable, Sendable {
     public let tool: String
     public let installHint: String
 

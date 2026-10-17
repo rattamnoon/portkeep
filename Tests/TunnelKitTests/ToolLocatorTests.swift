@@ -31,6 +31,16 @@ private struct Boom: Error {}
     #expect(path == ToolLocator.fallbackPath)
 }
 
+@Test func hangingShellTimesOut() async {
+    // A real process that never exits must not hold up launch past the timeout.
+    let started = ContinuousClock.now
+    let path = await ToolLocator.loginShellPath(shell: "/bin/sleep", timeout: .milliseconds(200)) { exe, _ in
+        try await ToolLocator.captureOutput(exe, ["30"])
+    }
+    #expect(path == ToolLocator.fallbackPath)
+    #expect(ContinuousClock.now - started < .seconds(2))
+}
+
 @Test func resolvesFromSearchPathInOrder() {
     let tools = ToolPaths(searchPath: "/a:/opt/homebrew/bin:/usr/bin", overrides: [:], isExecutable: {
         $0 == "/opt/homebrew/bin/aws" || $0 == "/usr/bin/aws"
