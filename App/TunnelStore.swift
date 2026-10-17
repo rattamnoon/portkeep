@@ -31,10 +31,27 @@ final class TunnelStore {
         return seen
     }
 
+    /// With BURROW_DEBUG=1, commands and state changes are appended to debug.log beside tunnels.json (UI tests).
+    @ObservationIgnored private let debugLog: URL?
+
     init(directory: URL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         .appendingPathComponent("Burrow")) {
         fileURL = directory.appendingPathComponent("tunnels.json")
         reaper = OrphanReaper(file: directory.appendingPathComponent("running.json"))
+        debugLog = ProcessInfo.processInfo.environment["BURROW_DEBUG"] == "1"
+            ? directory.appendingPathComponent("debug.log") : nil
+    }
+
+    private func debug(_ message: @autoclosure () -> String) {
+        guard let debugLog else { return }
+        let line = Data("\(Date.now.formatted(.iso8601)) \(message())\n".utf8)
+        if let handle = try? FileHandle(forWritingTo: debugLog) {
+            handle.seekToEndOfFile()
+            handle.write(line)
+            try? handle.close()
+        } else {
+            try? line.write(to: debugLog)
+        }
     }
 
     // MARK: Lifecycle
@@ -55,6 +72,7 @@ final class TunnelStore {
 
         let shell = ProcessInfo.processInfo.environment["SHELL"] ?? "/bin/zsh"
         let path = await ToolLocator.loginShellPath(shell: shell)
+        debug("start: PATH=\(path)")
         runner = SystemRunner(path: path)
         tools = ToolPaths(searchPath: path, overrides: file.toolPaths)
 
@@ -109,8 +127,12 @@ final class TunnelStore {
         supervisors[tunnel.id] = supervisor
         states[tunnel.id] = .off
         let stream = supervisor.states
+        debug("supervisor created for \(tunnel.name)")
         Task { [weak self] in
-            for await state in stream { self?.states[tunnel.id] = state }
+            for await state in stream {
+                self?.debug("\(tunnel.name): \(state)")
+                self?.states[tunnel.id] = state
+            }
         }
     }
 
@@ -119,11 +141,15 @@ final class TunnelStore {
     func state(of id: UUID) -> TunnelState { states[id] ?? .off }
 
     func toggle(_ id: UUID) async {
+        debug("toggle \(id) from \(state(of: id))")
         if state(of: id).isOn { await turnOff(id) } else { await turnOn(id) }
     }
 
     func turnOn(_ id: UUID) async {
-        guard let tunnel = tunnel(id), let supervisor = supervisors[id] else { return }
+        guard let tunnel = tunnel(id), let supervisor = supervisors[id] else {
+            debug("turnOn \(id): no tunnel or supervisor")
+            return
+        }
         if let holder = claims.claim(tunnel.localPort, by: id) {
             blockedBy[id] = holder
             await supervisor.blockByOtherTunnel()

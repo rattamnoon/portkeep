@@ -10,12 +10,16 @@ final class SettingsSmokeTests: XCTestCase {
         dataDir = FileManager.default.temporaryDirectory.appendingPathComponent("burrow-ui-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: dataDir, withIntermediateDirectories: true)
         app = XCUIApplication()
-        app.launchEnvironment = ["BURROW_DATA_DIR": dataDir.path, "BURROW_SHOW": "settings"]
+        app.launchEnvironment = ["BURROW_DATA_DIR": dataDir.path, "BURROW_SHOW": "settings", "BURROW_DEBUG": "1"]
         app.launchArguments = ["-AppleLanguages", "(en)"]
         app.launch()
     }
 
     override func tearDown() {
+        // The app's own record of commands and state changes, for diagnosing a failure.
+        if let log = try? String(contentsOf: dataDir.appendingPathComponent("debug.log"), encoding: .utf8) {
+            print("BURROW-DEBUG-LOG\n\(log)END-BURROW-DEBUG-LOG")
+        }
         app.terminate()
         try? FileManager.default.removeItem(at: dataDir)
     }
