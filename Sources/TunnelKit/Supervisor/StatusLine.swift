@@ -9,7 +9,7 @@ extension Tunnel {
         case .kubernetes(let c): c.context
         case .iap(let c): c.instance
         case .cloudflare(let c): c.hostname
-        case .custom: "the server"
+        case .custom: L10n.text("the server")
         }
     }
 
@@ -20,26 +20,27 @@ extension Tunnel {
         case .kubernetes: "Kubernetes"
         case .iap: "Google Cloud IAP"
         case .cloudflare: "Cloudflare Access"
-        case .custom: "Command"
+        case .custom: L10n.text("Command")
         }
     }
 }
 
 /// The one-line status under a tunnel's name (spec §7).
 public func statusLine(_ state: TunnelState, tunnel: Tunnel, now: Date, blockedBy: String? = nil) -> String {
+    let port = String(tunnel.localPort)
     switch state {
     case .off:
-        return "Off"
+        return L10n.text("Off")
     case .checking, .starting:
-        return "Connecting…"
+        return L10n.text("Connecting…")
     case .connected(let since):
-        return "Connected · \(duration(from: since, to: now))"
+        return L10n.text("Connected · \(duration(from: since, to: now))")
     case .retrying(let reason, _, _):
-        return "Reconnecting… \(retryReason(reason, tunnel: tunnel))"
+        return L10n.text("Reconnecting… \(retryReason(reason, tunnel: tunnel))")
     case .blocked(let owner):
-        if let blockedBy { return "Port \(tunnel.localPort) is used by \(blockedBy)" }
-        if let owner { return "Port \(tunnel.localPort) is in use by \(owner.command)" }
-        return "Port \(tunnel.localPort) is in use"
+        if let blockedBy { return L10n.text("Port \(port) is used by \(blockedBy)") }
+        if let owner { return L10n.text("Port \(port) is in use by \(owner.command)") }
+        return L10n.text("Port \(port) is in use")
     case .failed(let reason):
         return failureText(reason, tunnel: tunnel)
     }
@@ -48,45 +49,46 @@ public func statusLine(_ state: TunnelState, tunnel: Tunnel, now: Date, blockedB
 /// Full sentence for a failure, as in the spec §6 table.
 public func failureText(_ reason: FailureReason, tunnel: Tunnel) -> String {
     let host = tunnel.remoteName
+    let port = String(tunnel.localPort)
     switch reason {
     case .hostKeyChanged:
-        return "Host key changed for \(host). Check it, then remove the old key from known_hosts."
+        return L10n.text("Host key changed for \(host). Check it, then remove the old key from known_hosts.")
     case .authFailed:
-        return "\(host) refused the key. Add it to the agent with ssh-add --apple-use-keychain."
+        return L10n.text("\(host) refused the key. Add it to the agent with ssh-add --apple-use-keychain.")
     case .ssoExpired(let profile):
-        return "AWS sign-in expired for profile \(profile ?? "default")."
+        return L10n.text("AWS sign-in expired for profile \(profile ?? "default").")
     case .pluginMissing:
-        return "session-manager-plugin is not installed."
+        return L10n.text("session-manager-plugin is not installed.")
     case .forwardRefused:
-        return "The server refused the forward."
+        return L10n.text("The server refused the forward.")
     case .hostUnreachable:
-        return "Can't reach \(host)."
+        return L10n.text("Can't reach \(host).")
     case .portInUse:
-        return "Port \(tunnel.localPort) is in use."
+        return L10n.text("Port \(port) is in use.")
     case .toolMissing(let missing):
-        return "\(missing.tool) not found. Install it with \(missing.installHint)."
+        return L10n.text("\(missing.tool) not found. Install it with \(missing.installHint).")
     case .readinessTimeout:
-        return "Port \(tunnel.localPort) didn't open within 20 seconds."
+        return L10n.text("Port \(port) didn't open within 20 seconds.")
     case .stoppedResponding:
-        return "Stopped responding."
+        return L10n.text("Stopped responding.")
     case .unknown(let status):
-        return "Exited (\(status)). See log."
+        return L10n.text("Exited (\(String(status))). See log.")
     }
 }
 
 private func retryReason(_ reason: FailureReason, tunnel: Tunnel) -> String {
     switch reason {
-    case .hostUnreachable: "can't reach \(tunnel.remoteName)"
-    case .readinessTimeout: "port didn't open"
-    case .stoppedResponding: "stopped responding"
-    case .unknown(let status): "exited (\(status))"
+    case .hostUnreachable: L10n.text("can't reach \(tunnel.remoteName)")
+    case .readinessTimeout: L10n.text("port didn't open")
+    case .stoppedResponding: L10n.text("stopped responding")
+    case .unknown(let status): L10n.text("exited (\(String(status)))")
     default: failureText(reason, tunnel: tunnel)
     }
 }
 
 private func duration(from start: Date, to end: Date) -> String {
     let minutes = max(0, Int(end.timeIntervalSince(start) / 60))
-    if minutes >= 60 { return "\(minutes / 60)h \(minutes % 60)m" }
-    if minutes >= 1 { return "\(minutes)m" }
-    return "just now"
+    if minutes >= 60 { return L10n.text("\(String(minutes / 60))h \(String(minutes % 60))m") }
+    if minutes >= 1 { return L10n.text("\(String(minutes))m") }
+    return L10n.text("just now")
 }

@@ -81,11 +81,11 @@ struct MenuView: View {
 
 /// A plain full-width menu item with the system hover highlight.
 struct MenuItem: View {
-    let title: String
+    let title: LocalizedStringKey
     let action: () -> Void
     @State private var hovering = false
 
-    init(_ title: String, action: @escaping () -> Void) {
+    init(_ title: LocalizedStringKey, action: @escaping () -> Void) {
         self.title = title
         self.action = action
     }

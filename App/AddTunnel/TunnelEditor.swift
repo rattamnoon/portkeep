@@ -12,7 +12,7 @@ struct TunnelEditor: View {
     var body: some View {
         Form {
             Section {
-                TextField("Name", text: $draft.name, prompt: Text("e.g. Dashboard MySQL")).accessibilityIdentifier("editor.name")
+                TextField("Name", text: $draft.name, prompt: example("Dashboard MySQL")).accessibilityIdentifier("editor.name")
                 Picker("Group", selection: $draft.group) {
                     ForEach(groupChoices, id: \.self) { Text($0).tag($0) }
                 }
@@ -28,7 +28,7 @@ struct TunnelEditor: View {
                 LabeledContent("Local port") {
                     HStack {
                         Text(portStatus.text).font(.caption).foregroundStyle(portStatus.color)
-                        TextField("Local port", text: $draft.localPort, prompt: Text("e.g. 3306")).accessibilityIdentifier("editor.localPort")
+                        TextField("Local port", text: $draft.localPort, prompt: example("3306")).accessibilityIdentifier("editor.localPort")
                             .labelsHidden()
                             .frame(width: 80)
                             .multilineTextAlignment(.trailing)
@@ -76,44 +76,44 @@ struct TunnelEditor: View {
                 Text("SOCKS").tag(SSHMode.dynamic)
             }
             .pickerStyle(.segmented)
-            ComboField("Host", text: $draft.sshHost, choices: sources.sshHosts, prompt: "e.g. jump")
-            ComboField("Jump through", text: $draft.sshJump, choices: sources.sshHosts, prompt: "None")
+            ComboField("Host", text: $draft.sshHost, choices: sources.sshHosts, prompt: example("jump"))
+            ComboField("Jump through", text: $draft.sshJump, choices: sources.sshHosts, prompt: Text("None"))
             if draft.sshMode != .dynamic {
                 hostPort("Destination", host: $draft.destHost, port: $draft.destPort,
-                         hostPrompt: "e.g. mysql.internal", portPrompt: "3306")
+                         hostPrompt: example("mysql.internal"), portPrompt: Text(verbatim: "3306"))
             }
         case .ssm:
-            ComboField("Profile", text: $draft.profile, choices: sources.awsProfiles.map(\.name), prompt: "e.g. default")
+            ComboField("Profile", text: $draft.profile, choices: sources.awsProfiles.map(\.name), prompt: example("default"))
                 .onChange(of: draft.profile) { _, name in
                     if draft.region.isEmpty, let region = sources.awsProfiles.first(where: { $0.name == name })?.region {
                         draft.region = region
                     }
                 }
-            TextField("Region", text: $draft.region, prompt: Text("e.g. ap-southeast-1"))
-            TextField("Instance ID", text: $draft.target, prompt: Text("e.g. i-0123456789abcdef0"))
+            TextField("Region", text: $draft.region, prompt: example("ap-southeast-1"))
+            TextField("Instance ID", text: $draft.target, prompt: example("i-0123456789abcdef0"))
             Picker("Forward to", selection: $draft.ssmToRemoteHost) {
                 Text("Remote host").tag(true)
                 Text("The instance").tag(false)
             }
             .pickerStyle(.segmented)
             if draft.ssmToRemoteHost {
-                TextField("Remote host", text: $draft.remoteHost, prompt: Text("e.g. mysql.prod.internal"))
+                TextField("Remote host", text: $draft.remoteHost, prompt: example("mysql.prod.internal"))
             }
-            TextField("Remote port", text: $draft.remotePort, prompt: Text("e.g. 3306"))
+            TextField("Remote port", text: $draft.remotePort, prompt: example("3306"))
         case .kubernetes:
-            ComboField("Context", text: $draft.context, choices: sources.kubeContexts, prompt: "e.g. my-cluster")
-            TextField("Namespace", text: $draft.namespace, prompt: Text("e.g. default"))
-            TextField("Resource", text: $draft.resource, prompt: Text("e.g. svc/grafana"))
-            TextField("Remote port", text: $draft.remotePort, prompt: Text("e.g. 3000"))
+            ComboField("Context", text: $draft.context, choices: sources.kubeContexts, prompt: example("my-cluster"))
+            TextField("Namespace", text: $draft.namespace, prompt: example("default"))
+            TextField("Resource", text: $draft.resource, prompt: example("svc/grafana"))
+            TextField("Remote port", text: $draft.remotePort, prompt: example("3000"))
         case .iap:
-            TextField("Project", text: $draft.project, prompt: Text("e.g. my-project"))
-            TextField("Zone", text: $draft.zone, prompt: Text("e.g. asia-southeast1-a"))
-            TextField("Instance", text: $draft.instance, prompt: Text("e.g. db-1"))
-            TextField("Remote port", text: $draft.remotePort, prompt: Text("e.g. 5432"))
+            TextField("Project", text: $draft.project, prompt: example("my-project"))
+            TextField("Zone", text: $draft.zone, prompt: example("asia-southeast1-a"))
+            TextField("Instance", text: $draft.instance, prompt: example("db-1"))
+            TextField("Remote port", text: $draft.remotePort, prompt: example("5432"))
         case .cloudflare:
-            TextField("Hostname", text: $draft.hostname, prompt: Text("e.g. db.example.com"))
+            TextField("Hostname", text: $draft.hostname, prompt: example("db.example.com"))
         case .custom:
-            TextField("Command", text: $draft.command, prompt: Text("e.g. tsh proxy db --port {port} mydb"), axis: .vertical).accessibilityIdentifier("editor.command")
+            TextField("Command", text: $draft.command, prompt: example("tsh proxy db --port {port} mydb"), axis: .vertical).accessibilityIdentifier("editor.command")
                 .font(.system(size: 12, design: .monospaced))
             Text("Use {port} where the local port goes.").font(.caption).foregroundStyle(.secondary)
         }
@@ -128,7 +128,7 @@ struct TunnelEditor: View {
             TextField("Keep-alive (seconds)", text: $draft.keepAlive)
             Toggle("Fail if the port can't be forwarded", isOn: $draft.exitOnForwardFailure)
             Toggle("Compression", isOn: $draft.compression)
-            TextField("Extra arguments", text: $draft.extraArgs, prompt: Text("-o LogLevel=ERROR"))
+            TextField("Extra arguments", text: $draft.extraArgs, prompt: Text(verbatim: "-o LogLevel=ERROR"))
         case .ssm:
             Toggle("Offer AWS sign-in when the session expires", isOn: $draft.ssoAutoLogin)
         default:
@@ -137,12 +137,12 @@ struct TunnelEditor: View {
     }
 
     private func hostPort(_ label: LocalizedStringKey, host: Binding<String>, port: Binding<String>,
-                          hostPrompt: String, portPrompt: String) -> some View {
+                          hostPrompt: Text, portPrompt: Text) -> some View {
         LabeledContent(label) {
             HStack(spacing: 4) {
-                TextField(label, text: host, prompt: Text(hostPrompt)).labelsHidden()
+                TextField(label, text: host, prompt: hostPrompt).labelsHidden()
                 Text(":").foregroundStyle(.secondary)
-                TextField("Port", text: port, prompt: Text(portPrompt)).labelsHidden().frame(width: 64)
+                TextField("Port", text: port, prompt: portPrompt).labelsHidden().frame(width: 64)
             }
         }
     }
@@ -175,14 +175,19 @@ struct TunnelEditor: View {
     }
 }
 
+/// Placeholder that reads as an example, never as a filled-in value.
+func example(_ value: String) -> Text {
+    Text("e.g. \(value)")
+}
+
 /// A text field with a menu of known values (hosts from ~/.ssh/config, AWS profiles, kube contexts).
 struct ComboField: View {
     let label: LocalizedStringKey
     @Binding var text: String
     let choices: [String]
-    let prompt: String
+    let prompt: Text
 
-    init(_ label: LocalizedStringKey, text: Binding<String>, choices: [String], prompt: String) {
+    init(_ label: LocalizedStringKey, text: Binding<String>, choices: [String], prompt: Text) {
         self.label = label
         _text = text
         self.choices = choices
@@ -192,7 +197,7 @@ struct ComboField: View {
     var body: some View {
         LabeledContent(label) {
             HStack(spacing: 4) {
-                TextField(label, text: $text, prompt: Text(prompt)).labelsHidden()
+                TextField(label, text: $text, prompt: prompt).labelsHidden()
                 if !choices.isEmpty {
                     Menu {
                         ForEach(choices, id: \.self) { choice in Button(choice) { text = choice } }

@@ -79,6 +79,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         termSource?.resume()
         AppActivation.observeWindowCloses()
 
+        switch environment["BURROW_APPEARANCE"] {
+        case "light": NSApp.appearance = NSAppearance(named: .aqua)
+        case "dark": NSApp.appearance = NSAppearance(named: .darkAqua)
+        default: break
+        }
+
         if environment["BURROW_DEMO"] == "1" {
             store.loadDemo()
         } else {

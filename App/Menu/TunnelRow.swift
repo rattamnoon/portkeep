@@ -63,7 +63,7 @@ struct TunnelRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("\(tunnel.name), \(store.statusText(tunnel.id))")
-            .accessibilityHint(state.isOn ? "Turns the tunnel off" : "Turns the tunnel on")
+            .accessibilityHint(state.isOn ? Text("Turns the tunnel off") : Text("Turns the tunnel on"))
 
             actionsMenu
         }

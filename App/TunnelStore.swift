@@ -1,6 +1,7 @@
 import AppKit
 import Foundation
 import Observation
+import ServiceManagement
 import TunnelKit
 
 /// The app's single source of truth: tunnel definitions, their live states, and the commands the UI sends.
@@ -46,10 +47,10 @@ final class TunnelStore {
         case .newerSchema(let loaded):
             file = loaded
             readOnly = true
-            banner = "tunnels.json was written by a newer Burrow. Changes won't be saved."
+            banner = String(localized: "tunnels.json was written by a newer Burrow. Changes won’t be saved.")
         case .broken(let backup):
             file = TunnelFile()
-            banner = "tunnels.json couldn't be read, so it was moved to \(backup.lastPathComponent)."
+            banner = String(localized: "tunnels.json couldn’t be read, so it was moved to \(backup.lastPathComponent).")
         }
 
         let shell = ProcessInfo.processInfo.environment["SHELL"] ?? "/bin/zsh"
@@ -249,7 +250,23 @@ final class TunnelStore {
         do {
             try file.save(to: fileURL)
         } catch {
-            banner = "Couldn't save tunnels.json: \(error.localizedDescription)"
+            banner = String(localized: "Couldn’t save tunnels.json: \(error.localizedDescription)")
+        }
+        updateLoginItem()
+    }
+
+    /// Burrow opens at login only while some tunnel asks to connect at login (spec §5.5).
+    private func updateLoginItem() {
+        let wanted = file.tunnels.contains(where: \.connectAtLogin)
+        let service = SMAppService.mainApp
+        do {
+            switch (wanted, service.status) {
+            case (true, .notRegistered), (true, .notFound): try service.register()
+            case (false, .enabled), (false, .requiresApproval): try service.unregister()
+            default: break
+            }
+        } catch {
+            banner = String(localized: "Couldn’t update the login item: \(error.localizedDescription)")
         }
     }
 }

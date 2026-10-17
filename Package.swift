@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "TunnelKit",
+    defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     products: [
         .library(name: "TunnelKit", targets: ["TunnelKit"]),
@@ -11,7 +12,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-clocks", from: "1.0.0"),
     ],
     targets: [
-        .target(name: "TunnelKit"),
+        .target(name: "TunnelKit", resources: [.process("Resources")]),
         .testTarget(
             name: "TunnelKitTests",
             dependencies: [

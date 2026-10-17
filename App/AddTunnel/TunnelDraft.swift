@@ -13,7 +13,7 @@ enum MethodKind: String, CaseIterable, Identifiable {
         case .kubernetes: "Kubernetes"
         case .iap: "Google Cloud IAP"
         case .cloudflare: "Cloudflare Access"
-        case .custom: "Custom Command"
+        case .custom: String(localized: "Custom Command")
         }
     }
 
@@ -24,18 +24,18 @@ enum MethodKind: String, CaseIterable, Identifiable {
         case .kubernetes: "kubectl port-forward"
         case .iap: "gcloud start-iap-tunnel"
         case .cloudflare: "cloudflared access tcp"
-        case .custom: "Any command that holds a port open"
+        case .custom: String(localized: "Any command that holds a port open")
         }
     }
 
     var needs: String {
         switch self {
-        case .ssh: "Uses /usr/bin/ssh with your ~/.ssh/config, keys and agent."
-        case .ssm: "Needs the AWS CLI and session-manager-plugin."
-        case .kubernetes: "Uses kubectl and your kubeconfig contexts."
-        case .iap: "Needs the gcloud CLI, signed in."
-        case .cloudflare: "Needs cloudflared. Signs in through the browser."
-        case .custom: "Burrow watches the port and restarts the command when it stops."
+        case .ssh: String(localized: "Uses /usr/bin/ssh with your ~/.ssh/config, keys and agent.")
+        case .ssm: String(localized: "Needs the AWS CLI and session-manager-plugin.")
+        case .kubernetes: String(localized: "Uses kubectl and your kubeconfig contexts.")
+        case .iap: String(localized: "Needs the gcloud CLI, signed in.")
+        case .cloudflare: String(localized: "Needs cloudflared. Signs in through the browser.")
+        case .custom: String(localized: "Burrow watches the port and restarts the command when it stops.")
         }
     }
 

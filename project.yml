@@ -1,6 +1,7 @@
 name: Burrow
 options:
   bundleIdPrefix: com.rattamnoon
+  developmentLanguage: en
   deploymentTarget:
     macOS: "14.0"
 packages:
@@ -22,6 +23,7 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
+        SWIFT_EMIT_LOC_STRINGS: YES
         ENABLE_HARDENED_RUNTIME: YES
         CODE_SIGN_ENTITLEMENTS: App/Resources/Burrow.entitlements
         INFOPLIST_FILE: App/Resources/Info.plist
