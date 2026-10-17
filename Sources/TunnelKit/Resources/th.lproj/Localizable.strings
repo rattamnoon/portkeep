@@ -4,7 +4,6 @@
 "Connecting…" = "กำลังเชื่อมต่อ…";
 "Connected · %@" = "เชื่อมต่อแล้ว · %@";
 "Reconnecting… %@" = "กำลังเชื่อมต่อใหม่… %@";
-"Port %@ is used by %@" = "พอร์ต %1$@ ถูกใช้โดย %2$@";
 "Port %@ is in use by %@" = "พอร์ต %1$@ ถูก %2$@ ใช้อยู่";
 "Port %@ is in use" = "พอร์ต %@ ถูกใช้อยู่";
 "Host key changed for %@. Check it, then remove the old key from known_hosts." = "host key ของ %@ เปลี่ยนไป ตรวจสอบให้แน่ใจ แล้วลบคีย์เก่าออกจาก known_hosts";
@@ -25,3 +24,4 @@
 "%@h %@m" = "%1$@ ชม. %2$@ นาที";
 "%@m" = "%@ นาที";
 "just now" = "เมื่อสักครู่";
+"Standing by · starts when an app connects" = "รออยู่ · เริ่มเมื่อมีแอปเชื่อมต่อ";

@@ -11,8 +11,6 @@ final class TunnelStore {
 
     private(set) var file = TunnelFile()
     private(set) var states: [UUID: TunnelState] = [:]
-    /// Tunnels waiting because another tunnel holds their port: waiting id → holder id.
-    private(set) var blockedBy: [UUID: UUID] = [:]
     var banner: String?
     private(set) var tools = ToolPaths(searchPath: ToolLocator.fallbackPath, overrides: [:])
     private(set) var readOnly = false
@@ -23,6 +21,7 @@ final class TunnelStore {
     @ObservationIgnored let ports: any PortChecking = SystemPorts()
     @ObservationIgnored private let fileURL: URL
     @ObservationIgnored private let reaper: OrphanReaper
+    @ObservationIgnored private let notifications = DropNotifications()
 
     var tunnels: [Tunnel] { file.tunnels }
     var groups: [String] {
@@ -39,6 +38,13 @@ final class TunnelStore {
     @ObservationIgnored private var wantedOn: Set<UUID> = []
     @ObservationIgnored private let sessionURL: URL
 
+    /// status.json, for the command line tool; rewritten shortly after each change.
+    @ObservationIgnored private let statusURL: URL
+    @ObservationIgnored private var statusWrite: Task<Void, Never>?
+    /// Commands from portkeep:// URLs that arrived before `start()` finished.
+    @ObservationIgnored private var started = false
+    @ObservationIgnored private var pendingCommands: [(RemoteCommand.Action, RemoteCommand.Target)] = []
+
     /// Settings › General: turn back on what was on when Portkeep quit. On unless switched off.
     static var restoresOnLaunch: Bool {
         get { UserDefaults.standard.object(forKey: "restoreTunnelsOnLaunch") as? Bool ?? true }
@@ -49,9 +55,14 @@ final class TunnelStore {
         .appendingPathComponent("Portkeep")) {
         fileURL = directory.appendingPathComponent("tunnels.json")
         sessionURL = directory.appendingPathComponent("session.json")
+        statusURL = directory.appendingPathComponent("status.json")
         reaper = OrphanReaper(file: directory.appendingPathComponent("running.json"))
         debugLog = ProcessInfo.processInfo.environment["PORTKEEP_DEBUG"] == "1"
             ? directory.appendingPathComponent("debug.log") : nil
+        notifications.lookup = { [weak self] id in
+            guard let self, let tunnel = self.tunnel(id) else { return nil }
+            return (tunnel.name, tunnel.localPort, self.statusText(id))
+        }
     }
 
     private func debug(_ message: @autoclosure () -> String) {
@@ -91,15 +102,12 @@ final class TunnelStore {
         for tunnel in file.tunnels { makeSupervisor(for: tunnel) }
         let restore = Self.restoresOnLaunch ? loadSession() : []
         debug("start: restoring \(restore.count) tunnel(s)")
-        for (id, start) in claims.planLogin(file.tunnels, alsoStart: restore) {
-            wantedOn.insert(id)
-            switch start {
-            case .start: await supervisors[id]?.turnOn()
-            case .blocked(let holder):
-                blockedBy[id] = holder
-                await supervisors[id]?.blockByOtherTunnel()
-            }
-        }
+        // Two of them on one port: the first in the list starts, the other stays off.
+        await switchOn(file.tunnels.filter { $0.connectAtLogin || restore.contains($0.id) }.map(\.id))
+        started = true
+        scheduleStatusWrite()
+        for (action, target) in pendingCommands { await perform(action, on: target) }
+        pendingCommands = []
     }
 
     /// Sample tunnels with fixed states and no processes, for screenshots (PORTKEEP_DEMO=1). Nothing is saved.
@@ -138,6 +146,7 @@ final class TunnelStore {
     /// Called at quit: stops every child process before the app exits.
     func stopAllNow() {
         reaper.stopAll()
+        if started { writeStatus(running: false) }
     }
 
     private func makeSupervisor(for tunnel: Tunnel) {
@@ -151,6 +160,8 @@ final class TunnelStore {
             for await state in stream {
                 self?.debug("\(tunnel.name): \(state)")
                 self?.states[tunnel.id] = state
+                self?.notifications.stateChanged(tunnel.id, to: state)
+                self?.scheduleStatusWrite()
             }
         }
     }
@@ -182,17 +193,27 @@ final class TunnelStore {
         if state(of: id).isOn { await turnOff(id) } else { await turnOn(id) }
     }
 
+    /// Switching on a tunnel whose port another tunnel holds switches that one off first, so
+    /// tunnels sharing a port act as one switch between environments.
     func turnOn(_ id: UUID) async {
-        guard let tunnel = tunnel(id), let supervisor = supervisors[id] else {
-            debug("turnOn \(id): no tunnel or supervisor")
-            return
+        await switchOn([id])
+    }
+
+    /// Switches on `ids` together, one tunnel per local port (the first in list order wins).
+    func switchOn(_ ids: [UUID]) async {
+        let wanted = Set(ids)
+        let plan = claims.planSwitchOn(file.tunnels.filter { wanted.contains($0.id) })
+        for holder in plan.stop {
+            debug("switchOn: stopping \(tunnel(holder)?.name ?? "?") to free its port")
+            await turnOff(holder)
         }
-        remember(id, on: true)
-        if let holder = claims.claim(tunnel.localPort, by: id) {
-            blockedBy[id] = holder
-            await supervisor.blockByOtherTunnel()
-        } else {
-            blockedBy[id] = nil
+        for id in plan.start {
+            guard let tunnel = tunnel(id), let supervisor = supervisors[id] else {
+                debug("turnOn \(id): no tunnel or supervisor")
+                continue
+            }
+            remember(id, on: true)
+            _ = claims.claim(tunnel.localPort, by: id)
             await supervisor.turnOn()
         }
     }
@@ -200,21 +221,42 @@ final class TunnelStore {
     func turnOff(_ id: UUID) async {
         guard let tunnel = tunnel(id) else { return }
         remember(id, on: false)
-        blockedBy[id] = nil
         await supervisors[id]?.turnOff()
         claims.release(tunnel.localPort, by: id)
-        // Hand the port to the next tunnel waiting for it.
-        if let waiting = blockedBy.first(where: { $0.value == id })?.key {
-            await turnOn(waiting)
-        }
     }
 
+    func isOn(_ id: UUID) -> Bool { wantedOn.contains(id) || state(of: id).isOn }
+
     func startAll() async {
-        for tunnel in file.tunnels where !state(of: tunnel.id).isOn { await turnOn(tunnel.id) }
+        await switchOn(file.tunnels.map(\.id))
     }
 
     func stopAll() async {
-        for tunnel in file.tunnels where state(of: tunnel.id).isOn { await turnOff(tunnel.id) }
+        for tunnel in file.tunnels where isOn(tunnel.id) { await turnOff(tunnel.id) }
+    }
+
+    func startGroup(_ group: String) async {
+        await switchOn(file.tunnels.filter { $0.group == group }.map(\.id))
+    }
+
+    func stopGroup(_ group: String) async {
+        for tunnel in file.tunnels where tunnel.group == group && isOn(tunnel.id) { await turnOff(tunnel.id) }
+    }
+
+    /// A portkeep:// command (the command line tool). Before launch has finished, it waits for it.
+    func perform(_ action: RemoteCommand.Action, on target: RemoteCommand.Target) async {
+        guard started else {
+            pendingCommands.append((action, target))
+            return
+        }
+        let ids = target.tunnels(in: file.tunnels).map(\.id)
+        debug("url: \(action) \(target) → \(ids.count) tunnel(s)")
+        let on = action == .start || (action == .toggle && !ids.contains(where: isOn))
+        if on {
+            await switchOn(ids)
+        } else {
+            for id in ids where isOn(id) { await turnOff(id) }
+        }
     }
 
     func kickAll() async {
@@ -235,10 +277,13 @@ final class TunnelStore {
             persist()
             if old.localPort != tunnel.localPort, state(of: tunnel.id).isOn {
                 claims.release(old.localPort, by: tunnel.id)
+                // Moving onto a port another running tunnel holds switches that one off, as turning on does.
+                if let holder = claims.holder(of: tunnel.localPort) { await turnOff(holder) }
                 _ = claims.claim(tunnel.localPort, by: tunnel.id)
             }
             // Only a change to how it connects restarts it; renaming or retagging doesn't.
-            if old.localPort != tunnel.localPort || old.method != tunnel.method {
+            if old.localPort != tunnel.localPort || old.method != tunnel.method
+                || old.startsOnConnect != tunnel.startsOnConnect || old.idleMinutes != tunnel.idleMinutes {
                 await supervisors[tunnel.id]?.update(tunnel)
             }
         } else {
@@ -248,10 +293,26 @@ final class TunnelStore {
         }
     }
 
+    /// Adds a copy right after the tunnel, named "<name> copy", switched off. Returns its id.
+    @discardableResult
+    func duplicate(_ id: UUID) -> UUID? {
+        guard let index = file.tunnels.firstIndex(where: { $0.id == id }) else { return nil }
+        let original = file.tunnels[index]
+        let name = Tunnel.copyName(taken: file.tunnels.map(\.name)) { n in
+            n == 1 ? String(localized: "\(original.name) copy") : String(localized: "\(original.name) copy \(String(n))")
+        }
+        let copy = original.duplicate(named: name)
+        file.tunnels.insert(copy, at: index + 1)
+        persist()
+        makeSupervisor(for: copy)
+        return copy.id
+    }
+
     func delete(_ id: UUID) async {
         await turnOff(id)
         supervisors[id] = nil
         states[id] = nil
+        notifications.forget(id)
         file.tunnels.removeAll { $0.id == id }
         persist()
     }
@@ -272,6 +333,31 @@ final class TunnelStore {
         guard let tunnel = tunnel(id), case .ssm(let c) = tunnel.method, let aws = tools.url(for: "aws") else { return }
         _ = try? await ToolLocator.captureOutput(aws, ["sso", "login", "--profile", c.profile])
         await supervisors[id]?.kick()
+    }
+
+    // MARK: Import / export
+
+    /// Tunnels, groups, tags and colours, without tool paths.
+    func exportData() throws -> Data {
+        try TunnelExport(file).data()
+    }
+
+    /// Adds an export's tunnels under new ids, skipping ones already here with the same settings.
+    func importTunnels(_ export: TunnelExport) -> ImportSummary {
+        let (summary, added) = file.merge(export)
+        persist()
+        for tunnel in added { makeSupervisor(for: tunnel) }
+        return summary
+    }
+
+    /// New tunnels, all off (Import from SSH Config).
+    func add(_ tunnels: [Tunnel]) {
+        for tunnel in tunnels {
+            if !file.groups.contains(tunnel.group) { file.groups.append(tunnel.group) }
+            file.tunnels.append(tunnel)
+            makeSupervisor(for: tunnel)
+        }
+        persist()
     }
 
     // MARK: Groups, tags, colours
@@ -357,6 +443,8 @@ final class TunnelStore {
     func test(_ tunnel: Tunnel) async -> (state: TunnelState, log: [String]) {
         var probe = tunnel
         probe.id = UUID()
+        // Connect now, even for a tunnel that would wait for an app.
+        probe.startsOnConnect = false
         let supervisor = Supervisor(tunnel: probe, tools: tools, ports: ports, runner: runner,
                                     reaper: reaper, clock: ContinuousClock())
         await supervisor.turnOn()
@@ -378,14 +466,42 @@ final class TunnelStore {
 
     func statusText(_ id: UUID, now: Date = .now) -> String {
         guard let tunnel = tunnel(id) else { return "" }
-        let holderName = blockedBy[id].flatMap { self.tunnel($0)?.name }
-        return statusLine(state(of: id), tunnel: tunnel, now: now, blockedBy: holderName)
+        return statusLine(state(of: id), tunnel: tunnel, now: now)
     }
 
     var connectedCount: Int { states.values.filter { if case .connected = $0 { true } else { false } }.count }
     var needsAttention: Bool { states.values.contains(where: \.needsAttention) }
 
+    private func scheduleStatusWrite() {
+        guard started, statusWrite == nil else { return }
+        statusWrite = Task { [weak self] in
+            // Coalesces a burst of changes (a group switching on) into one write.
+            try? await Task.sleep(for: .milliseconds(200))
+            self?.statusWrite = nil
+            self?.writeStatus(running: true)
+        }
+    }
+
+    private func writeStatus(running: Bool) {
+        let entries = file.tunnels.map { tunnel in
+            let state = running ? state(of: tunnel.id) : .off
+            var since: Date?
+            if case .connected(let date) = state { since = date }
+            return StatusSnapshot.Entry(
+                id: tunnel.id, name: tunnel.name, group: tunnel.group, port: tunnel.localPort,
+                state: StatusSnapshot.stateName(state), status: statusLine(state, tunnel: tunnel, now: .now),
+                connectedSince: since)
+        }
+        do {
+            try FileManager.default.createDirectory(at: statusURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try StatusSnapshot(pid: getpid(), running: running, tunnels: entries).write(to: statusURL)
+        } catch {
+            debug("status.json: \(error)")
+        }
+    }
+
     private func persist() {
+        scheduleStatusWrite()
         guard !readOnly else { return }
         do {
             try file.save(to: fileURL)

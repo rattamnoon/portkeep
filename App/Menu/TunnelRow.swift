@@ -12,7 +12,7 @@ struct TunnelRow: View {
 
     private var active: Bool {
         switch state {
-        case .connected, .starting, .checking, .retrying: true
+        case .connected, .starting, .checking, .retrying, .standingBy: true
         default: false
         }
     }
@@ -49,9 +49,6 @@ struct TunnelRow: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(state.needsAttention ? 2 : 1)
                         .fixedSize(horizontal: false, vertical: true)
-                }
-                if let tag = tunnel.tags.first {
-                    TagChip(tag: tag, hex: store.file.tagColor(tag)).padding(.top, 1)
                 }
             }
             // The text column takes the free width first; a Spacer here split it in half and cut names short.
@@ -94,6 +91,12 @@ struct TunnelRow: View {
                 AppActivation.bringForward()
                 navigation.showSettings()
             }
+            Button("Duplicate") {
+                guard let copy = store.duplicate(tunnel.id) else { return }
+                navigation.selection = .tunnel(copy)
+                AppActivation.bringForward()
+                navigation.showSettings()
+            }
             Button("Show Log") {
                 AppActivation.bringForward()
                 openWindow(id: "log", value: tunnel.id)
@@ -128,10 +131,6 @@ struct TunnelRow: View {
             return
         }
         guard port != tunnel.localPort else { return }
-        if let other = store.tunnels.first(where: { $0.localPort == port && $0.id != tunnel.id }) {
-            showProblem(String(localized: "Port \(String(port)) is already used by \(other.name)."))
-            return
-        }
         var updated = tunnel
         updated.localPort = port
         Task { await store.save(updated) }

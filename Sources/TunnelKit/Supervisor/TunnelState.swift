@@ -10,6 +10,8 @@ public enum TunnelState: Equatable, Hashable, Sendable {
     case connected(since: Date)
     case retrying(FailureReason, attempt: Int, until: Date)
     case failed(FailureReason)
+    /// On demand and idle: Portkeep listens on the local port; the tunnel starts when an app connects.
+    case standingBy
 
     /// Shown with a dot on the menu bar item.
     public var needsAttention: Bool {

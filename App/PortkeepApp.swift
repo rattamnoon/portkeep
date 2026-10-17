@@ -1,5 +1,6 @@
 import SwiftUI
 import TunnelKit
+import UserNotifications
 
 @main
 struct PortkeepApp: App {
@@ -53,7 +54,7 @@ enum SettingsSelection: Hashable {
 }
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     let store: TunnelStore
     let navigation = Navigation()
     private var events: SystemEvents?
@@ -67,6 +68,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private var termSource: DispatchSourceSignal?
+
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // portkeep:// URLs (the command line tool). Taken here, before SwiftUI, which would open a
+        // window for each one.
+        NSAppleEventManager.shared().setEventHandler(
+            self, andSelector: #selector(handleGetURL(_:withReply:)),
+            forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
+    }
+
+    @objc private func handleGetURL(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+        guard let text = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
+              let url = URL(string: text), let command = RemoteCommand(url: url) else { return }
+        switch command {
+        case .run(let action, let target):
+            Task { await store.perform(action, on: target) }
+        case .openSettings(let name):
+            if let name, let tunnel = RemoteCommand.Target.tunnel(name).tunnels(in: store.tunnels).first {
+                navigation.selection = .tunnel(tunnel.id)
+            }
+            showSettings()
+        }
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // `kill`/launchd send SIGTERM, which would skip applicationShouldTerminate and orphan children.
@@ -92,6 +115,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if environment["PORTKEEP_DEMO"] == "1" {
             store.loadDemo()
         } else {
+            UNUserNotificationCenter.current().delegate = self
             events = SystemEvents(store: store)
             Task {
                 await store.start()
@@ -186,6 +210,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         AppActivation.bringForward()
+    }
+
+    /// Show tunnel notifications even while one of our windows is in front.
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter, willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        [.banner, .list, .sound]
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {

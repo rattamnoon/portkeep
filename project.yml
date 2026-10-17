@@ -13,14 +13,26 @@ targets:
     platform: macOS
     sources:
       - path: App
+        excludes:
+          - CLI
     dependencies:
       - package: TunnelKit
+    postCompileScripts:
+      # The `portkeep` command line tool, kept executable at Contents/Resources/bin/portkeep.
+      - name: Copy command line tool
+        script: |
+          mkdir -p "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/bin"
+          install -m 755 "$SRCROOT/App/CLI/portkeep" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/bin/portkeep"
+        inputFiles:
+          - $(SRCROOT)/App/CLI/portkeep
+        outputFiles:
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/bin/portkeep
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.rattamnoon.portkeep
         PRODUCT_NAME: Portkeep
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        MARKETING_VERSION: "0.2.0"
+        MARKETING_VERSION: "0.3.0"
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete

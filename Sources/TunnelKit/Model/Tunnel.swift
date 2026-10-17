@@ -179,10 +179,18 @@ public struct Tunnel: Codable, Identifiable, Hashable, Sendable {
     public var method: TunnelMethod
     /// Free-form labels for filtering, e.g. "db", "readonly". Colours live in `TunnelFile.tagColors`.
     public var tags: [String]
+    /// On demand: while switched on, Portkeep listens on the local port itself and starts the tunnel
+    /// when the first app connects (see `supportsOnDemand`).
+    public var startsOnConnect: Bool
+    /// With `startsOnConnect`, stop the tunnel after this many minutes without connections; 0 never stops it.
+    public var idleMinutes: Int
+
+    public static let defaultIdleMinutes = 10
 
     public init(
         id: UUID = UUID(), name: String, group: String, localPort: Int,
-        connectAtLogin: Bool = false, method: TunnelMethod, tags: [String] = []
+        connectAtLogin: Bool = false, method: TunnelMethod, tags: [String] = [],
+        startsOnConnect: Bool = false, idleMinutes: Int = Tunnel.defaultIdleMinutes
     ) {
         self.id = id
         self.name = name
@@ -191,9 +199,13 @@ public struct Tunnel: Codable, Identifiable, Hashable, Sendable {
         self.connectAtLogin = connectAtLogin
         self.method = method
         self.tags = tags
+        self.startsOnConnect = startsOnConnect
+        self.idleMinutes = idleMinutes
     }
 
-    private enum CodingKeys: String, CodingKey { case id, name, group, localPort, connectAtLogin, method, tags }
+    private enum CodingKeys: String, CodingKey {
+        case id, name, group, localPort, connectAtLogin, method, tags, startsOnConnect, idleMinutes
+    }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -205,6 +217,40 @@ public struct Tunnel: Codable, Identifiable, Hashable, Sendable {
         method = try c.decode(TunnelMethod.self, forKey: .method)
         // Files written before tags existed have none.
         tags = try c.decodeIfPresent([String].self, forKey: .tags) ?? []
+        // Files written before on-demand existed start everything straight away.
+        startsOnConnect = try c.decodeIfPresent(Bool.self, forKey: .startsOnConnect) ?? false
+        idleMinutes = try c.decodeIfPresent(Int.self, forKey: .idleMinutes) ?? Self.defaultIdleMinutes
+    }
+
+    /// On demand needs a local listener for Portkeep to stand in for: not SSH -R (it listens on the
+    /// server), and a custom command only when it takes the port from `{port}`.
+    public var supportsOnDemand: Bool {
+        switch method {
+        case .ssh(let c): c.mode != .remote
+        case .custom(let c): c.command.contains("{port}")
+        default: true
+        }
+    }
+
+    /// Whether this tunnel runs on demand when switched on.
+    public var runsOnDemand: Bool { startsOnConnect && supportsOnDemand }
+}
+
+extension Tunnel {
+    /// The same tunnel under a new id and `name`.
+    public func duplicate(named name: String) -> Tunnel {
+        var copy = self
+        copy.id = UUID()
+        copy.name = name
+        return copy
+    }
+
+    /// The first of `label(1)`, `label(2)`, … ("Redis copy", "Redis copy 2") not in `taken`, ignoring case.
+    public static func copyName(taken: [String], label: (Int) -> String) -> String {
+        let used = Set(taken.map { $0.lowercased() })
+        var n = 1
+        while used.contains(label(n).lowercased()) { n += 1 }
+        return label(n)
     }
 }
 

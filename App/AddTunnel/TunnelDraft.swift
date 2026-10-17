@@ -92,6 +92,9 @@ struct TunnelDraft: Equatable {
     var hostname = ""
     var command = ""
 
+    var startsOnConnect = false
+    var idleMinutes = String(Tunnel.defaultIdleMinutes)
+
     init() {}
 
     init(_ tunnel: Tunnel) {
@@ -101,6 +104,8 @@ struct TunnelDraft: Equatable {
         localPort = String(tunnel.localPort)
         connectAtLogin = tunnel.connectAtLogin
         tag = tunnel.tags.first ?? ""
+        startsOnConnect = tunnel.startsOnConnect
+        idleMinutes = String(tunnel.idleMinutes)
         switch tunnel.method {
         case .ssh(let c):
             kind = .ssh
@@ -179,10 +184,21 @@ struct TunnelDraft: Equatable {
         }
     }
 
+    /// On demand needs a local listener: not SSH remote forwarding, and custom commands only with {port}.
+    var supportsOnDemand: Bool {
+        switch kind {
+        case .ssh: sshMode != .remote
+        case .custom: command.contains("{port}")
+        default: true
+        }
+    }
+
     /// Nil until every required field is filled with a valid value.
     var tunnel: Tunnel? {
         guard let name = filled(name), let local = port(localPort), let method else { return nil }
+        let idle = Int(idleMinutes.trimmingCharacters(in: .whitespaces)).map { max(0, $0) } ?? Tunnel.defaultIdleMinutes
         return Tunnel(id: id, name: name, group: filled(group) ?? "Other", localPort: local,
-                      connectAtLogin: connectAtLogin, method: method, tags: Array(Tunnel.parseTags(tag).prefix(1)))
+                      connectAtLogin: connectAtLogin, method: method, tags: Array(Tunnel.parseTags(tag).prefix(1)),
+                      startsOnConnect: startsOnConnect && supportsOnDemand, idleMinutes: idle)
     }
 }

@@ -4,7 +4,6 @@
 "Connecting…" = "正在连接…";
 "Connected · %@" = "已连接 · %@";
 "Reconnecting… %@" = "正在重新连接… %@";
-"Port %@ is used by %@" = "端口 %1$@ 已被 %2$@ 使用";
 "Port %@ is in use by %@" = "端口 %1$@ 正被 %2$@ 占用";
 "Port %@ is in use" = "端口 %@ 已被占用";
 "Host key changed for %@. Check it, then remove the old key from known_hosts." = "%@ 的主机密钥已更改。请先确认，再从 known_hosts 中删除旧密钥。";
@@ -25,3 +24,4 @@
 "%@h %@m" = "%1$@ 小时 %2$@ 分钟";
 "%@m" = "%@ 分钟";
 "just now" = "刚刚";
+"Standing by · starts when an app connects" = "待命 · 有应用连接时启动";

@@ -2,10 +2,18 @@ import Foundation
 
 /// Runs one tunnel through the states of spec §5.1: checks the port, launches the CLI, waits for
 /// the local port to accept connections, health-checks it, and retries with backoff.
+///
+/// On demand (`Tunnel.runsOnDemand`), switching on only opens a `TCPProxy` on the local port. The
+/// first app to connect starts the process on an internal port, and it stops again after
+/// `idleMinutes` with no connections.
 public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
     public private(set) var tunnel: Tunnel
     public private(set) var state: TunnelState = .off {
-        didSet { if state != oldValue { continuation.yield(state) } }
+        didSet {
+            guard state != oldValue else { return }
+            continuation.yield(state)
+            answerWaitingClients()
+        }
     }
     /// Every state change, in order.
     public nonisolated let states: AsyncStream<TunnelState>
@@ -19,6 +27,7 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
     private let reaper: OrphanReaper
     private let clock: C
     private let now: @Sendable () -> Date
+    private let pickInternalPort: @Sendable () -> Int
 
     private var loop: Task<Void, Never>?
     private var current: (any RunningProcess)?
@@ -27,14 +36,24 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
     private var backoff = Backoff()
     private var attempt = 0
 
+    // On demand
+    private var proxy: TCPProxy?
+    /// Where the process listens while the proxy holds the tunnel's port.
+    private var internalPort: Int?
+    private var idleTimer: Task<Void, Never>?
+    /// Clients waiting for the process to connect, answered with the internal port or nil.
+    private var waitingClients: [UUID: CheckedContinuation<Int?, Never>] = [:]
+
     static var readinessPoll: Duration { .milliseconds(250) }
     static var readinessPolls: Int { 80 }  // 20 s
     static var healthEvery: Int { 10 }     // seconds between probes
     static var resetAfter: Duration { .seconds(60) }
+    static var clientWait: Duration { .seconds(30) }
 
     public init(
         tunnel: Tunnel, tools: ToolPaths, ports: any PortChecking, runner: any ProcessRunning,
-        reaper: OrphanReaper, clock: C, now: @escaping @Sendable () -> Date = Date.init
+        reaper: OrphanReaper, clock: C, now: @escaping @Sendable () -> Date = Date.init,
+        pickInternalPort: @escaping @Sendable () -> Int = PortProbe.ephemeralPort
     ) {
         self.tunnel = tunnel
         self.id = tunnel.id
@@ -44,21 +63,22 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
         self.reaper = reaper
         self.clock = clock
         self.now = now
+        self.pickInternalPort = pickInternalPort
         (states, continuation) = AsyncStream.makeStream(of: TunnelState.self)
     }
 
     // MARK: Commands
 
-    public func turnOn() {
+    public func turnOn() async {
         guard !wantsOn else { return }
         wantsOn = true
         resetRetries()
-        startLoop()
+        if tunnel.runsOnDemand { await standBy() } else { startLoop() }
     }
 
     public func turnOff() async {
         wantsOn = false
-        await stopLoop()
+        await shutDown()
         state = .off
     }
 
@@ -67,7 +87,13 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
         guard wantsOn else { return }
         await stopLoop()
         resetRetries()
-        startLoop()
+        guard tunnel.runsOnDemand else { return startLoop() }
+        if let proxy {
+            // Start again only for clients still connected; otherwise wait for the next one.
+            if proxy.activeCount > 0 { startLoop() } else { state = .standingBy }
+        } else {
+            await standBy()
+        }
     }
 
     public func setNetworkAvailable(_ available: Bool) async {
@@ -76,20 +102,19 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
     }
 
     public func update(_ tunnel: Tunnel) async {
+        guard wantsOn else {
+            self.tunnel = tunnel
+            return
+        }
+        // The port or on-demand setting may have changed, so the listener restarts too.
+        await shutDown()
         self.tunnel = tunnel
-        if wantsOn { await kick() }
+        wantsOn = false
+        await turnOn()
     }
 
     public func setTools(_ tools: ToolPaths) {
         self.tools = tools
-    }
-
-    /// Marks the tunnel blocked because another tunnel holds its port; it stays on and
-    /// starts when kicked after the other one lets go.
-    public func blockByOtherTunnel() async {
-        wantsOn = true
-        await stopLoop()
-        state = .blocked(nil)
     }
 
     // MARK: Loop
@@ -100,7 +125,18 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
     }
 
     private func startLoop() {
+        if tunnel.runsOnDemand, internalPort == nil { internalPort = pickInternalPort() }
         loop = Task { await self.run() }
+    }
+
+    /// Stops the process and, on demand, the listener and idle timer.
+    private func shutDown() async {
+        idleTimer?.cancel()
+        idleTimer = nil
+        await stopLoop()
+        proxy?.stop()
+        proxy = nil
+        internalPort = nil
     }
 
     private func stopLoop() async {
@@ -129,10 +165,19 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
         case cancelled
     }
 
+    /// The tunnel as its process runs it: on demand, on the internal port.
+    private var processTunnel: Tunnel {
+        guard tunnel.runsOnDemand, let internalPort else { return tunnel }
+        var copy = tunnel
+        copy.localPort = internalPort
+        return copy
+    }
+
     private func run() async {
         while !Task.isCancelled {
             state = .checking
-            let port = tunnel.localPort
+            let processTunnel = self.processTunnel
+            let port = processTunnel.localPort
 
             if hasLocalPort, !ports.isFree(port) {
                 let owner = await ports.owner(of: port)
@@ -142,7 +187,7 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
 
             let invocation: Invocation
             do {
-                invocation = try CommandBuilder.invocation(for: tunnel, tools: tools)
+                invocation = try CommandBuilder.invocation(for: processTunnel, tools: tools)
             } catch {
                 state = .failed(.toolMissing(error))
                 return
@@ -247,5 +292,110 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
         case .stoppedResponding, .cancelled:
             return .stoppedResponding
         }
+    }
+
+    // MARK: On demand
+
+    /// Listens on the tunnel's port, without starting the process.
+    private func standBy() async {
+        state = .checking
+        let port = tunnel.localPort
+        if !ports.isFree(port) {
+            let owner = await ports.owner(of: port)
+            if wantsOn { state = .blocked(owner) }
+            return
+        }
+        let proxy = TCPProxy(
+            upstream: { [weak self] in await self?.upstreamForClient() },
+            onActiveChange: { [weak self] in Task { await self?.clientsChanged() } })
+        do {
+            try await proxy.start(port: port)
+        } catch {
+            log.append("Could not listen on 127.0.0.1:\(port): \(error)")
+            let owner = await ports.owner(of: port)
+            if wantsOn { state = .blocked(owner) }
+            return
+        }
+        // Switched off while the listener was starting.
+        guard wantsOn, self.proxy == nil else {
+            proxy.stop()
+            return
+        }
+        self.proxy = proxy
+        log.append("Listening on 127.0.0.1:\(port); starts when an app connects.")
+        state = .standingBy
+    }
+
+    /// Asked by the proxy for each new client: starts the process if it isn't running and waits up
+    /// to `clientWait` for it to connect. Nil closes the client.
+    private func upstreamForClient() async -> Int? {
+        guard wantsOn else { return nil }
+        idleTimer?.cancel()
+        idleTimer = nil
+        switch state {
+        case .connected: return internalPort
+        case .off, .blocked, .failed: return nil
+        case .standingBy:
+            resetRetries()
+            startLoop()
+        case .checking, .starting, .retrying:
+            break
+        }
+        let id = UUID()
+        let timeout = Task { [clock] in
+            try? await clock.sleep(for: Self.clientWait)
+            self.answer(id, with: nil)
+        }
+        defer { timeout.cancel() }
+        return await withCheckedContinuation { waitingClients[id] = $0 }
+    }
+
+    private func answer(_ id: UUID, with port: Int?) {
+        waitingClients.removeValue(forKey: id)?.resume(returning: port)
+    }
+
+    private func answerWaitingClients() {
+        let port: Int?
+        switch state {
+        case .connected: port = internalPort
+        case .off, .blocked, .failed, .standingBy: port = nil
+        case .checking, .starting, .retrying: return
+        }
+        let waiting = waitingClients.values
+        waitingClients = [:]
+        waiting.forEach { $0.resume(returning: port) }
+    }
+
+    /// Whether the process is running or being started (not idle, failed or off).
+    private var processActive: Bool {
+        switch state {
+        case .checking, .starting, .connected, .retrying: proxy != nil
+        case .off, .blocked, .failed, .standingBy: false
+        }
+    }
+
+    var idleTimerRunning: Bool { idleTimer != nil }
+
+    private func clientsChanged() {
+        guard let proxy else { return }
+        if proxy.activeCount > 0 {
+            idleTimer?.cancel()
+            idleTimer = nil
+            return
+        }
+        guard idleTimer == nil, processActive, tunnel.idleMinutes > 0 else { return }
+        let wait = Duration.seconds(tunnel.idleMinutes * 60)
+        idleTimer = Task { [clock] in
+            do { try await clock.sleep(for: wait) } catch { return }
+            await self.stopIdleProcess()
+        }
+    }
+
+    private func stopIdleProcess() async {
+        idleTimer = nil
+        guard wantsOn, processActive, proxy?.activeCount == 0 else { return }
+        log.append("No connections for \(tunnel.idleMinutes) min; stopping until an app connects.")
+        await stopLoop()
+        state = .standingBy
     }
 }
