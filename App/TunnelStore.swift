@@ -215,6 +215,14 @@ final class TunnelStore {
         for tunnel in file.tunnels where isOn(tunnel.id) { await turnOff(tunnel.id) }
     }
 
+    func startGroup(_ group: String) async {
+        await switchOn(file.tunnels.filter { $0.group == group }.map(\.id))
+    }
+
+    func stopGroup(_ group: String) async {
+        for tunnel in file.tunnels where tunnel.group == group && isOn(tunnel.id) { await turnOff(tunnel.id) }
+    }
+
     func kickAll() async {
         for supervisor in supervisors.values { await supervisor.kick() }
     }

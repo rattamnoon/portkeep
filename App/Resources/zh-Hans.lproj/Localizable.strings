@@ -137,3 +137,7 @@
 "Reopen tunnels that were on when Portkeep quit" = "重新打开退出 Portkeep 时处于开启状态的隧道";
 "Tunnels set to Connect at login always start." = "设为“登录时连接”的隧道总会启动。";
 "Shared with %@" = "与 %@ 共用";
+"Tunnels in %@" = "%@ 中的隧道";
+"Start or stop every tunnel in %@" = "启动或停止 %@ 中的所有隧道";
+"Start All" = "全部启动";
+"Stop All" = "全部停止";

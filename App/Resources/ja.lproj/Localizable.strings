@@ -137,3 +137,7 @@
 "Reopen tunnels that were on when Portkeep quit" = "Portkeep 終了時にオンだったトンネルを再度開く";
 "Tunnels set to Connect at login always start." = "「ログイン時に接続」のトンネルは常に開始します。";
 "Shared with %@" = "%@ と共用";
+"Tunnels in %@" = "%@ のトンネル";
+"Start or stop every tunnel in %@" = "%@ のすべてのトンネルを開始または停止";
+"Start All" = "すべて開始";
+"Stop All" = "すべて停止";

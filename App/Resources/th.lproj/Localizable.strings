@@ -137,3 +137,7 @@
 "Reopen tunnels that were on when Portkeep quit" = "เปิด tunnel ที่เปิดค้างไว้ก่อนปิด Portkeep ให้อีกครั้ง";
 "Tunnels set to Connect at login always start." = "tunnel ที่ตั้งเชื่อมต่อเมื่อเข้าสู่ระบบจะเริ่มเสมอ";
 "Shared with %@" = "ใช้พอร์ตร่วมกับ %@";
+"Tunnels in %@" = "Tunnel ในกลุ่ม %@";
+"Start or stop every tunnel in %@" = "เปิดหรือปิดทุก tunnel ในกลุ่ม %@";
+"Start All" = "เปิดทั้งหมด";
+"Stop All" = "ปิดทั้งหมด";

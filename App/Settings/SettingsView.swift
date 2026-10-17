@@ -32,6 +32,10 @@ struct SettingsView: View {
                             }
                         } header: {
                             GroupHeader(name: group, hex: store.file.groupColors[group])
+                                .contextMenu {
+                                    Button("Start All") { Task { await store.startGroup(group) } }
+                                    Button("Stop All") { Task { await store.stopGroup(group) } }
+                                }
                         }
                     }
                 }

@@ -85,7 +85,7 @@ Install the CLIs for the methods you use, for example `brew install awscli kubec
 2. Pick a method and fill in the fields. Hosts from `~/.ssh/config`, AWS profiles and kube contexts you already have are offered in pickers.
 3. Choose a local port, a group and a tag (one per tunnel). The **Runs** box shows the exact command.
 4. Press **Test Connection** to check it, then **Add Tunnel**.
-5. Use a tunnel's switch in the menu to start or stop it. The switch at the top starts or stops them all.
+5. Use a tunnel's switch in the menu to start or stop it. Each group header has a switch for the whole group, and the switch at the top starts or stops them all. Tunnels sharing a port aren't started together: the first one in the list wins.
 
 When a tunnel needs you, the menu bar icon shows a dot and the row shows a warning. Open **⋯** on the row for:
 - the fix (use another port, sign in to AWS, retry);
@@ -97,7 +97,7 @@ If the icon is hidden under the notch, open Portkeep again from Finder or Spotli
   <img src="docs/images/settings-en-light.png" width="720" alt="Settings window: tunnels by group in the sidebar, the selected tunnel's details on the right">
 </p>
 
-**Settings** lists every tunnel by group, with search over names, ports, groups and tags. Pick a tunnel to see its live status, **Start**/**Stop** it, edit it, or open its log. Editing the name, group or tags of a running tunnel doesn't restart it.
+**Settings** lists every tunnel by group, with search over names, ports, groups and tags. Pick a tunnel to see its live status, **Start**/**Stop** it, edit it, or open its log. Right-click a group header for **Start All** and **Stop All**. Editing the name, group or tags of a running tunnel doesn't restart it.
 
 ### Groups, tags and colours
 

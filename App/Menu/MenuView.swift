@@ -32,6 +32,8 @@ struct MenuView: View {
                                     .font(.system(size: 10, weight: .semibold))
                                     .tracking(0.4)
                                     .foregroundStyle(.secondary)
+                                Spacer()
+                                groupSwitch(group, tunnels: tunnels)
                             }
                             .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 2)
                             ForEach(tunnels) { TunnelRow(tunnel: $0) }
@@ -87,6 +89,17 @@ struct MenuView: View {
                 .help("Start or stop every tunnel")
         }
         .padding(.horizontal, 4)
+    }
+
+    /// Like the switch at the top, for one group: on while any of its tunnels is on.
+    private func groupSwitch(_ group: String, tunnels: [Tunnel]) -> some View {
+        Toggle("Tunnels in \(group)", isOn: Binding(
+            get: { tunnels.contains { store.state(of: $0.id).isOn } },
+            set: { on in Task { on ? await store.startGroup(group) : await store.stopGroup(group) } }))
+            .toggleStyle(.switch)
+            .controlSize(.mini)
+            .labelsHidden()
+            .help("Start or stop every tunnel in \(group)")
     }
 
     private var emptyState: some View {
