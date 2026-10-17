@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connection methods — Portkeep docs</title>
+<meta name="description" content="How Portkeep runs SSH (-L, -R, -D, ProxyJump), AWS SSM, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, with every field and worked examples.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/methods.html">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Portkeep">
+<meta property="og:title" content="Connection methods — Portkeep docs">
+<meta property="og:description" content="How Portkeep runs SSH (-L, -R, -D, ProxyJump), AWS SSM, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, with every field and worked examples.">
+<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/methods.html">
+<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Connection methods — Portkeep docs">
+<meta name="twitter:description" content="How Portkeep runs SSH (-L, -R, -D, ProxyJump), AWS SSM, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, with every field and worked examples.">
+<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://rattamnoon.github.io/portkeep/docs/methods.html#article",
+   "headline": "Connection methods",
+   "description": "How Portkeep runs SSH (-L, -R, -D, ProxyJump), AWS SSM, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, with every field and worked examples.",
+   "url": "https://rattamnoon.github.io/portkeep/docs/methods.html",
+   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/methods.html",
+   "inLanguage": "en",
+   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "dateModified": "2026-10-17",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "about": {
+    "@id": "https://rattamnoon.github.io/portkeep/#app"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Portkeep",
+    "url": "https://rattamnoon.github.io/portkeep/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Portkeep",
+     "item": "https://rattamnoon.github.io/portkeep/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://rattamnoon.github.io/portkeep/docs/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Connection methods",
+     "item": "https://rattamnoon.github.io/portkeep/docs/methods.html"
+    }
+   ]
+  },
+  {
+   "@type": "HowTo",
+   "name": "Forward an RDS database to your Mac through AWS SSM",
+   "step": [
+    {
+     "@type": "HowToStep",
+     "position": 1,
+     "name": "Install the tools",
+     "text": "Install the AWS CLI and session-manager-plugin: brew install awscli and brew install --cask session-manager-plugin."
+    },
+    {
+     "@type": "HowToStep",
+     "position": 2,
+     "name": "Add an AWS SSM tunnel",
+     "text": "Open Add Tunnel… and choose AWS SSM."
+    },
+    {
+     "@type": "HowToStep",
+     "position": 3,
+     "name": "Pick the profile and instance",
+     "text": "Choose your AWS profile, check the region, and enter the ID of an instance that can reach the database."
+    },
+    {
+     "@type": "HowToStep",
+     "position": 4,
+     "name": "Point it at the database",
+     "text": "Set Forward to to Remote host, the RDS endpoint as Remote host, 5432 or 3306 as Remote port, and the Local port your client will use."
+    },
+    {
+     "@type": "HowToStep",
+     "position": 5,
+     "name": "Test and switch on",
+     "text": "Press Test Connection, then Add Tunnel, and switch it on in the menu. Connect your client to 127.0.0.1 on the local port."
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5.5A2 2 0 0 0 11 3.5H5.5a2 2 0 0 0-2 2V11a2 2 0 0 0 2 2H7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></symbol>
+</svg>
+
+<header class="bar">
+  <nav class="bar-inner" aria-label="Site">
+    <a class="bar-brand" href="../" aria-label="Portkeep home"><img src="../assets/favicon.png" width="22" height="22" alt=""> Portkeep</a>
+    <div class="bar-links">
+      <a class="hide-narrow" href="./">Docs</a>
+      <a class="hide-narrow" href="../#faq">FAQ</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <button class="nav-toggle" type="button" aria-controls="docs-nav" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="docs">
+  <nav class="side" id="docs-nav" aria-label="Docs">
+    <p class="side-title">Documentation</p>
+    <ol>
+      <li><a href="./">Get started</a></li>
+      <li><a href="menu.html">The menu</a></li>
+      <li><a href="tunnels.html">Adding tunnels</a></li>
+      <li><a href="methods.html" aria-current="page">Connection methods</a></li>
+      <li><a href="status.html">Status &amp; troubleshooting</a></li>
+      <li><a href="ports.html">Local ports &amp; on demand</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="import-export.html">Import &amp; export</a></li>
+      <li><a href="data.html">Files &amp; privacy</a></li>
+      <li><a href="faq.html">FAQ &amp; limits</a></li>
+    </ol>
+    <div class="side-foot">
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Report a bug</a>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+  <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
+  <h1>Connection methods</h1>
+  <p class="lede">Portkeep opens each tunnel by running a command-line tool with your existing configuration and sign-ins. This page lists, for each method, the command it runs, what you need installed, every field, and a worked example.</p>
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#all-methods">How every method runs</a></li>
+      <li><a href="#ssh">SSH</a></li>
+      <li><a href="#ssm">AWS SSM</a></li>
+      <li><a href="#kubernetes">Kubernetes</a></li>
+      <li><a href="#iap">Google Cloud IAP</a></li>
+      <li><a href="#cloudflare">Cloudflare Access</a></li>
+      <li><a href="#custom">Custom Command</a></li>
+    </ol>
+  </nav>
+
+<h2 id="all-methods">How every method runs<a class="anchor" href="#all-methods" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li>Portkeep finds each tool on your login shell’s <code>PATH</code>, or uses the path you set in <a href="settings.html#tools">Settings › Tools</a>. The tool runs with that <code>PATH</code>, so <code>aws</code> can find <code>session-manager-plugin</code>.</li>
+  <li>The tool gets no keyboard input. Anything that would stop to ask for a password, passphrase or one-time code fails instead, so sign-in must already work without typing.</li>
+  <li>Everything the tool prints goes to the tunnel’s <a href="status.html#logs">log</a>, and Portkeep reads the last lines to explain a failure.</li>
+  <li>The tunnel counts as <em>Connected</em> once <code>127.0.0.1</code> on the local port accepts a connection, within 20 seconds of starting.</li>
+  <li>The <a href="tunnels.html#runs">Runs</a> box in the editor shows the exact command before you save.</li>
+</ul>
+
+<h2 id="ssh">SSH<a class="anchor" href="#ssh" aria-label="Link to this section">#</a></h2>
+<p>Runs <code>ssh</code> (normally <code>/usr/bin/ssh</code>) with your <code>~/.ssh/config</code>, keys and agent. Use it for a database or service behind a bastion, for a SOCKS proxy, or to expose a local port on a server.</p>
+<dl class="fields">
+  <div><dt>Forwarding</dt><dd><span class="ui">Local</span> (<code>-L</code>, the default), <span class="ui">Remote</span> (<code>-R</code>) or <span class="ui">SOCKS</span> (<code>-D</code>).</dd></div>
+  <div><dt>Host</dt><dd>The SSH host to connect to: an alias from <code>~/.ssh/config</code> or <code>user@host</code>. Required.</dd></div>
+  <div><dt>Jump through</dt><dd>Optional jump host, passed as <code>-J</code> (ProxyJump). Empty means none. A <code>ProxyJump</code> line in your SSH config works too.</dd></div>
+  <div><dt>Destination</dt><dd>Host and port at the far end, for Local and Remote. Not shown for SOCKS. Required.</dd></div>
+</dl>
+<p>Every SSH tunnel runs with <code>-N</code> (no remote command), <code>-o ServerAliveInterval=&lt;keep-alive&gt;</code> and <code>-o BatchMode=yes</code>, which makes <code>ssh</code> fail rather than prompt.</p>
+
+<h3 id="ssh-local">Local forwarding (-L)<a class="anchor" href="#ssh-local" aria-label="Link to this section">#</a></h3>
+<p>Your Mac’s local port reaches <span class="ui">Destination</span> as the SSH host sees it. Use <code>localhost</code> for a service on the SSH host itself.</p>
+<div class="code"><pre><code>ssh -N -L 5432:db.internal:5432 -J jump -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o BatchMode=yes bastion</code></pre></div>
+
+<h3 id="ssh-remote">Remote forwarding (-R)<a class="anchor" href="#ssh-remote" aria-label="Link to this section">#</a></h3>
+<p>The other way round: the SSH host opens <span class="ui">Local port</span> on its side, and connections to it reach <span class="ui">Destination</span> as your Mac sees it, for example <code>localhost:3000</code> for a dev server on your Mac.</p>
+<div class="code"><pre><code>ssh -N -R 8080:localhost:3000 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o BatchMode=yes devbox</code></pre></div>
+<p>Nothing listens on your Mac, so Portkeep doesn’t check the local port and can’t probe the forward: it counts the tunnel as connected once <code>ssh</code> has been running for 3 seconds, and reconnects when <code>ssh</code> exits. On-demand start isn’t available for remote forwarding.</p>
+
+<h3 id="ssh-socks">SOCKS proxy (-D)<a class="anchor" href="#ssh-socks" aria-label="Link to this section">#</a></h3>
+<p>A SOCKS proxy on your Mac’s local port that sends traffic out through the SSH host. Point a browser or tool at <code>127.0.0.1</code> on that port as a SOCKS5 proxy.</p>
+<div class="code"><pre><code>ssh -N -D 1080 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o BatchMode=yes jump</code></pre></div>
+
+<h3 id="ssh-advanced">SSH Advanced Options<a class="anchor" href="#ssh-advanced" aria-label="Link to this section">#</a></h3>
+<dl class="fields">
+  <div><dt>Identity file</dt><dd>A private key to use, passed as <code>-i</code> (<code>~</code> is expanded). Empty means ssh-agent and your SSH config decide. The key must not need a passphrase typed; add passphrase keys to the agent with <code>ssh-add --apple-use-keychain</code>.</dd></div>
+  <div><dt>Keep-alive (seconds)</dt><dd>Default 30. Passed as <code>ServerAliveInterval</code>, so <code>ssh</code> notices a dead connection and exits.</dd></div>
+  <div><dt>Fail if the port can’t be forwarded</dt><dd>On by default. Adds <code>-o ExitOnForwardFailure=yes</code>, so <code>ssh</code> exits instead of staying connected without the forward.</dd></div>
+  <div><dt>Compression</dt><dd>Off by default. Adds <code>-C</code>.</dd></div>
+  <div><dt>Extra arguments</dt><dd>More <code>ssh</code> options, such as <code>-o LogLevel=ERROR</code>. Split into words like a shell would, with quotes respected, but variables and wildcards aren’t expanded.</dd></div>
+</dl>
+
+<h3 id="ssh-example">Example: Postgres behind a bastion<a class="anchor" href="#ssh-example" aria-label="Link to this section">#</a></h3>
+<p>A database at <code>db.staging.internal:5432</code> that only the bastion can reach, with <code>bastion</code> defined in <code>~/.ssh/config</code>:</p>
+<ol>
+  <li>Name <code>Postgres</code>, Group <code>Staging</code>, Tag <code>db</code>.</li>
+  <li>Forwarding <span class="ui">Local</span>, Host <code>bastion</code>, Destination <code>db.staging.internal</code> : <code>5432</code>.</li>
+  <li>Local port <code>5432</code>. Your client connects to <code>127.0.0.1:5432</code>.</li>
+</ol>
+
+<h2 id="ssm">AWS SSM<a class="anchor" href="#ssm" aria-label="Link to this section">#</a></h2>
+<p>Runs <code>aws ssm start-session</code> with AWS Session Manager port forwarding. It needs the AWS CLI and <code>session-manager-plugin</code>:</p>
+<div class="code"><pre><code>brew install awscli
+brew install --cask session-manager-plugin</code></pre></div>
+<dl class="fields">
+  <div><dt>Profile</dt><dd>The AWS profile to use, as in <code>~/.aws/config</code>. Default <code>default</code>.</dd></div>
+  <div><dt>Region</dt><dd>Required. Filled in from the profile when you pick one and Region is empty.</dd></div>
+  <div><dt>Instance ID</dt><dd>The instance Session Manager connects to, such as <code>i-0123456789abcdef0</code>. Passed as <code>--target</code>.</dd></div>
+  <div><dt>Forward to</dt><dd><span class="ui">Remote host</span> (the default): a host the instance can reach, such as an RDS endpoint. <span class="ui">The instance</span>: a port on the instance itself.</dd></div>
+  <div><dt>Remote host</dt><dd>Shown for Remote host. The host name or address as the instance sees it.</dd></div>
+  <div><dt>Remote port</dt><dd>The port on the remote host, or on the instance.</dd></div>
+</dl>
+<p>To a remote host, Portkeep runs the <code>AWS-StartPortForwardingSessionToRemoteHost</code> document:</p>
+<div class="code"><pre><code>aws ssm start-session --profile prod --region ap-southeast-1 --target i-0a3f5c9e2b7d41f08 --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters host=orders.cluster-ro.internal,portNumber=3306,localPortNumber=3306</code></pre></div>
+<p>To the instance, it runs <code>AWS-StartPortForwardingSession</code>:</p>
+<div class="code"><pre><code>aws ssm start-session --profile prod --region ap-southeast-1 --target i-0a3f5c9e2b7d41f08 --document-name AWS-StartPortForwardingSession --parameters portNumber=8080,localPortNumber=8080</code></pre></div>
+
+<h3 id="ssm-sso">AWS sign-in (SSO)<a class="anchor" href="#ssm-sso" aria-label="Link to this section">#</a></h3>
+<p>When an SSO profile’s session has expired, the tunnel stops with <span class="msg">AWS sign-in expired for profile prod.</span> rather than retrying. Choose <span class="ui">Sign In to AWS…</span> in the row’s <span class="ui">⋯</span> menu: Portkeep runs <code>aws sso login --profile prod</code>, which opens your browser, and tries the tunnel again when it finishes.</p>
+<p>Advanced Options has one SSM setting, <span class="ui">Offer AWS sign-in when the session expires</span>, on by default. It is saved with the tunnel; in 0.3.0 the <span class="ui">Sign In to AWS…</span> action is offered for an expired sign-in either way.</p>
+
+<h3 id="ssm-example">Example: RDS through an SSM instance<a class="anchor" href="#ssm-example" aria-label="Link to this section">#</a></h3>
+<p>An RDS MySQL database that only instances in its VPC can reach, and an instance <code>i-0a3f5c9e2b7d41f08</code> with the SSM agent in that VPC:</p>
+<ol class="steps">
+  <li>Install the AWS CLI and <code>session-manager-plugin</code>, and check that <code>aws sso login --profile prod</code> (or your usual sign-in) works in Terminal.</li>
+  <li>Open <span class="ui">Add Tunnel…</span> and choose <span class="ui">AWS SSM</span>.</li>
+  <li>Name <code>Orders MySQL</code>, Group <code>Production</code>. Profile <code>prod</code>; check that Region filled in, or type it. Instance ID <code>i-0a3f5c9e2b7d41f08</code>.</li>
+  <li>Forward to <span class="ui">Remote host</span>, Remote host <code>orders.cluster-ro.internal</code> (the RDS endpoint), Remote port <code>3306</code>, Local port <code>3306</code>.</li>
+  <li>Press <span class="ui">Test Connection</span>, then <span class="ui">Add Tunnel</span>, and switch it on in the menu. Connect your MySQL client to <code>127.0.0.1:3306</code>.</li>
+</ol>
+<p>To keep a Development copy on the same port, use <span class="ui">Duplicate</span> and change the group, instance and endpoint. Switching one on switches the other off. See <a href="ports.html#shared-ports">Shared ports</a>.</p>
+
+<h2 id="kubernetes">Kubernetes<a class="anchor" href="#kubernetes" aria-label="Link to this section">#</a></h2>
+<p>Runs <code>kubectl port-forward</code> with your kubeconfig contexts. It needs <code>kubectl</code> (<code>brew install kubectl</code>).</p>
+<dl class="fields">
+  <div><dt>Context</dt><dd>The kubeconfig context, picked from <code>kubectl config get-contexts</code> or typed. Required.</dd></div>
+  <div><dt>Namespace</dt><dd>Default <code>default</code>.</dd></div>
+  <div><dt>Resource</dt><dd>What to forward to, in <code>kubectl</code>’s <code>type/name</code> form: <code>svc/grafana</code>, <code>deploy/api</code> or <code>pod/api-7d9f</code>.</dd></div>
+  <div><dt>Remote port</dt><dd>The port on the service or pod.</dd></div>
+</dl>
+<p>The forward listens on <code>127.0.0.1</code> only:</p>
+<div class="code"><pre><code>kubectl --context prod -n analytics port-forward svc/clickhouse 8123:8123 --address 127.0.0.1</code></pre></div>
+<p><code>kubectl port-forward</code> exits when its connection to the pod breaks, for example when the pod restarts. Portkeep runs it again with the same settings, so it picks up the new pod.</p>
+
+<h3 id="kubernetes-example">Example: ClickHouse through a service<a class="anchor" href="#kubernetes-example" aria-label="Link to this section">#</a></h3>
+<ol>
+  <li>Name <code>ClickHouse</code>, Group <code>Production</code>, Tag <code>analytics</code>.</li>
+  <li>Context <code>prod</code>, Namespace <code>analytics</code>, Resource <code>svc/clickhouse</code>, Remote port <code>8123</code>.</li>
+  <li>Local port <code>8123</code>. If a local <code>clickhouse-server</code> already listens there, the field says <span class="msg">In use</span>: pick another port such as <code>18123</code>, or use <span class="ui">Use Port 18123</span> from the <span class="ui">⋯</span> menu later.</li>
+</ol>
+
+<h2 id="iap">Google Cloud IAP<a class="anchor" href="#iap" aria-label="Link to this section">#</a></h2>
+<p>Runs <code>gcloud compute start-iap-tunnel</code> through Identity-Aware Proxy. It needs the gcloud CLI, signed in (<code>brew install --cask google-cloud-sdk</code>, then <code>gcloud auth login</code>).</p>
+<dl class="fields">
+  <div><dt>Project</dt><dd>The Google Cloud project ID.</dd></div>
+  <div><dt>Zone</dt><dd>The instance’s zone, such as <code>asia-southeast1-a</code>.</dd></div>
+  <div><dt>Instance</dt><dd>The VM’s name.</dd></div>
+  <div><dt>Remote port</dt><dd>The port on the VM.</dd></div>
+</dl>
+<div class="code"><pre><code>gcloud compute start-iap-tunnel db-1 5432 --local-host-port=localhost:5432 --zone asia-southeast1-a --project my-project</code></pre></div>
+
+<h2 id="cloudflare">Cloudflare Access<a class="anchor" href="#cloudflare" aria-label="Link to this section">#</a></h2>
+<p>Runs <code>cloudflared access tcp</code> for a TCP application behind Cloudflare Access. It needs <code>cloudflared</code> (<code>brew install cloudflared</code>), which signs in through the browser.</p>
+<dl class="fields">
+  <div><dt>Hostname</dt><dd>The Access application’s hostname, such as <code>db.example.com</code>.</dd></div>
+</dl>
+<div class="code"><pre><code>cloudflared access tcp --hostname db.example.com --url localhost:5432</code></pre></div>
+
+<h2 id="custom">Custom Command<a class="anchor" href="#custom" aria-label="Link to this section">#</a></h2>
+<p>Runs any command that holds a port open, for tools Portkeep has no form for. It is run with <code>/bin/zsh -c</code>, with <code>{port}</code> replaced by the tunnel’s local port and your login shell’s <code>PATH</code>.</p>
+<dl class="fields">
+  <div><dt>Command</dt><dd>The command line, such as <code>tsh proxy db --port {port} mydb</code>. Use <code>{port}</code> where the local port goes.</dd></div>
+</dl>
+<p>For Portkeep to manage it, the command must:</p>
+<ul>
+  <li>stay running in the foreground for as long as the tunnel is up. When it exits, Portkeep counts that as a drop and runs it again;</li>
+  <li>listen on <code>127.0.0.1</code> on the local port within 20 seconds. Portkeep watches the port, not the output;</li>
+  <li>not ask for input.</li>
+</ul>
+<p>Without <code>{port}</code> in the command, it must listen on the <span class="ui">Local port</span> you set, and <a href="ports.html#on-demand">on-demand start</a> isn’t available, because Portkeep can’t move the command to another port while it holds yours.</p>
+
+  <nav class="pager" aria-label="Previous and next pages">
+    <a class="prev" href="tunnels.html" rel="prev"><span>Previous</span><strong>Adding tunnels</strong></a>
+    <a class="next" href="status.html" rel="next"><span>Next</span><strong>Status &amp; troubleshooting</strong></a>
+  </nav>
+  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="foot-brand"><img src="../assets/favicon.png" width="18" height="18" alt=""> Portkeep</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Docs</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/blob/main/LICENSE">MIT License</a>
+    </nav>
+    <p class="foot-copy">© 2026 Rattamnoon Kiratipisut</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    var toggle = document.querySelector('.nav-toggle');
+    var side = document.getElementById('docs-nav');
+    toggle.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('.code').forEach(function (block) {
+      if (!navigator.clipboard) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>';
+      var label = button.querySelector('span');
+      var timer;
+      button.addEventListener('click', function () {
+        var text = block.querySelector('code').innerText.replace(/\n$/, '');
+        navigator.clipboard.writeText(text).then(function () {
+          button.classList.add('is-done');
+          label.textContent = 'Copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () { button.classList.remove('is-done'); label.textContent = 'Copy'; }, 2000);
+        });
+      });
+      block.appendChild(button);
+    });
+  })();
+</script>
+</body>
+</html>
