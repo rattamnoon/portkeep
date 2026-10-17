@@ -146,3 +146,11 @@
 "Stop after minutes idle" = "アイドル何分後に停止";
 "Portkeep listens on the local port and starts the tunnel when the first connection arrives. 0 minutes keeps it running." = "Portkeep がローカルポートで待ち受け、最初の接続が来たときにトンネルを開始します。0 分にすると停止しません。";
 "Not available for remote forwarding, or for a command without {port}." = "リモートフォワーディングや {port} を含まないコマンドでは使えません。";
+"%@ is down" = "%@ が切断されています";
+"%@ needs attention" = "%@ の対応が必要です";
+"%@ is back" = "%@ が復旧しました";
+"Connected on 127.0.0.1:%@." = "127.0.0.1:%@ で接続しました。";
+"Notify when a tunnel drops" = "トンネルが切れたら通知";
+"Notifications for Portkeep are off in System Settings." = "システム設定で Portkeep の通知がオフになっています。";
+"Open System Settings" = "システム設定を開く";
+"When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back." = "トンネルが 30 秒以上切れているときや、サインインの期限切れなど対応が必要なとき、そして復旧したときに通知します。";

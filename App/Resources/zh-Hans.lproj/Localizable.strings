@@ -146,3 +146,11 @@
 "Stop after minutes idle" = "空闲多少分钟后停止";
 "Portkeep listens on the local port and starts the tunnel when the first connection arrives. 0 minutes keeps it running." = "Portkeep 自己监听本地端口，第一个连接到来时才启动隧道。填 0 分钟则一直运行。";
 "Not available for remote forwarding, or for a command without {port}." = "不适用于远程转发，或不含 {port} 的命令。";
+"%@ is down" = "%@ 已断开";
+"%@ needs attention" = "%@ 需要处理";
+"%@ is back" = "%@ 已恢复";
+"Connected on 127.0.0.1:%@." = "已连接到 127.0.0.1:%@。";
+"Notify when a tunnel drops" = "隧道断开时通知";
+"Notifications for Portkeep are off in System Settings." = "系统设置中已关闭 Portkeep 的通知。";
+"Open System Settings" = "打开系统设置";
+"When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back." = "当隧道断开超过 30 秒或需要你处理（例如登录已过期）时，以及恢复时。";

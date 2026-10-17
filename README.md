@@ -30,6 +30,7 @@ A terminal tab running `ssh -N -L 5432:db:5432 bastion` works until the laptop s
   - "Port 8123 is in use by clickhouse-server"
 
   Each comes with the fix one click away.
+- **Notifications.** When a tunnel has been down for 30 seconds or needs you (an expired sign-in, a changed host key, a taken port), macOS tells you once, and again when it's back.
 - **No port clashes.** Portkeep checks the port before starting, names the process holding it, and offers a free one.
 - **On demand.** Set a tunnel to *Start when an app connects* (Advanced Options) and Portkeep holds the port itself, shows *Standing by*, and opens the real tunnel the moment your client connects. It stops again after 10 idle minutes (or never, with 0). Works for local and SOCKS forwards and for custom commands that use `{port}`.
 - **One switch per port.** Tunnels may share a local port, such as Production and Development MySQL both on 3306. Switching one on switches the other off first, so changing environment is one click and your client keeps the same address.
@@ -120,7 +121,7 @@ When editing a tunnel, type a new group or tag right in the form.
 ### Tools and General
 
 - **Tools** shows where each CLI was found on your login shell's `PATH`, with a ✓ or ⚠. Type a path or use **Choose…** to use a different binary; **Reset** goes back to the one found.
-- **General** sets the language and whether Portkeep reopens the tunnels that were on when it quit (on by default). Tunnels set to **Connect at login** always start, and Portkeep adds itself as a login item while any tunnel uses that setting.
+- **General** sets the language, whether Portkeep reopens the tunnels that were on when it quit (on by default), and whether it notifies you when a tunnel drops (on by default; macOS asks for permission the first time). Tunnels set to **Connect at login** always start, and Portkeep adds itself as a login item while any tunnel uses that setting.
 
 ## Languages
 

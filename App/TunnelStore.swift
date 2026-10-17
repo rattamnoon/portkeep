@@ -21,6 +21,7 @@ final class TunnelStore {
     @ObservationIgnored let ports: any PortChecking = SystemPorts()
     @ObservationIgnored private let fileURL: URL
     @ObservationIgnored private let reaper: OrphanReaper
+    @ObservationIgnored private let notifications = DropNotifications()
 
     var tunnels: [Tunnel] { file.tunnels }
     var groups: [String] {
@@ -50,6 +51,10 @@ final class TunnelStore {
         reaper = OrphanReaper(file: directory.appendingPathComponent("running.json"))
         debugLog = ProcessInfo.processInfo.environment["PORTKEEP_DEBUG"] == "1"
             ? directory.appendingPathComponent("debug.log") : nil
+        notifications.lookup = { [weak self] id in
+            guard let self, let tunnel = self.tunnel(id) else { return nil }
+            return (tunnel.name, tunnel.localPort, self.statusText(id))
+        }
     }
 
     private func debug(_ message: @autoclosure () -> String) {
@@ -142,6 +147,7 @@ final class TunnelStore {
             for await state in stream {
                 self?.debug("\(tunnel.name): \(state)")
                 self?.states[tunnel.id] = state
+                self?.notifications.stateChanged(tunnel.id, to: state)
             }
         }
     }
@@ -261,6 +267,7 @@ final class TunnelStore {
         await turnOff(id)
         supervisors[id] = nil
         states[id] = nil
+        notifications.forget(id)
         file.tunnels.removeAll { $0.id == id }
         persist()
     }

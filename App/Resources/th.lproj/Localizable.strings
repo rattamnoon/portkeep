@@ -146,3 +146,11 @@
 "Stop after minutes idle" = "หยุดเมื่อไม่มีการใช้งาน (นาที)";
 "Portkeep listens on the local port and starts the tunnel when the first connection arrives. 0 minutes keeps it running." = "Portkeep จะรอรับการเชื่อมต่อที่พอร์ตในเครื่องเอง และเริ่ม tunnel เมื่อมีการเชื่อมต่อแรกเข้ามา ใส่ 0 นาทีเพื่อให้ทำงานต่อไม่หยุด";
 "Not available for remote forwarding, or for a command without {port}." = "ใช้ไม่ได้กับ remote forwarding หรือคำสั่งที่ไม่มี {port}";
+"%@ is down" = "%@ หลุดอยู่";
+"%@ needs attention" = "%@ ต้องให้คุณดู";
+"%@ is back" = "%@ กลับมาแล้ว";
+"Connected on 127.0.0.1:%@." = "เชื่อมต่อแล้วที่ 127.0.0.1:%@";
+"Notify when a tunnel drops" = "แจ้งเตือนเมื่อ tunnel หลุด";
+"Notifications for Portkeep are off in System Settings." = "การแจ้งเตือนของ Portkeep ถูกปิดอยู่ในการตั้งค่าระบบ";
+"Open System Settings" = "เปิดการตั้งค่าระบบ";
+"When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back." = "เมื่อ tunnel หลุดนานเกิน 30 วินาที หรือต้องให้คุณจัดการ เช่น การลงชื่อเข้าใช้หมดอายุ และเมื่อกลับมาใช้ได้อีกครั้ง";

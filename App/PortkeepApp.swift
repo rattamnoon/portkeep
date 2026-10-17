@@ -1,5 +1,6 @@
 import SwiftUI
 import TunnelKit
+import UserNotifications
 
 @main
 struct PortkeepApp: App {
@@ -53,7 +54,7 @@ enum SettingsSelection: Hashable {
 }
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     let store: TunnelStore
     let navigation = Navigation()
     private var events: SystemEvents?
@@ -92,6 +93,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if environment["PORTKEEP_DEMO"] == "1" {
             store.loadDemo()
         } else {
+            UNUserNotificationCenter.current().delegate = self
             events = SystemEvents(store: store)
             Task {
                 await store.start()
@@ -186,6 +188,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         AppActivation.bringForward()
+    }
+
+    /// Show tunnel notifications even while one of our windows is in front.
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter, willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        [.banner, .list, .sound]
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {

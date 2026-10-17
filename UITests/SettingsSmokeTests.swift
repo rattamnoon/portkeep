@@ -11,7 +11,8 @@ final class SettingsSmokeTests: XCTestCase {
         try FileManager.default.createDirectory(at: dataDir, withIntermediateDirectories: true)
         app = XCUIApplication()
         app.launchEnvironment = ["PORTKEEP_DATA_DIR": dataDir.path, "PORTKEEP_SHOW": "settings", "PORTKEEP_DEBUG": "1"]
-        app.launchArguments = ["-AppleLanguages", "(en)"]
+        // No notifications: a permission prompt would cover the window under test.
+        app.launchArguments = ["-AppleLanguages", "(en)", "-notifyOnDrop", "NO"]
         app.launch()
     }
 

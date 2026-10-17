@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 /// App language. macOS reads `AppleLanguages` at launch, so a change applies after relaunching.
 struct GeneralView: View {
@@ -8,6 +9,8 @@ struct GeneralView: View {
 
     @State private var selection = GeneralView.current
     @AppStorage("restoreTunnelsOnLaunch") private var restoreTunnels = true
+    @AppStorage("notifyOnDrop") private var notifyOnDrop = true
+    @State private var notificationsDenied = false
     @State private var launched = GeneralView.current
 
     var body: some View {
@@ -16,6 +19,29 @@ struct GeneralView: View {
                 Toggle("Reopen tunnels that were on when Portkeep quit", isOn: $restoreTunnels)
             } footer: {
                 Text("Tunnels set to Connect at login always start.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
+                Toggle("Notify when a tunnel drops", isOn: $notifyOnDrop)
+                    .onChange(of: notifyOnDrop) { _, on in
+                        guard on else { return }
+                        Task {
+                            await DropNotifications.authorize()
+                            notificationsDenied = await DropNotifications.isDenied
+                        }
+                    }
+                if notifyOnDrop, notificationsDenied {
+                    HStack {
+                        Text("Notifications for Portkeep are off in System Settings.")
+                            .font(.caption).foregroundStyle(.orange)
+                        Spacer()
+                        Button("Open System Settings") {
+                            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension")!)
+                        }
+                    }
+                }
+            } footer: {
+                Text("When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {
@@ -43,6 +69,7 @@ struct GeneralView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("General")
+        .task { notificationsDenied = await DropNotifications.isDenied }
     }
 
     private static var current: String {
