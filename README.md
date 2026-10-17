@@ -91,7 +91,7 @@ Install the CLIs for the methods you use, for example `brew install awscli kubec
 
 When a tunnel needs you, the menu bar icon shows a dot and the row shows a warning. Open **⋯** on the row for:
 - the fix (use another port, sign in to AWS, retry);
-- **Change Local Port…**, **Copy Address**, **Edit Tunnel…**, **Duplicate** or **Show Log**.
+- **Change Local Port…**, **Copy Address**, **Edit Tunnel…**, **Duplicate**, **Show Log** or **Copy Diagnostics** (versions, settings, state and the last 50 log lines as Markdown for a bug report).
 
 **Duplicate** copies a tunnel, settings and all, as "<name> copy" (switched off) and opens it in Settings: the quick way to add Development next to Production.
 
@@ -123,7 +123,7 @@ When editing a tunnel, type a new group or tag right in the form.
 ### Tools and General
 
 - **Tools** shows where each CLI was found on your login shell's `PATH`, with a ✓ or ⚠. Type a path or use **Choose…** to use a different binary; **Reset** goes back to the one found.
-- **General** sets the language, whether Portkeep reopens the tunnels that were on when it quit (on by default), and whether it notifies you when a tunnel drops (on by default; macOS asks for permission the first time). Tunnels set to **Connect at login** always start, and Portkeep adds itself as a login item while any tunnel uses that setting.
+- **General** sets the language, whether Portkeep reopens the tunnels that were on when it quit (on by default), whether it notifies you when a tunnel drops (on by default; macOS asks for permission the first time), and whether it checks GitHub once a day for a new release (on by default; the only network request Portkeep makes itself). It also has the AI assistants setup and **Copy Diagnostics for All**. Tunnels set to **Connect at login** always start, and Portkeep adds itself as a login item while any tunnel uses that setting.
 
 ### Import and export
 
@@ -233,7 +233,7 @@ To cut a release, push a tag (`git tag v0.4.0 && git push origin v0.4.0`) or run
 
 ## Contributing
 
-Bug reports and ideas are welcome in [Issues](https://github.com/rattamnoon/portkeep/issues). For a bug, include the tunnel's method, what the menu said, and the lines from **Show Log**. Pull requests should pass `swift test` and build with `xcodebuild`; CI runs the UI smoke tests. See [CONTRIBUTING.md](CONTRIBUTING.md) for the details.
+Bug reports and ideas are welcome in [Issues](https://github.com/rattamnoon/portkeep/issues). For a bug, paste **Copy Diagnostics** from the tunnel's **⋯** menu, or include the tunnel's method, what the menu said, and the lines from **Show Log**. Pull requests should pass `swift test` and build with `xcodebuild`; CI runs the UI smoke tests. See [CONTRIBUTING.md](CONTRIBUTING.md) for the details.
 
 ## License
 
