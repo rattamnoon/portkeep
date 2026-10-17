@@ -24,6 +24,10 @@ final class SettingsSmokeTests: XCTestCase {
         (try? String(contentsOf: dataDir.appendingPathComponent("tunnels.json"), encoding: .utf8)) ?? ""
     }
 
+    private func element(_ identifier: String) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+    }
+
     private func openAddSheet() {
         let add = app.buttons["sidebar.add"].firstMatch
         XCTAssertTrue(add.waitForExistence(timeout: 5))
@@ -58,21 +62,24 @@ final class SettingsSmokeTests: XCTestCase {
 
         // Run it and wait until the port really answers.
         row.click()
-        app.switches["detail.toggle"].firstMatch.click()
-        let status = app.staticTexts["detail.status"].firstMatch
+        // By identifier only: SwiftUI exposes a switch-style Toggle as a checkbox on some macOS versions.
+        let toggle = element("detail.toggle")
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.click()
+        let status = element("detail.status")
         let connected = NSPredicate(format: "value BEGINSWITH 'Connected'")
         expectation(for: connected, evaluatedWith: status)
         waitForExpectations(timeout: 20)
 
         // Rename and save.
         replace(app.textFields["editor.name"].firstMatch, with: "Smoke HTTP 2")
-        app.buttons["detail.save"].firstMatch.click()
+        element("detail.save").click()
         XCTAssertTrue(app.staticTexts["Smoke HTTP 2"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(savedJSON.contains("Smoke HTTP 2"))
 
         // Delete.
-        app.buttons["sidebar.remove"].firstMatch.click()
-        let confirmRemove = app.buttons["sidebar.confirmRemove"].firstMatch
+        element("sidebar.remove").click()
+        let confirmRemove = element("sidebar.confirmRemove")
         XCTAssertTrue(confirmRemove.waitForExistence(timeout: 3))
         confirmRemove.click()
         let gone = NSPredicate(format: "exists == false")
