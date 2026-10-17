@@ -4,7 +4,6 @@ import TunnelKit
 struct MenuView: View {
     @Environment(TunnelStore.self) private var store
     @Environment(Navigation.self) private var navigation
-    @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -18,18 +17,27 @@ struct MenuView: View {
                     .padding(.horizontal, 4)
             }
 
+            if !store.file.usedTags.isEmpty { tagFilter }
+
             VStack(alignment: .leading, spacing: 0) {
                 if store.tunnels.isEmpty {
                     emptyState
                 } else {
                     ForEach(store.groups, id: \.self) { group in
-                        let tunnels = store.tunnels.filter { $0.group == group }
+                        let tunnels = store.tunnels.filter {
+                            $0.group == group && (tagFilterValue == nil || $0.tags.contains(tagFilterValue!))
+                        }
                         if !tunnels.isEmpty {
-                            Text(group.uppercased())
-                                .font(.system(size: 10, weight: .semibold))
-                                .tracking(0.4)
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 2)
+                            HStack(spacing: 5) {
+                                if let hex = store.file.groupColors[group] {
+                                    Circle().fill(Color(hex: hex)).frame(width: 7, height: 7).accessibilityHidden(true)
+                                }
+                                Text(group.uppercased())
+                                    .font(.system(size: 10, weight: .semibold))
+                                    .tracking(0.4)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 2)
                             ForEach(tunnels) { TunnelRow(tunnel: $0) }
                         }
                     }
@@ -55,7 +63,27 @@ struct MenuView: View {
             .controlSize(.large)
         }
         .padding(12)
-        .frame(width: 330)
+        .frame(width: 360)
+    }
+
+    /// Remembered while the app runs; nil shows every tunnel.
+    @State private var tagFilterValue: String?
+
+    /// Tap a tag to show only its tunnels; tap it again to show all.
+    private var tagFilter: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 5) {
+                ForEach(store.file.usedTags, id: \.self) { tag in
+                    Button { tagFilterValue = tagFilterValue == tag ? nil : tag } label: {
+                        TagChip(tag: tag, hex: store.file.tagColor(tag), selected: tagFilterValue == tag)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(tagFilterValue == tag ? .isSelected : [])
+                    .help(tagFilterValue == tag ? Text("Show all tunnels") : Text("Show only \(tag)"))
+                }
+            }
+            .padding(.horizontal, 4)
+        }
     }
 
     private var header: some View {
@@ -98,7 +126,7 @@ struct MenuView: View {
             openWindow(id: "add")
         } else {
             navigation.selection = selection
-            openSettings()
+            navigation.showSettings()
         }
     }
 }

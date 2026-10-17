@@ -21,25 +21,28 @@ struct SettingsView: View {
                 ForEach(store.groups, id: \.self) { group in
                     let tunnels = filtered.filter { $0.group == group }
                     if !tunnels.isEmpty {
-                        Section(group) {
+                        Section {
                             ForEach(tunnels) { tunnel in
-                                HStack {
-                                    Text(tunnel.name)
-                                    Spacer()
+                                HStack(spacing: 6) {
+                                    Text(tunnel.name).lineLimit(1).layoutPriority(1)
+                                    Spacer(minLength: 4)
                                     Text(String(tunnel.localPort)).foregroundStyle(.secondary).monospacedDigit()
                                 }
                                 .tag(SettingsSelection.tunnel(tunnel.id))
                             }
+                        } header: {
+                            GroupHeader(name: group, hex: store.file.groupColors[group])
                         }
                     }
                 }
                 Section {
+                    Label("Groups & Tags", systemImage: "tag").tag(SettingsSelection.labels)
                     Label("Tools", systemImage: "wrench.and.screwdriver").tag(SettingsSelection.tools)
                     Label("General", systemImage: "gearshape").tag(SettingsSelection.general)
                 }
             }
             .searchable(text: $search, placement: .sidebar)
-            .navigationSplitViewColumnWidth(min: 200, ideal: 220)
+            .navigationSplitViewColumnWidth(min: 230, ideal: 260, max: 340)
             // Like System Settings: the sidebar always shows, and its toggle crowded the window buttons.
             .toolbar(removing: .sidebarToggle)
             .safeAreaInset(edge: .bottom) {
@@ -70,6 +73,8 @@ struct SettingsView: View {
                 ToolsView()
             case .general:
                 GeneralView()
+            case .labels:
+                LabelsView()
             case nil:
                 placeholder
             }
@@ -100,6 +105,8 @@ struct SettingsView: View {
         guard !search.isEmpty else { return store.tunnels }
         return store.tunnels.filter {
             $0.name.localizedCaseInsensitiveContains(search) || String($0.localPort).contains(search)
+                || $0.group.localizedCaseInsensitiveContains(search)
+                || $0.tags.contains { $0.localizedCaseInsensitiveContains(search) }
         }
     }
 
@@ -183,22 +190,74 @@ struct ToolsView: View {
     var body: some View {
         Form {
             Section {
-                ForEach(tools, id: \.self) { tool in
-                    LabeledContent(tool) {
-                        TextField(tool, text: Binding(
-                            get: { store.file.toolPaths[tool] ?? "" },
-                            set: { store.setToolOverride(tool, path: $0) }),
-                            prompt: Text(store.tools.url(for: tool)?.path ?? String(localized: "Not found")))
-                            .labelsHidden()
-                            .frame(width: 320)
-                    }
-                }
+                ForEach(tools, id: \.self) { ToolRow(tool: $0) }
             } footer: {
-                Text("Found on your login shell's PATH. Type a path to override it.")
+                Text("Portkeep finds each tool on your login shell's PATH. Type or choose a path to use a different one; Reset goes back to the one found.")
                     .font(.caption).foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
         .navigationTitle("Tools")
+    }
+}
+
+private struct ToolRow: View {
+    let tool: String
+    @Environment(TunnelStore.self) private var store
+    @State private var text = ""
+
+    private var override: String? { store.file.toolPaths[tool] }
+    /// What PATH alone would give, ignoring the override.
+    private var found: String? { ToolPaths(searchPath: store.tools.searchPath, overrides: [:]).url(for: tool)?.path }
+    private var effective: String? { override ?? found }
+    private var usable: Bool { effective.map { FileManager.default.isExecutableFile(atPath: $0) } ?? false }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                Image(systemName: usable ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                    .foregroundStyle(usable ? .green : .orange)
+                    .accessibilityLabel(usable ? Text("Found") : Text("Not found"))
+                Text(verbatim: tool).fontWeight(.medium)
+                Spacer()
+                if override != nil {
+                    Text("Custom").font(.caption).foregroundStyle(.secondary)
+                }
+            }
+            HStack(spacing: 6) {
+                TextField(tool, text: $text, prompt: Text(found ?? String(localized: "Not found")))
+                    .labelsHidden()
+                    .textFieldStyle(.roundedBorder)
+                    .font(.system(size: 12, design: .monospaced))
+                    .onSubmit { store.setToolOverride(tool, path: text.trimmingCharacters(in: .whitespaces)) }
+                Button("Choose…", action: choose)
+                Button("Reset") {
+                    text = ""
+                    store.setToolOverride(tool, path: "")
+                }
+                .disabled(override == nil)
+            }
+            if let override, !FileManager.default.isExecutableFile(atPath: override) {
+                Text("\(override) isn't an executable file.").font(.caption).foregroundStyle(.orange)
+            }
+        }
+        .padding(.vertical, 2)
+        .onAppear { text = override ?? "" }
+        .onChange(of: override) { _, new in text = new ?? "" }
+    }
+
+    private func choose() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.showsHiddenFiles = true
+        panel.treatsFilePackagesAsDirectories = true
+        panel.directoryURL = URL(fileURLWithPath: (effective as NSString?)?.deletingLastPathComponent ?? "/opt/homebrew/bin")
+        panel.message = String(localized: "Choose the \(tool) executable")
+        if panel.runModal() == .OK, let url = panel.url {
+            text = url.path
+            store.setToolOverride(tool, path: url.path)
+        }
     }
 }

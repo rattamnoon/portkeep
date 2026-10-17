@@ -112,7 +112,11 @@ final class TunnelStore {
             (Tunnel(name: "SOCKS Proxy", group: "Other", localPort: 1080, method: .ssh(SSHConfig(mode: .dynamic, host: "jump"))),
              .off),
         ]
-        file = TunnelFile(groups: ["Staging", "Production", "Other"], tunnels: demo.map(\.0))
+        let demoTags: [[String]] = [["db"], ["cache"], ["db", "readonly"], ["olap"], ["metrics"], []]
+        var tunnels = demo.map(\.0)
+        for index in tunnels.indices { tunnels[index].tags = demoTags[index] }
+        file = TunnelFile(groups: ["Staging", "Production", "Other"], tunnels: tunnels,
+                          groupColors: ["Staging": "#34C759", "Production": "#FF3B30"])
         states = Dictionary(uniqueKeysWithValues: demo.map { ($0.0.id, $0.1) })
     }
 
@@ -189,6 +193,7 @@ final class TunnelStore {
     func retry(_ id: UUID) async { await supervisors[id]?.kick() }
 
     func save(_ tunnel: Tunnel) async {
+        if !file.groups.contains(tunnel.group) { file.groups.append(tunnel.group) }
         if let index = file.tunnels.firstIndex(where: { $0.id == tunnel.id }) {
             let old = file.tunnels[index]
             file.tunnels[index] = tunnel
@@ -197,7 +202,10 @@ final class TunnelStore {
                 claims.release(old.localPort, by: tunnel.id)
                 _ = claims.claim(tunnel.localPort, by: tunnel.id)
             }
-            await supervisors[tunnel.id]?.update(tunnel)
+            // Only a change to how it connects restarts it; renaming or retagging doesn't.
+            if old.localPort != tunnel.localPort || old.method != tunnel.method {
+                await supervisors[tunnel.id]?.update(tunnel)
+            }
         } else {
             file.tunnels.append(tunnel)
             persist()
@@ -229,6 +237,77 @@ final class TunnelStore {
         guard let tunnel = tunnel(id), case .ssm(let c) = tunnel.method, let aws = tools.url(for: "aws") else { return }
         _ = try? await ToolLocator.captureOutput(aws, ["sso", "login", "--profile", c.profile])
         await supervisors[id]?.kick()
+    }
+
+    // MARK: Groups, tags, colours
+    // Labels don't change how a tunnel runs, so these edit the file without restarting anything.
+
+    func setGroupColor(_ group: String, hex: String) {
+        file.groupColors[group] = hex
+        persist()
+    }
+
+    func setTagColor(_ tag: String, hex: String) {
+        file.tagColors[tag] = hex
+        persist()
+    }
+
+    func addGroup(_ name: String, hex: String) {
+        let name = name.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty, !groups.contains(name) else { return }
+        file.groups.append(name)
+        file.groupColors[name] = hex
+        persist()
+    }
+
+    /// Removes a group no tunnel is in.
+    func deleteGroup(_ name: String) {
+        guard !file.tunnels.contains(where: { $0.group == name }) else { return }
+        file.groups.removeAll { $0 == name }
+        file.groupColors[name] = nil
+        persist()
+    }
+
+    func addTag(_ name: String, hex: String) {
+        guard let name = Tunnel.parseTags(name).first,
+              !file.allTags.contains(where: { $0.lowercased() == name.lowercased() }) else { return }
+        file.tags.append(name)
+        file.tagColors[name] = hex
+        persist()
+    }
+
+    /// Removes a tag from the list and from every tunnel that has it.
+    func deleteTag(_ name: String) {
+        file.tags.removeAll { $0 == name }
+        for index in file.tunnels.indices { file.tunnels[index].tags.removeAll { $0 == name } }
+        file.tagColors[name] = nil
+        persist()
+    }
+
+    func tunnelCount(inGroup group: String) -> Int { file.tunnels.filter { $0.group == group }.count }
+    func tunnelCount(withTag tag: String) -> Int { file.tunnels.filter { $0.tags.contains(tag) }.count }
+
+    func renameGroup(_ old: String, to new: String) {
+        guard old != new else { return }
+        for index in file.tunnels.indices where file.tunnels[index].group == old { file.tunnels[index].group = new }
+        if let i = file.groups.firstIndex(of: old) {
+            if file.groups.contains(new) { file.groups.remove(at: i) } else { file.groups[i] = new }
+        }
+        if let color = file.groupColors.removeValue(forKey: old), file.groupColors[new] == nil { file.groupColors[new] = color }
+        persist()
+    }
+
+    func renameTag(_ old: String, to new: String) {
+        guard old != new else { return }
+        for index in file.tunnels.indices {
+            file.tunnels[index].tags = Tunnel.parseTags(
+                file.tunnels[index].tags.map { $0 == old ? new : $0 }.joined(separator: ","))
+        }
+        if let i = file.tags.firstIndex(of: old) {
+            if file.tags.contains(new) { file.tags.remove(at: i) } else { file.tags[i] = new }
+        }
+        if let color = file.tagColors.removeValue(forKey: old), file.tagColors[new] == nil { file.tagColors[new] = color }
+        persist()
     }
 
     func setToolOverride(_ tool: String, path: String) {
