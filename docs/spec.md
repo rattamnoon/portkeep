@@ -118,6 +118,8 @@ Classified from the last 50 stderr lines and exit status. First match wins.
 | portInUse | `Address already in use` | no → Blocked (§5.4) | Port {L} is in use. |
 | unknown | anything else | yes | Exited ({status}). See log. |
 
+Not from stderr: `toolMissing` (§5.6, no retry), `readinessTimeout` (port never accepted within 20 s, retry), `stoppedResponding` (was Connected, two health probes failed, retry).
+
 ## 7. Interface
 
 Follows the design canvas, page "Apple-style": light/dark menu, conflict submenu, Settings window, Add Tunnel sheet.
