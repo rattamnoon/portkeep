@@ -154,3 +154,13 @@
 "Notifications for Portkeep are off in System Settings." = "システム設定で Portkeep の通知がオフになっています。";
 "Open System Settings" = "システム設定を開く";
 "When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back." = "トンネルが 30 秒以上切れているときや、サインインの期限切れなど対応が必要なとき、そして復旧したときに通知します。";
+"Installed %@" = "%@ にインストールしました";
+"Run portkeep list in a new terminal window to try it." = "新しいターミナルウインドウで portkeep list を実行して試してください。";
+"%@ isn’t on your PATH yet. Add it in your shell profile, or install into /usr/local/bin with:\n\n%@" = "%1$@ はまだ PATH に含まれていません。シェルの設定ファイルに追加するか、次のコマンドで /usr/local/bin にインストールしてください:\n\n%2$@";
+"Couldn’t install the command line tool" = "コマンドラインツールをインストールできませんでした";
+"Portkeep can’t write to /usr/local/bin or ~/.local/bin. Run this in Terminal instead:\n\n%@" = "Portkeep は /usr/local/bin にも ~/.local/bin にも書き込めません。代わりにターミナルで次を実行してください:\n\n%@";
+"OK" = "OK";
+"Copy Command" = "コマンドをコピー";
+"Command line tool" = "コマンドラインツール";
+"Install Command Line Tool…" = "コマンドラインツールをインストール…";
+"Adds portkeep to your PATH: portkeep list, portkeep start <name>, portkeep stop-group <group>…" = "portkeep を PATH に追加します: portkeep list、portkeep start <名前>、portkeep stop-group <グループ>…";

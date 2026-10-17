@@ -154,3 +154,13 @@
 "Notifications for Portkeep are off in System Settings." = "การแจ้งเตือนของ Portkeep ถูกปิดอยู่ในการตั้งค่าระบบ";
 "Open System Settings" = "เปิดการตั้งค่าระบบ";
 "When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back." = "เมื่อ tunnel หลุดนานเกิน 30 วินาที หรือต้องให้คุณจัดการ เช่น การลงชื่อเข้าใช้หมดอายุ และเมื่อกลับมาใช้ได้อีกครั้ง";
+"Installed %@" = "ติดตั้งที่ %@ แล้ว";
+"Run portkeep list in a new terminal window to try it." = "เปิดหน้าต่าง Terminal ใหม่แล้วลองรัน portkeep list";
+"%@ isn’t on your PATH yet. Add it in your shell profile, or install into /usr/local/bin with:\n\n%@" = "%1$@ ยังไม่อยู่ใน PATH ให้เพิ่มในไฟล์ตั้งค่า shell หรือติดตั้งลง /usr/local/bin ด้วยคำสั่ง:\n\n%2$@";
+"Couldn’t install the command line tool" = "ติดตั้งเครื่องมือบรรทัดคำสั่งไม่ได้";
+"Portkeep can’t write to /usr/local/bin or ~/.local/bin. Run this in Terminal instead:\n\n%@" = "Portkeep เขียนไฟล์ลง /usr/local/bin หรือ ~/.local/bin ไม่ได้ ให้รันคำสั่งนี้ใน Terminal แทน:\n\n%@";
+"OK" = "ตกลง";
+"Copy Command" = "คัดลอกคำสั่ง";
+"Command line tool" = "เครื่องมือบรรทัดคำสั่ง";
+"Install Command Line Tool…" = "ติดตั้งเครื่องมือบรรทัดคำสั่ง…";
+"Adds portkeep to your PATH: portkeep list, portkeep start <name>, portkeep stop-group <group>…" = "เพิ่ม portkeep ลงใน PATH: portkeep list, portkeep start <ชื่อ>, portkeep stop-group <กลุ่ม>…";

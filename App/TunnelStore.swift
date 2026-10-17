@@ -38,6 +38,13 @@ final class TunnelStore {
     @ObservationIgnored private var wantedOn: Set<UUID> = []
     @ObservationIgnored private let sessionURL: URL
 
+    /// status.json, for the command line tool; rewritten shortly after each change.
+    @ObservationIgnored private let statusURL: URL
+    @ObservationIgnored private var statusWrite: Task<Void, Never>?
+    /// Commands from portkeep:// URLs that arrived before `start()` finished.
+    @ObservationIgnored private var started = false
+    @ObservationIgnored private var pendingCommands: [(RemoteCommand.Action, RemoteCommand.Target)] = []
+
     /// Settings › General: turn back on what was on when Portkeep quit. On unless switched off.
     static var restoresOnLaunch: Bool {
         get { UserDefaults.standard.object(forKey: "restoreTunnelsOnLaunch") as? Bool ?? true }
@@ -48,6 +55,7 @@ final class TunnelStore {
         .appendingPathComponent("Portkeep")) {
         fileURL = directory.appendingPathComponent("tunnels.json")
         sessionURL = directory.appendingPathComponent("session.json")
+        statusURL = directory.appendingPathComponent("status.json")
         reaper = OrphanReaper(file: directory.appendingPathComponent("running.json"))
         debugLog = ProcessInfo.processInfo.environment["PORTKEEP_DEBUG"] == "1"
             ? directory.appendingPathComponent("debug.log") : nil
@@ -96,6 +104,10 @@ final class TunnelStore {
         debug("start: restoring \(restore.count) tunnel(s)")
         // Two of them on one port: the first in the list starts, the other stays off.
         await switchOn(file.tunnels.filter { $0.connectAtLogin || restore.contains($0.id) }.map(\.id))
+        started = true
+        scheduleStatusWrite()
+        for (action, target) in pendingCommands { await perform(action, on: target) }
+        pendingCommands = []
     }
 
     /// Sample tunnels with fixed states and no processes, for screenshots (PORTKEEP_DEMO=1). Nothing is saved.
@@ -134,6 +146,7 @@ final class TunnelStore {
     /// Called at quit: stops every child process before the app exits.
     func stopAllNow() {
         reaper.stopAll()
+        if started { writeStatus(running: false) }
     }
 
     private func makeSupervisor(for tunnel: Tunnel) {
@@ -148,6 +161,7 @@ final class TunnelStore {
                 self?.debug("\(tunnel.name): \(state)")
                 self?.states[tunnel.id] = state
                 self?.notifications.stateChanged(tunnel.id, to: state)
+                self?.scheduleStatusWrite()
             }
         }
     }
@@ -227,6 +241,22 @@ final class TunnelStore {
 
     func stopGroup(_ group: String) async {
         for tunnel in file.tunnels where tunnel.group == group && isOn(tunnel.id) { await turnOff(tunnel.id) }
+    }
+
+    /// A portkeep:// command (the command line tool). Before launch has finished, it waits for it.
+    func perform(_ action: RemoteCommand.Action, on target: RemoteCommand.Target) async {
+        guard started else {
+            pendingCommands.append((action, target))
+            return
+        }
+        let ids = target.tunnels(in: file.tunnels).map(\.id)
+        debug("url: \(action) \(target) → \(ids.count) tunnel(s)")
+        let on = action == .start || (action == .toggle && !ids.contains(where: isOn))
+        if on {
+            await switchOn(ids)
+        } else {
+            for id in ids where isOn(id) { await turnOff(id) }
+        }
     }
 
     func kickAll() async {
@@ -402,7 +432,36 @@ final class TunnelStore {
     var connectedCount: Int { states.values.filter { if case .connected = $0 { true } else { false } }.count }
     var needsAttention: Bool { states.values.contains(where: \.needsAttention) }
 
+    private func scheduleStatusWrite() {
+        guard started, statusWrite == nil else { return }
+        statusWrite = Task { [weak self] in
+            // Coalesces a burst of changes (a group switching on) into one write.
+            try? await Task.sleep(for: .milliseconds(200))
+            self?.statusWrite = nil
+            self?.writeStatus(running: true)
+        }
+    }
+
+    private func writeStatus(running: Bool) {
+        let entries = file.tunnels.map { tunnel in
+            let state = running ? state(of: tunnel.id) : .off
+            var since: Date?
+            if case .connected(let date) = state { since = date }
+            return StatusSnapshot.Entry(
+                id: tunnel.id, name: tunnel.name, group: tunnel.group, port: tunnel.localPort,
+                state: StatusSnapshot.stateName(state), status: statusLine(state, tunnel: tunnel, now: .now),
+                connectedSince: since)
+        }
+        do {
+            try FileManager.default.createDirectory(at: statusURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try StatusSnapshot(pid: getpid(), running: running, tunnels: entries).write(to: statusURL)
+        } catch {
+            debug("status.json: \(error)")
+        }
+    }
+
     private func persist() {
+        scheduleStatusWrite()
         guard !readOnly else { return }
         do {
             try file.save(to: fileURL)

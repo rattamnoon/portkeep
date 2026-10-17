@@ -123,6 +123,29 @@ When editing a tunnel, type a new group or tag right in the form.
 - **Tools** shows where each CLI was found on your login shell's `PATH`, with a ✓ or ⚠. Type a path or use **Choose…** to use a different binary; **Reset** goes back to the one found.
 - **General** sets the language, whether Portkeep reopens the tunnels that were on when it quit (on by default), and whether it notifies you when a tunnel drops (on by default; macOS asks for permission the first time). Tunnels set to **Connect at login** always start, and Portkeep adds itself as a login item while any tunnel uses that setting.
 
+### Command line and URLs
+
+**Settings › General › Install Command Line Tool…** links `portkeep` into `/usr/local/bin` when it can write there, otherwise `~/.local/bin` (and tells you if that isn't on your `PATH`). If neither works it shows the `sudo ln -s` line to paste.
+
+```
+portkeep list                        # name, group, port, state
+portkeep status "Orders MySQL"       # exits 0 when connected
+portkeep start "Orders MySQL"        # also stop, toggle
+portkeep start-group Development     # also stop-group, start-all, stop-all
+portkeep open                        # Settings
+```
+
+Names and groups match ignoring case. Changes go to Portkeep in the background, launching it if needed; `list` and `status` read `status.json`. The same commands work as URLs from anywhere that opens links (Shortcuts, Raycast, a script's `open`):
+
+```
+portkeep://start?name=Orders%20MySQL
+portkeep://stop?group=Production
+portkeep://toggle?all
+portkeep://open?name=Redis
+```
+
+`name` also takes a tunnel's id from `tunnels.json`.
+
 ## Languages
 
 English, ไทย, 简体中文 and 日本語. Portkeep follows your macOS language. To change it, use **Settings › General › Language** (Portkeep relaunches) or set it per app in **System Settings › General › Language & Region**.
@@ -142,13 +165,14 @@ All in `~/Library/Application Support/Portkeep/`:
 | `tunnels.json` | Tunnels, groups, tags, colours and tool paths. Plain JSON, safe to back up or edit while Portkeep is quit. |
 | `session.json` | Which tunnels are switched on, to reopen them at the next launch. |
 | `running.json` | Child processes, so they can be stopped after a crash. |
+| `status.json` | What each tunnel is doing right now, for the `portkeep` command. Written by the app, never read back. |
 
 If `tunnels.json` can't be read, Portkeep moves it aside to `tunnels.json.broken-<date>` instead of overwriting it.
 
 ## Limits in this version
 
 - Authentication must already work without typing; passwords, passphrase prompts and OTP aren't supported yet. Add passphrase keys with `ssh-add --apple-use-keychain`.
-- There is no sync between Macs, import/export or Shortcuts support yet.
+- There is no sync between Macs, import/export or native Shortcuts actions yet; a shortcut can open a `portkeep://` URL.
 - Builds from source are ad-hoc signed. Until notarized releases are published, macOS warns when you open a copy on another Mac.
 - Portkeep is not on the Mac App Store, because the sandbox would stop it running your CLIs and reading your config.
 

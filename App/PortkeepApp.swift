@@ -69,6 +69,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     private var termSource: DispatchSourceSignal?
 
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // portkeep:// URLs (the command line tool). Taken here, before SwiftUI, which would open a
+        // window for each one.
+        NSAppleEventManager.shared().setEventHandler(
+            self, andSelector: #selector(handleGetURL(_:withReply:)),
+            forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
+    }
+
+    @objc private func handleGetURL(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+        guard let text = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
+              let url = URL(string: text), let command = RemoteCommand(url: url) else { return }
+        switch command {
+        case .run(let action, let target):
+            Task { await store.perform(action, on: target) }
+        case .openSettings(let name):
+            if let name, let tunnel = RemoteCommand.Target.tunnel(name).tunnels(in: store.tunnels).first {
+                navigation.selection = .tunnel(tunnel.id)
+            }
+            showSettings()
+        }
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         // `kill`/launchd send SIGTERM, which would skip applicationShouldTerminate and orphan children.
         // Unblock it too: a parent shell can hand us a mask with SIGTERM blocked.

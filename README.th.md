@@ -87,6 +87,27 @@ open /Applications/Portkeep.app
 - **เครื่องมือ**: แสดง path ของแต่ละโปรแกรม พร้อมไอคอน ✓ หรือ ⚠ เลือกไฟล์อื่นด้วย **เลือก…** หรือกด **รีเซ็ต** เพื่อกลับไปใช้ตัวที่หาเจอ
 - **ทั่วไป**: เปลี่ยนภาษา (อังกฤษ, ไทย, จีนตัวย่อ, ญี่ปุ่น), เปิด/ปิดการเปิด tunnel ที่ค้างไว้ให้อีกครั้งเมื่อเปิดแอป และเปิด/ปิดการแจ้งเตือนเมื่อ tunnel หลุด (เปิดไว้เป็นค่าเริ่มต้น ครั้งแรก macOS จะขออนุญาตก่อน)
 
+## บรรทัดคำสั่งและ URL
+
+**การตั้งค่า › ทั่วไป › ติดตั้งเครื่องมือบรรทัดคำสั่ง…** จะลิงก์ `portkeep` ไว้ที่ `/usr/local/bin` ถ้าเขียนได้ ไม่งั้นจะใช้ `~/.local/bin` (และบอกถ้าโฟลเดอร์นั้นยังไม่อยู่ใน `PATH`) ถ้าเขียนไม่ได้ทั้งคู่จะแสดงคำสั่ง `sudo ln -s` ให้คัดลอกไปรันเอง
+
+```
+portkeep list                        # ชื่อ กลุ่ม พอร์ต สถานะ
+portkeep status "Orders MySQL"       # exit 0 เมื่อเชื่อมต่ออยู่
+portkeep start "Orders MySQL"        # มี stop และ toggle ด้วย
+portkeep start-group Development     # มี stop-group, start-all, stop-all ด้วย
+portkeep open                        # เปิดหน้าต่างการตั้งค่า
+```
+
+ชื่อ tunnel และกลุ่มไม่สนตัวพิมพ์เล็กใหญ่ คำสั่งที่เปลี่ยนสถานะจะส่งไปให้ Portkeep ทำงานเบื้องหลัง (เปิดแอปให้ถ้ายังไม่เปิด) ส่วน `list` และ `status` อ่านจาก `status.json` คำสั่งเดียวกันใช้เป็น URL ได้ด้วย เช่นจาก Shortcuts, Raycast หรือ `open` ในสคริปต์:
+
+```
+portkeep://start?name=Orders%20MySQL
+portkeep://stop?group=Production
+portkeep://toggle?all
+portkeep://open?name=Redis
+```
+
 ## ข้อจำกัดของเวอร์ชันนี้
 
 - ยังไม่รองรับการพิมพ์รหัสผ่าน, passphrase หรือ OTP ให้เพิ่มคีย์เข้า agent ด้วย `ssh-add --apple-use-keychain` ก่อน

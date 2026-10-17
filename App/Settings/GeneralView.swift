@@ -3,6 +3,7 @@ import UserNotifications
 
 /// App language. macOS reads `AppleLanguages` at launch, so a change applies after relaunching.
 struct GeneralView: View {
+    @Environment(TunnelStore.self) private var store
     static let languages: [(code: String, name: String)] = [
         ("en", "English"), ("th", "ไทย"), ("zh-Hans", "简体中文"), ("ja", "日本語"),
     ]
@@ -42,6 +43,14 @@ struct GeneralView: View {
                 }
             } footer: {
                 Text("When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
+                LabeledContent("Command line tool") {
+                    Button("Install Command Line Tool…") { CommandLineTool.install(searchPath: store.tools.searchPath) }
+                }
+            } footer: {
+                Text("Adds portkeep to your PATH: portkeep list, portkeep start <name>, portkeep stop-group <group>…")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {

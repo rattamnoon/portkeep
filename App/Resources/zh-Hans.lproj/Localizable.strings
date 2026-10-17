@@ -154,3 +154,13 @@
 "Notifications for Portkeep are off in System Settings." = "系统设置中已关闭 Portkeep 的通知。";
 "Open System Settings" = "打开系统设置";
 "When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back." = "当隧道断开超过 30 秒或需要你处理（例如登录已过期）时，以及恢复时。";
+"Installed %@" = "已安装到 %@";
+"Run portkeep list in a new terminal window to try it." = "在新的终端窗口中运行 portkeep list 试试。";
+"%@ isn’t on your PATH yet. Add it in your shell profile, or install into /usr/local/bin with:\n\n%@" = "%1$@ 还不在你的 PATH 中。请在 shell 配置文件中添加，或用以下命令安装到 /usr/local/bin：\n\n%2$@";
+"Couldn’t install the command line tool" = "无法安装命令行工具";
+"Portkeep can’t write to /usr/local/bin or ~/.local/bin. Run this in Terminal instead:\n\n%@" = "Portkeep 无法写入 /usr/local/bin 或 ~/.local/bin。请在终端中运行：\n\n%@";
+"OK" = "好";
+"Copy Command" = "拷贝命令";
+"Command line tool" = "命令行工具";
+"Install Command Line Tool…" = "安装命令行工具…";
+"Adds portkeep to your PATH: portkeep list, portkeep start <name>, portkeep stop-group <group>…" = "将 portkeep 加入 PATH：portkeep list、portkeep start <名称>、portkeep stop-group <分组>…";
