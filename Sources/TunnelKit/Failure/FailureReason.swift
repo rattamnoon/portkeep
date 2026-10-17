@@ -8,12 +8,14 @@ public enum FailureReason: Equatable, Hashable, Sendable {
     case portInUse
     case toolMissing(ToolMissing)
     case readinessTimeout
+    /// Was Connected, then two health probes in a row failed.
+    case stoppedResponding
     case unknown(status: Int32)
 
     /// Only failures that can clear up on their own are retried (spec §6).
     public var isRetryable: Bool {
         switch self {
-        case .hostUnreachable, .readinessTimeout, .unknown: true
+        case .hostUnreachable, .readinessTimeout, .stoppedResponding, .unknown: true
         default: false
         }
     }

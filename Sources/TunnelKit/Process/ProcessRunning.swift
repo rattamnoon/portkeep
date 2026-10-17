@@ -39,6 +39,8 @@ public final class LogBuffer: @unchecked Sendable {
 
 public protocol RunningProcess: Sendable {
     var pid: Int32 { get }
+    /// Exit status if it has exited, without waiting.
+    var exitStatus: Int32? { get }
     /// Exit status; 128 + signal number when killed by a signal.
     func waitForExit() async -> Int32
     /// SIGTERM to the whole process group, SIGKILL after 3 s; returns once it has exited.
@@ -144,6 +146,8 @@ private final class SpawnedProcess: RunningProcess, @unchecked Sendable {
         }
         pending.forEach { $0.resume(returning: code) }
     }
+
+    var exitStatus: Int32? { lock.withLock { status } }
 
     func waitForExit() async -> Int32 {
         await withCheckedContinuation { continuation in
