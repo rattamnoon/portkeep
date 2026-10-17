@@ -17,7 +17,7 @@ import Testing
 }
 
 @Test func kubeContexts() {
-    #expect(KubeContexts.parse("origin-prod\norigin-uat\n\n") == ["origin-prod", "origin-uat"])
+    #expect(KubeContexts.parse("acme-prod\nacme-uat\n\n") == ["acme-prod", "acme-uat"])
 }
 
 @Test func switchingOnASetStartsOneTunnelPerPort() {

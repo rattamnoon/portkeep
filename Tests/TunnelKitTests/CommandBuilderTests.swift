@@ -77,8 +77,8 @@ private func args(_ method: TunnelMethod, port: Int = 3306, tools: ToolPaths = a
 }
 
 @Test func kubernetes() throws {
-    let a = try args(.kubernetes(KubeConfig(context: "origin-prod", namespace: "monitoring", resource: "svc/grafana", remotePort: 3000)), port: 3000)
-    #expect(a == ["--context", "origin-prod", "-n", "monitoring", "port-forward", "svc/grafana", "3000:3000", "--address", "127.0.0.1"])
+    let a = try args(.kubernetes(KubeConfig(context: "acme-prod", namespace: "monitoring", resource: "svc/grafana", remotePort: 3000)), port: 3000)
+    #expect(a == ["--context", "acme-prod", "-n", "monitoring", "port-forward", "svc/grafana", "3000:3000", "--address", "127.0.0.1"])
 }
 
 @Test func iap() throws {
