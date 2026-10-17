@@ -87,3 +87,7 @@ open /Applications/Portkeep.app
 - ยังไม่มี sync ข้ามเครื่อง และ import/export
 - build เองเป็นการเซ็นแบบ ad-hoc ถ้าคัดลอกไปเครื่องอื่น macOS จะเตือนก่อนเปิด จนกว่าจะมี release ที่ notarize แล้ว
 - ไม่ขึ้น Mac App Store เพราะ sandbox ทำให้เรียกเครื่องมือและอ่าน config ของคุณไม่ได้
+
+## License
+
+[MIT](LICENSE) © 2026 Rattamnoon Kiratipisut ใช้ แก้ไข และแจกต่อได้อิสระ ขอแค่คงข้อความลิขสิทธิ์ไว้

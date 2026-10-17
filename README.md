@@ -165,4 +165,4 @@ To cut a release, push a tag (`git tag v0.2.0 && git push origin v0.2.0`) or run
 
 ## License
 
-Not decided yet.
+[MIT](LICENSE) © 2026 Rattamnoon Kiratipisut
