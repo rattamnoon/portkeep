@@ -92,7 +92,7 @@
 "Use Port %@" = "使用端口 %@";
 "Use ssh-agent" = "使用 ssh-agent";
 "Use {port} where the local port goes." = "在本地端口的位置使用 {port}。";
-"Uses /usr/bin/ssh with your ~/.ssh/config, keys and agent." = "使用 /usr/bin/ssh 以及你的 ~/.ssh/config、密钥和 agent。";
+"Uses ssh from your PATH (see Tools) with your ~/.ssh/config, keys and agent." = "使用 PATH 中的 ssh（见“工具”）以及你的 ~/.ssh/config、密钥和 agent。";
 "Uses kubectl and your kubeconfig contexts." = "使用 kubectl 和 kubeconfig 中的上下文。";
 "Zone" = "可用区";
 "e.g. %@" = "例如 %@";

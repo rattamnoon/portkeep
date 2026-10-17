@@ -92,7 +92,7 @@
 "Use Port %@" = "ใช้พอร์ต %@";
 "Use ssh-agent" = "ใช้ ssh-agent";
 "Use {port} where the local port goes." = "ใส่ {port} ตรงที่ต้องการให้เป็นพอร์ตในเครื่อง";
-"Uses /usr/bin/ssh with your ~/.ssh/config, keys and agent." = "ใช้ /usr/bin/ssh กับ ~/.ssh/config, คีย์ และ agent ที่มีอยู่";
+"Uses ssh from your PATH (see Tools) with your ~/.ssh/config, keys and agent." = "ใช้ ssh จาก PATH ของคุณ (ดูที่ เครื่องมือ) กับ ~/.ssh/config, คีย์ และ agent ที่มีอยู่";
 "Uses kubectl and your kubeconfig contexts." = "ใช้ kubectl และ context ใน kubeconfig";
 "Zone" = "Zone";
 "e.g. %@" = "เช่น %@";

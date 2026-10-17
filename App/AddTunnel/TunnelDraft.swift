@@ -30,7 +30,7 @@ enum MethodKind: String, CaseIterable, Identifiable {
 
     var needs: String {
         switch self {
-        case .ssh: String(localized: "Uses /usr/bin/ssh with your ~/.ssh/config, keys and agent.")
+        case .ssh: String(localized: "Uses ssh from your PATH (see Tools) with your ~/.ssh/config, keys and agent.")
         case .ssm: String(localized: "Needs the AWS CLI and session-manager-plugin.")
         case .kubernetes: String(localized: "Uses kubectl and your kubeconfig contexts.")
         case .iap: String(localized: "Needs the gcloud CLI, signed in.")

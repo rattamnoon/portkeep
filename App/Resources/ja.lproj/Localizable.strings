@@ -92,7 +92,7 @@
 "Use Port %@" = "ポート %@ を使用";
 "Use ssh-agent" = "ssh-agent を使用";
 "Use {port} where the local port goes." = "ローカルポートを入れる位置に {port} を使います。";
-"Uses /usr/bin/ssh with your ~/.ssh/config, keys and agent." = "/usr/bin/ssh と、お使いの ~/.ssh/config・鍵・エージェントを使います。";
+"Uses ssh from your PATH (see Tools) with your ~/.ssh/config, keys and agent." = "PATH 上の ssh（「ツール」を参照）と、お使いの ~/.ssh/config・鍵・エージェントを使います。";
 "Uses kubectl and your kubeconfig contexts." = "kubectl と kubeconfig のコンテキストを使います。";
 "Zone" = "ゾーン";
 "e.g. %@" = "例：%@";

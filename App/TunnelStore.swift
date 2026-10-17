@@ -332,9 +332,16 @@ final class TunnelStore {
         await turnOn(id)
     }
 
+    /// The tunnel's "Offer AWS sign-in when the session expires" setting is on.
+    func offersSignIn(_ id: UUID) -> Bool {
+        guard let tunnel = tunnel(id), case .ssm(let c) = tunnel.method else { return false }
+        return c.ssoAutoLogin
+    }
+
     /// `aws sso login` for an expired SSM profile, then retry.
     func signIn(_ id: UUID) async {
-        guard let tunnel = tunnel(id), case .ssm(let c) = tunnel.method, let aws = tools.url(for: "aws") else { return }
+        guard offersSignIn(id), let tunnel = tunnel(id), case .ssm(let c) = tunnel.method,
+              let aws = tools.url(for: "aws") else { return }
         _ = try? await ToolLocator.captureOutput(aws, ["sso", "login", "--profile", c.profile])
         await supervisors[id]?.kick()
     }
