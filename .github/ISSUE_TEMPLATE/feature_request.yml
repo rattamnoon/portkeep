@@ -1,0 +1,39 @@
+name: Feature request
+description: Something Portkeep should do that it doesn't yet.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Start from the tunnel and the moment it gets in your way; the feature can follow from there. Check [Limits in this version](https://github.com/rattamnoon/portkeep#limits-in-this-version) first, since some gaps are already known.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What gets in the way
+      description: The tunnel you keep open, and what you have to do by hand today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you'd like Portkeep to do
+    validations:
+      required: true
+  - type: dropdown
+    id: method
+    attributes:
+      label: Connection method it's about
+      options:
+        - SSH
+        - AWS Session Manager
+        - Kubernetes
+        - Google Cloud IAP
+        - Cloudflare Access
+        - Custom command
+        - A method Portkeep doesn't support yet
+        - Not method-specific
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you use instead today
+      description: A script, another app, a terminal tab, …

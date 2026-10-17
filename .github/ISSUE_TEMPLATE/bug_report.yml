@@ -1,0 +1,68 @@
+name: Bug report
+description: A tunnel misbehaves, or Portkeep does something it shouldn't.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. The menu's message and the lines from **Show Log** (open **⋯** on the tunnel's row) usually say most of what's needed. Remove hostnames, account ids or anything else you'd rather not post.
+  - type: input
+    id: version
+    attributes:
+      label: Portkeep version
+      description: "`brew info --cask portkeep`, or `defaults read /Applications/Portkeep.app/Contents/Info CFBundleShortVersionString`."
+      placeholder: "0.3.0"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "macOS 15.3 (Apple silicon)"
+    validations:
+      required: true
+  - type: dropdown
+    id: method
+    attributes:
+      label: Connection method
+      options:
+        - SSH (local -L)
+        - SSH (remote -R)
+        - SSH (SOCKS -D)
+        - AWS Session Manager
+        - Kubernetes (kubectl port-forward)
+        - Google Cloud IAP
+        - Cloudflare Access
+        - Custom command
+        - Not tunnel-specific
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what you saw instead.
+    validations:
+      required: true
+  - type: textarea
+    id: menu-said
+    attributes:
+      label: What the menu said
+      description: The tunnel's status line or warning, word for word if you can.
+      placeholder: "Reconnecting… can't reach i-0a3f5c9e2b7d41f08"
+  - type: textarea
+    id: log
+    attributes:
+      label: Log lines from Show Log
+      description: Open **⋯** on the tunnel's row › **Show Log**, and paste the lines around the failure.
+      render: shell
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Add an SSH tunnel to …
+        2. Put the Mac to sleep for …
+        3. …
+    validations:
+      required: true
