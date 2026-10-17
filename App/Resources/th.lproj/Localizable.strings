@@ -98,3 +98,5 @@
 "e.g. %@" = "เช่น %@";
 "tunnels.json couldn’t be read, so it was moved to %@." = "อ่าน tunnels.json ไม่ได้ จึงย้ายไปไว้ที่ %@";
 "tunnels.json was written by a newer Burrow. Changes won’t be saved." = "tunnels.json ถูกบันทึกโดย Burrow เวอร์ชันใหม่กว่า การแก้ไขจะไม่ถูกบันทึก";
+"Start" = "เริ่ม";
+"Stop" = "หยุด";

@@ -98,3 +98,5 @@
 "e.g. %@" = "例如 %@";
 "tunnels.json couldn’t be read, so it was moved to %@." = "无法读取 tunnels.json，已将其移至 %@。";
 "tunnels.json was written by a newer Burrow. Changes won’t be saved." = "tunnels.json 由较新版本的 Burrow 写入。更改将不会保存。";
+"Start" = "启动";
+"Stop" = "停止";

@@ -159,11 +159,9 @@ struct TunnelDetailView: View {
             }
             Spacer()
             Button("Show Log") { AppActivation.bringForward(); openWindow(id: "log", value: tunnel.id) }
-            Toggle("On", isOn: Binding(
-                get: { state.isOn },
-                set: { _ in Task { await store.toggle(tunnel.id) } }))
-                .toggleStyle(.switch)
-                .labelsHidden()
+            // A button, not a switch: a Toggle bound to async state never called its setter here.
+            Button(state.isOn ? "Stop" : "Start") { Task { await store.toggle(tunnel.id) } }
+                .keyboardShortcut(.return, modifiers: .command)
                 .accessibilityIdentifier("detail.toggle")
         }
         .padding(12)

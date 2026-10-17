@@ -98,3 +98,5 @@
 "e.g. %@" = "例：%@";
 "tunnels.json couldn’t be read, so it was moved to %@." = "tunnels.json を読み込めなかったため、%@ に移動しました。";
 "tunnels.json was written by a newer Burrow. Changes won’t be saved." = "tunnels.json は新しいバージョンの Burrow で書き込まれています。変更は保存されません。";
+"Start" = "開始";
+"Stop" = "停止";
