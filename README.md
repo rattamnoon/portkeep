@@ -9,7 +9,7 @@
 Portkeep is a macOS menu bar app for the tunnels you open every day: databases, caches, dashboards and SOCKS proxies behind SSH jump hosts, AWS Session Manager, Kubernetes and more. Name each tunnel once and switch it on when you need it. Portkeep keeps it alive. When a tunnel drops, Portkeep says which one, why, and that it is already reconnecting.
 
 <p align="center">
-  <img src="docs/images/menu-en-light.png" width="330" alt="Portkeep menu: tunnels grouped by environment, each with a switch, status and tags">
+  <img src="docs/images/menu-en-light.png" width="330" alt="Portkeep menu: tunnels grouped by environment, each with a switch and status">
   &nbsp;&nbsp;
   <img src="docs/images/menu-en-dark.png" width="330" alt="The same menu in dark mode">
 </p>
@@ -18,7 +18,7 @@ Portkeep is a macOS menu bar app for the tunnels you open every day: databases, 
 
 A terminal tab running `ssh -N -L 5432:db:5432 bastion` works until the laptop sleeps, the Wi-Fi changes or the session times out. Then your database client is the first to find out. Portkeep replaces those tabs:
 
-- **A switch per tunnel.** Each tunnel sits under a group (Production, Development, …) with its local port, live status and a tag.
+- **A switch per tunnel.** Each tunnel sits under a group (Production, Development, …) with its local port and live status.
 - **Honest status.** A tunnel shows *Connected* only when its local port actually accepts connections; a running process isn't enough.
 - **Automatic reconnect.** It reconnects after sleep, a network change or a dropped session. Retries back off from 1 s to 60 s, and no retries are spent while you're offline.
 - **It remembers.** Tunnels that were on when Portkeep quit come back on at the next launch, including after a restart.

@@ -50,9 +50,6 @@ struct TunnelRow: View {
                         .lineLimit(state.needsAttention ? 2 : 1)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                if let tag = tunnel.tags.first {
-                    TagChip(tag: tag, hex: store.file.tagColor(tag)).padding(.top, 1)
-                }
             }
             // The text column takes the free width first; a Spacer here split it in half and cut names short.
             .frame(maxWidth: .infinity, alignment: .leading)
