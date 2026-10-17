@@ -46,7 +46,15 @@ struct TunnelEditor: View {
 
             if hasAdvanced {
                 Section {
-                    DisclosureGroup("Advanced Options", isExpanded: $advanced) { advancedFields }
+                    DisclosureGroup(isExpanded: $advanced) {
+                        advancedFields
+                    } label: {
+                        // The whole row toggles, not just the chevron.
+                        Text("Advanced Options")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
+                            .onTapGesture { withAnimation { advanced.toggle() } }
+                    }
                 }
             }
 
