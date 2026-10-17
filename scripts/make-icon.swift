@@ -1,8 +1,8 @@
-// Draws the Portkeep app icon and writes App/Resources/Assets.xcassets/AppIcon.appiconset.
-// Run from the repo root: swift scripts/make-icon.swift
+// Draws the Portkeep app icon and writes App/Resources/Assets.xcassets/AppIcon.appiconset
+// and docs/images/icon.png. Run from the repo root: swift scripts/make-icon.swift
 //
-// Monochrome: a graphite squircle with a tunnel seen head-on, three arches receding into the
-// mountain and the light at the end of it.
+// Monochrome: a graphite squircle holding the "Port" mark, two square brackets around a dot,
+// a port held open.
 import AppKit
 
 let set = URL(fileURLWithPath: "App/Resources/Assets.xcassets/AppIcon.appiconset")
@@ -27,52 +27,37 @@ func render(_ side: Int) -> Data {
     NSColor(white: 0.1, alpha: 1).setFill()
     squircle.fill()
     ctx.restoreGState()
-    NSGradient(colors: [NSColor(white: 0.26, alpha: 1), NSColor(white: 0.07, alpha: 1)])!.draw(in: squircle, angle: -90)
+    NSGradient(colors: [NSColor(srgbRed: 0x34 / 255, green: 0x34 / 255, blue: 0x3a / 255, alpha: 1),
+                        NSColor(srgbRed: 0x0c / 255, green: 0x0c / 255, blue: 0x0e / 255, alpha: 1)])!
+        .draw(in: squircle, angle: -90)
 
-    // A hairline highlight along the top edge, like machined metal.
+    // A faint 3 px sheen just inside the edge, fading out by mid height.
     ctx.saveGState()
     squircle.addClip()
-    let rim = NSBezierPath(roundedRect: body.insetBy(dx: 3, dy: 3), xRadius: 182, yRadius: 182)
-    rim.lineWidth = 4
-    NSGradient(colors: [NSColor(white: 1, alpha: 0.22), NSColor(white: 1, alpha: 0)])!
-        .draw(in: rim, angle: -90)
-    NSColor(white: 1, alpha: 0.10).setStroke()
-    rim.stroke()
+    ctx.addPath(squircle.cgPath)
+    ctx.setLineWidth(6)
+    ctx.replacePathWithStrokedPath()
+    ctx.clip()
+    NSGradient(colors: [NSColor(white: 1, alpha: 0.16), NSColor(white: 1, alpha: 0)])!
+        .draw(from: NSPoint(x: 0, y: body.maxY), to: NSPoint(x: 0, y: body.midY), options: [])
     ctx.restoreGState()
 
-    // The light at the end of the tunnel, a soft glow behind the innermost arch.
-    let center = NSPoint(x: 512, y: 430)
-    let glow = NSGradient(colors: [NSColor(white: 1, alpha: 0.55), NSColor(white: 1, alpha: 0)])!
-    glow.draw(fromCenter: center, radius: 0, toCenter: center, radius: 190, options: [])
-
-    // Three arches, each further in: narrower, thinner and dimmer.
-    let base: CGFloat = 300
-    let arches: [(halfWidth: CGFloat, height: CGFloat, width: CGFloat, alpha: CGFloat)] = [
-        (270, 470, 54, 1.0), (178, 330, 40, 0.75), (98, 205, 30, 0.5),
-    ]
-    for arch in arches {
-        let path = NSBezierPath()
-        path.lineWidth = arch.width
-        path.lineCapStyle = .round
-        path.lineJoinStyle = .round
-        let shoulder = base + arch.height - arch.halfWidth
-        path.move(to: NSPoint(x: 512 - arch.halfWidth, y: base))
-        path.line(to: NSPoint(x: 512 - arch.halfWidth, y: shoulder))
-        path.appendArc(withCenter: NSPoint(x: 512, y: shoulder), radius: arch.halfWidth,
-                       startAngle: 180, endAngle: 0, clockwise: true)
-        path.line(to: NSPoint(x: 512 + arch.halfWidth, y: base))
-        NSColor(white: 1, alpha: arch.alpha).setStroke()
-        path.stroke()
+    // The mark: two square brackets holding a dot. Symmetric about y = 512, so the SVG
+    // coordinates read the same with Core Graphics' y axis.
+    let ink = NSColor(srgbRed: 0xf1 / 255, green: 0xf1 / 255, blue: 0xf4 / 255, alpha: 1)
+    let brackets = NSBezierPath()
+    brackets.lineWidth = 58
+    brackets.lineCapStyle = .round
+    brackets.lineJoinStyle = .round
+    for (outer, inner) in [(CGFloat(330), CGFloat(418)), (694, 606)] {
+        brackets.move(to: NSPoint(x: inner, y: 318))
+        brackets.line(to: NSPoint(x: outer, y: 318))
+        brackets.line(to: NSPoint(x: outer, y: 706))
+        brackets.line(to: NSPoint(x: inner, y: 706))
     }
-
-    // Ground line.
-    let ground = NSBezierPath()
-    ground.lineWidth = 54
-    ground.lineCapStyle = .round
-    ground.move(to: NSPoint(x: 200, y: base))
-    ground.line(to: NSPoint(x: 824, y: base))
-    NSColor.white.setStroke()
-    ground.stroke()
+    ink.set()
+    brackets.stroke()
+    NSBezierPath(ovalIn: NSRect(x: 512 - 62, y: 512 - 62, width: 124, height: 124)).fill()
 
     NSGraphicsContext.restoreGraphicsState()
     return rep.representation(using: .png, properties: [:])!
@@ -88,4 +73,5 @@ for points in [16, 32, 128, 256, 512] {
 }
 try Data(#"{"images":[\#(images.joined(separator: ","))],"info":{"author":"xcode","version":1}}"#.utf8)
     .write(to: set.appendingPathComponent("Contents.json"))
-print("wrote \(images.count) icons to \(set.path)")
+try render(512).write(to: URL(fileURLWithPath: "docs/images/icon.png"))
+print("wrote \(images.count) icons to \(set.path) and docs/images/icon.png")
