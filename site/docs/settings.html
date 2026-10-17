@@ -8,15 +8,15 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/settings.html">
+<link rel="canonical" href="https://portkeep.rattamnoon.com/docs/settings.html">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Portkeep">
 <meta property="og:title" content="Settings — Portkeep docs">
 <meta property="og:description" content="Portkeep&#x27;s Settings window: the tunnel sidebar and search, the tunnel detail pane, Groups &amp; Tags, Tools paths, and General options such as language and notifications.">
-<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/settings.html">
-<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:url" content="https://portkeep.rattamnoon.com/docs/settings.html">
+<meta property="og:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Settings — Portkeep docs">
 <meta name="twitter:description" content="Portkeep&#x27;s Settings window: the tunnel sidebar and search, the tunnel detail pane, Groups &amp; Tags, Tools paths, and General options such as language and notifications.">
-<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="twitter:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta name="author" content="Rattamnoon Kiratipisut">
 <link rel="stylesheet" href="../assets/style.css">
 <link rel="stylesheet" href="../assets/docs.css">
@@ -34,13 +34,13 @@
  "@graph": [
   {
    "@type": "TechArticle",
-   "@id": "https://rattamnoon.github.io/portkeep/docs/settings.html#article",
+   "@id": "https://portkeep.rattamnoon.com/docs/settings.html#article",
    "headline": "The Settings window",
    "description": "Portkeep's Settings window: the tunnel sidebar and search, the tunnel detail pane, Groups & Tags, Tools paths, and General options such as language and notifications.",
-   "url": "https://rattamnoon.github.io/portkeep/docs/settings.html",
-   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/settings.html",
+   "url": "https://portkeep.rattamnoon.com/docs/settings.html",
+   "mainEntityOfPage": "https://portkeep.rattamnoon.com/docs/settings.html",
    "inLanguage": "en",
-   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "image": "https://portkeep.rattamnoon.com/assets/og.png",
    "dateModified": "2026-10-17",
    "author": {
     "@type": "Person",
@@ -48,12 +48,12 @@
     "url": "https://github.com/rattamnoon"
    },
    "about": {
-    "@id": "https://rattamnoon.github.io/portkeep/#app"
+    "@id": "https://portkeep.rattamnoon.com/#app"
    },
    "isPartOf": {
     "@type": "WebSite",
     "name": "Portkeep",
-    "url": "https://rattamnoon.github.io/portkeep/"
+    "url": "https://portkeep.rattamnoon.com/"
    }
   },
   {
@@ -63,19 +63,19 @@
      "@type": "ListItem",
      "position": 1,
      "name": "Portkeep",
-     "item": "https://rattamnoon.github.io/portkeep/"
+     "item": "https://portkeep.rattamnoon.com/"
     },
     {
      "@type": "ListItem",
      "position": 2,
      "name": "Docs",
-     "item": "https://rattamnoon.github.io/portkeep/docs/"
+     "item": "https://portkeep.rattamnoon.com/docs/"
     },
     {
      "@type": "ListItem",
      "position": 3,
      "name": "Settings",
-     "item": "https://rattamnoon.github.io/portkeep/docs/settings.html"
+     "item": "https://portkeep.rattamnoon.com/docs/settings.html"
     }
    ]
   }
@@ -114,6 +114,7 @@
       <li><a href="ports.html">Local ports &amp; on demand</a></li>
       <li><a href="settings.html" aria-current="page">Settings</a></li>
       <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html">AI assistants</a></li>
       <li><a href="import-export.html">Import &amp; export</a></li>
       <li><a href="data.html">Files &amp; privacy</a></li>
       <li><a href="faq.html">FAQ &amp; limits</a></li>
@@ -161,7 +162,7 @@
 <ul>
   <li>The card shows the live status line, the address and method (<span class="msg">127.0.0.1:3306 · AWS SSM</span>), <span class="ui">Show Log</span>, and <span class="ui">Start</span> or <span class="ui">Stop</span> (<kbd>⌘</kbd><kbd>Return</kbd>).</li>
   <li>The editor has every field from <a href="tunnels.html">Adding tunnels</a>, plus a <span class="ui">Connect with</span> picker to change the method.</li>
-  <li>At the bottom: <span class="ui">Duplicate</span>, <span class="ui">Revert</span>, and <span class="ui">Save</span> (<kbd>⌘</kbd><kbd>S</kbd>). Renaming, regrouping or retagging a running tunnel doesn’t restart it; changing how it connects does.</li>
+  <li>At the bottom: <span class="ui">Duplicate</span>, <span class="ui">Copy Diagnostics</span> (see <a href="status.html#diagnostics">Diagnostics</a>), <span class="ui">Revert</span>, and <span class="ui">Save</span> (<kbd>⌘</kbd><kbd>S</kbd>). Renaming, regrouping or retagging a running tunnel doesn’t restart it; changing how it connects does.</li>
 </ul>
 
 <h2 id="groups-tags">Groups &amp; Tags<a class="anchor" href="#groups-tags" aria-label="Link to this section">#</a></h2>
@@ -198,6 +199,9 @@
   <div><dt>Notify when a tunnel drops</dt><dd>On by default. See <a href="status.html#notifications">Notifications</a>. If notifications for Portkeep are turned off in System Settings, a line says so with an <span class="ui">Open System Settings</span> button.</dd></div>
   <div><dt>Tunnels</dt><dd><span class="ui">Export Tunnels…</span>, <span class="ui">Import Tunnels…</span> and <span class="ui">Import from SSH Config…</span>. See <a href="import-export.html">Import and export</a>.</dd></div>
   <div><dt>Command line tool</dt><dd><span class="ui">Install Command Line Tool…</span> puts <code>portkeep</code> on your <code>PATH</code>. See <a href="automation.html#install">Command line</a>.</dd></div>
+  <div><dt>AI assistants</dt><dd><span class="ui">Copy MCP Config</span> copies the MCP server entry for Claude Desktop, Cursor and other assistants; the <span class="ui">Claude Code</span> row shows the <code>claude mcp add</code> command, with <span class="ui">Copy Command</span>. See <a href="ai.html">AI assistants</a>.</dd></div>
+  <div><dt>Report a problem</dt><dd><span class="ui">Copy Diagnostics for All</span> copies versions, tool paths, and every tunnel’s settings, state and last 50 log lines as Markdown for a GitHub issue. See <a href="status.html#diagnostics">Diagnostics</a>.</dd></div>
+  <div><dt>Updates</dt><dd><span class="ui">Check for updates automatically</span> is on by default: once a day Portkeep asks GitHub for the latest release. When there is a newer one, a line says <span class="msg">Portkeep 0.5.0 is available</span> here and at the top of the menu, with <span class="ui">Release Notes</span> and, if you installed with Homebrew, <span class="ui">Copy Upgrade Command</span> (<code>brew upgrade --cask portkeep</code>), otherwise <span class="ui">Download</span>. <span class="ui">Check for Updates…</span> checks now and says if you are up to date. Nothing else is sent; see <a href="data.html#privacy">Privacy</a>.</dd></div>
   <div><dt>Language</dt><dd><span class="ui">Same as macOS</span> (the default), English, ไทย, 简体中文 or 日本語. Changing it shows <span class="msg">Portkeep needs to relaunch to switch language.</span> with a <span class="ui">Relaunch Now</span> button. You can also set the language per app in System Settings › General › Language &amp; Region.</dd></div>
 </dl>
 
@@ -208,7 +212,7 @@
     <a class="prev" href="ports.html" rel="prev"><span>Previous</span><strong>Local ports &amp; on demand</strong></a>
     <a class="next" href="automation.html" rel="next"><span>Next</span><strong>Command line &amp; URLs</strong></a>
   </nav>
-  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
   </main>
 </div>
 

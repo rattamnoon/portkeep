@@ -6,8 +6,16 @@ All notable changes to Portkeep are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-17
+
 ### Added
 
+- Use Portkeep from AI assistants: `portkeep mcp` is an MCP server (Claude Code, Claude Desktop, Cursor) that can list, add, edit, test, start, stop and remove tunnels, and `skills/portkeep` is an Agent Skill for it. Settings › General › AI assistants copies the MCP config.
+- The `portkeep` command is now a native tool with `--json` on every read and new `get`, `add`, `edit`, `remove`, `duplicate`, `test`, `logs`, `methods` and `discover` commands. Existing commands keep their output.
+- A daily check for new releases (can be turned off), with Check for Updates… in General and the `brew upgrade` command when installed with Homebrew.
+- Copy Diagnostics on a tunnel and for all tunnels, ready to paste into a bug report.
+- The website moved to https://portkeep.rattamnoon.com/ and has an "Use with AI assistants" guide.
+- The dmg includes the LICENSE. (#16)
 - A website on GitHub Pages, with an eleven-page user guide. (#13, #14)
 - Issue forms for bugs and feature requests, a pull request template and `CONTRIBUTING.md`. (#13)
 
@@ -15,6 +23,13 @@ All notable changes to Portkeep are recorded here. The format follows
 
 - New "Port" app icon and menu bar glyph: two brackets around a dot. (#11)
 - The Settings sidebar lists tunnels by name only; search still matches port numbers. (#11)
+
+### Fixed
+
+- "Offer AWS sign-in when the session expires" now controls whether Sign In to AWS… is offered.
+- Retry Now is offered for a blocked port and an expired AWS sign-in.
+- The SSH method's note says ssh comes from your PATH, which is what Portkeep uses.
+- Supervisor tests no longer fail now and then under parallel runs. (#16)
 
 ## [0.3.0] - 2026-10-17
 
@@ -69,7 +84,8 @@ All notable changes to Portkeep are recorded here. The format follows
 - Monochrome app icon and matching menu bar glyph. (#3)
 - Tags get their own line under a tunnel's status; the tag filter bar is removed. (#3)
 
-[Unreleased]: https://github.com/rattamnoon/portkeep/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/rattamnoon/portkeep/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/rattamnoon/portkeep/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/rattamnoon/portkeep/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/rattamnoon/portkeep/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rattamnoon/portkeep/releases/tag/v0.1.0

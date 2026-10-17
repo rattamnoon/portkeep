@@ -101,6 +101,7 @@ struct TunnelRow: View {
                 AppActivation.bringForward()
                 openWindow(id: "log", value: tunnel.id)
             }
+            Button("Copy Diagnostics") { store.copyDiagnostics(for: [tunnel.id]) }
         } label: {
             Image(systemName: "ellipsis")
         }
@@ -145,12 +146,20 @@ struct TunnelRow: View {
 
     @ViewBuilder private var fixAction: some View {
         switch state {
-        case .blocked(let owner) where owner != nil:
-            let alternate = PortProbe.alternate(for: tunnel.localPort) { store.ports.isFree($0) }
-            Button("Use Port \(String(alternate))") { Task { await store.useAlternatePort(tunnel.id) } }
+        case .blocked(let owner):
+            if owner != nil {
+                let alternate = PortProbe.alternate(for: tunnel.localPort) { store.ports.isFree($0) }
+                Button("Use Port \(String(alternate))") { Task { await store.useAlternatePort(tunnel.id) } }
+            }
+            // For when the other process has gone, or the user stopped it.
+            Button("Retry Now") { Task { await store.retry(tunnel.id) } }
             Divider()
         case .failed(.ssoExpired):
-            Button("Sign In to AWS…") { Task { await store.signIn(tunnel.id) } }
+            if store.offersSignIn(tunnel.id) {
+                Button("Sign In to AWS…") { Task { await store.signIn(tunnel.id) } }
+            }
+            // For a sign-in done in Terminal.
+            Button("Retry Now") { Task { await store.retry(tunnel.id) } }
             Divider()
         case .failed, .retrying:
             Button("Retry Now") { Task { await store.retry(tunnel.id) } }

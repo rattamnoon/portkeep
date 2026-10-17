@@ -15,6 +15,9 @@ struct GeneralView: View {
     @State private var notificationsDenied = false
     @State private var sshForwards: [SSHConfigForward]?
     @State private var launched = GeneralView.current
+    @State private var copied: String?
+    @AppStorage("checkForUpdates") private var checkForUpdates = true
+    private var updates: UpdateChecker { .shared }
 
     var body: some View {
         Form {
@@ -70,6 +73,56 @@ struct GeneralView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {
+                LabeledContent("MCP server") {
+                    Button(copied == "mcp" ? "Copied" : "Copy MCP Config") { copy(CommandLineTool.mcpConfig, as: "mcp") }
+                        .disabled(CommandLineTool.mcpConfig == nil)
+                        .accessibilityIdentifier("general.copyMCPConfig")
+                }
+                if let command = CommandLineTool.claudeCommand {
+                    LabeledContent {
+                        Button(copied == "claude" ? "Copied" : "Copy Command") { copy(command, as: "claude") }
+                    } label: {
+                        Text("Claude Code")
+                        Text(verbatim: command)
+                            .font(.system(size: 11, design: .monospaced))
+                            .textSelection(.enabled)
+                    }
+                }
+            } header: {
+                Text("AI assistants")
+            } footer: {
+                Text("Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
+                LabeledContent("Report a problem") {
+                    Button(copied == "diagnostics" ? "Copied" : "Copy Diagnostics for All") {
+                        copy(store.diagnostics(), as: "diagnostics")
+                    }
+                }
+            } footer: {
+                Text("Versions, tool paths, and each tunnel’s settings, state and last 50 log lines, as Markdown to paste into a GitHub issue. Portkeep stores no passwords; check hostnames before posting.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
+                Toggle("Check for updates automatically", isOn: $checkForUpdates)
+                LabeledContent {
+                    Button("Check for Updates…") { Task { await updates.check(manual: true) } }
+                        .disabled(updates.checking)
+                } label: {
+                    Text("Portkeep \(UpdateChecker.currentVersion)")
+                    if let result = updates.manualResult { Text(result) }
+                }
+                if let release = updates.available {
+                    UpdateBanner(release: release)
+                }
+            } header: {
+                Text("Updates")
+            } footer: {
+                Text("Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
                 Picker("Language", selection: $selection) {
                     Text("Same as macOS").tag("")
                     Divider()
@@ -97,6 +150,16 @@ struct GeneralView: View {
         .task { notificationsDenied = await DropNotifications.isDenied }
         .sheet(isPresented: Binding(get: { sshForwards != nil }, set: { if !$0 { sshForwards = nil } })) {
             SSHImportView(forwards: sshForwards ?? []).environment(store)
+        }
+    }
+
+    private func copy(_ text: String?, as which: String) {
+        guard let text else { return }
+        CommandLineTool.copy(text)
+        copied = which
+        Task {
+            try? await Task.sleep(for: .seconds(2))
+            if copied == which { copied = nil }
         }
     }
 

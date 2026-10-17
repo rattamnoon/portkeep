@@ -57,6 +57,7 @@ enum SettingsSelection: Hashable {
 final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     let store: TunnelStore
     let navigation = Navigation()
+    private let control = ControlService()
     private var events: SystemEvents?
     private var previewWindows: [NSWindow] = []
     private let environment = ProcessInfo.processInfo.environment
@@ -117,8 +118,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         } else {
             UNUserNotificationCenter.current().delegate = self
             events = SystemEvents(store: store)
+            UpdateChecker.shared.start()
             Task {
                 await store.start()
+                control.start(store: store)
                 // First launch: nothing in the menu bar says much yet, so show where to start.
                 if store.tunnels.isEmpty, environment["PORTKEEP_SHOW"] == nil { showSettings() }
             }
@@ -222,6 +225,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         // Stop every child before exiting so no ssh/aws process outlives the app. Synchronous on
         // purpose: with .terminateLater AppKit spins a modal run loop where our async work never ran.
+        control.stop()
         store.stopAllNow()
         return .terminateNow
     }

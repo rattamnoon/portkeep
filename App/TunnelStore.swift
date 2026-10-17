@@ -19,6 +19,8 @@ final class TunnelStore {
     @ObservationIgnored private var claims = PortClaims()
     @ObservationIgnored private var runner: any ProcessRunning = SystemRunner(path: ToolLocator.fallbackPath)
     @ObservationIgnored let ports: any PortChecking = SystemPorts()
+    /// The data folder: tunnels.json, status.json, control.sock.
+    @ObservationIgnored let directory: URL
     @ObservationIgnored private let fileURL: URL
     @ObservationIgnored private let reaper: OrphanReaper
     @ObservationIgnored private let notifications = DropNotifications()
@@ -53,6 +55,7 @@ final class TunnelStore {
 
     init(directory: URL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         .appendingPathComponent("Portkeep")) {
+        self.directory = directory
         fileURL = directory.appendingPathComponent("tunnels.json")
         sessionURL = directory.appendingPathComponent("session.json")
         statusURL = directory.appendingPathComponent("status.json")
@@ -105,7 +108,8 @@ final class TunnelStore {
         // Two of them on one port: the first in the list starts, the other stays off.
         await switchOn(file.tunnels.filter { $0.connectAtLogin || restore.contains($0.id) }.map(\.id))
         started = true
-        scheduleStatusWrite()
+        // Straight away rather than coalesced: `portkeep list` may be waiting on it.
+        writeStatus(running: true)
         for (action, target) in pendingCommands { await perform(action, on: target) }
         pendingCommands = []
     }
@@ -328,9 +332,16 @@ final class TunnelStore {
         await turnOn(id)
     }
 
+    /// The tunnel's "Offer AWS sign-in when the session expires" setting is on.
+    func offersSignIn(_ id: UUID) -> Bool {
+        guard let tunnel = tunnel(id), case .ssm(let c) = tunnel.method else { return false }
+        return c.ssoAutoLogin
+    }
+
     /// `aws sso login` for an expired SSM profile, then retry.
     func signIn(_ id: UUID) async {
-        guard let tunnel = tunnel(id), case .ssm(let c) = tunnel.method, let aws = tools.url(for: "aws") else { return }
+        guard offersSignIn(id), let tunnel = tunnel(id), case .ssm(let c) = tunnel.method,
+              let aws = tools.url(for: "aws") else { return }
         _ = try? await ToolLocator.captureOutput(aws, ["sso", "login", "--profile", c.profile])
         await supervisors[id]?.kick()
     }
@@ -462,6 +473,31 @@ final class TunnelStore {
 
     func log(for id: UUID) -> [String] { supervisors[id]?.log.lines ?? [] }
 
+    /// Copy Diagnostics: Markdown for a GitHub issue about these tunnels (all of them when nil).
+    func diagnostics(for ids: [UUID]? = nil) -> String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let found = ToolPaths(searchPath: tools.searchPath, overrides: [:])
+        let env = Diagnostics.Environment(
+            appVersion: info["CFBundleShortVersionString"] as? String ?? "?",
+            build: info["CFBundleVersion"] as? String ?? "?",
+            macOS: ProcessInfo.processInfo.operatingSystemVersionString,
+            architecture: Diagnostics.machine,
+            tools: Discovery.toolNames.map { name in
+                let custom = file.toolPaths[name].map { !$0.isEmpty } ?? false
+                return (name, custom ? file.toolPaths[name] : found.url(for: name)?.path, custom)
+            },
+            toolPaths: tools)
+        let chosen = ids.map { wanted in file.tunnels.filter { wanted.contains($0.id) } } ?? file.tunnels
+        return Diagnostics.markdown(env, tunnels: chosen.map {
+            Diagnostics.Entry(tunnel: $0, state: state(of: $0.id), log: log(for: $0.id))
+        })
+    }
+
+    func copyDiagnostics(for ids: [UUID]? = nil) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(diagnostics(for: ids), forType: .string)
+    }
+
     func tunnel(_ id: UUID) -> Tunnel? { file.tunnels.first { $0.id == id } }
 
     func statusText(_ id: UUID, now: Date = .now) -> String {
@@ -513,6 +549,9 @@ final class TunnelStore {
 
     /// Portkeep opens at login only while some tunnel asks to connect at login (spec §5.5).
     private func updateLoginItem() {
+        // A development data folder (UI tests, screenshots, trying a build) leaves the installed
+        // app's login item alone: it shares the bundle identifier.
+        guard ProcessInfo.processInfo.environment["PORTKEEP_DATA_DIR"] == nil else { return }
         let wanted = file.tunnels.contains(where: \.connectAtLogin)
         let service = SMAppService.mainApp
         do {

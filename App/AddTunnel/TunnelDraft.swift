@@ -30,7 +30,7 @@ enum MethodKind: String, CaseIterable, Identifiable {
 
     var needs: String {
         switch self {
-        case .ssh: String(localized: "Uses /usr/bin/ssh with your ~/.ssh/config, keys and agent.")
+        case .ssh: String(localized: "Uses ssh from your PATH (see Tools) with your ~/.ssh/config, keys and agent.")
         case .ssm: String(localized: "Needs the AWS CLI and session-manager-plugin.")
         case .kubernetes: String(localized: "Uses kubectl and your kubeconfig contexts.")
         case .iap: String(localized: "Needs the gcloud CLI, signed in.")
@@ -193,12 +193,14 @@ struct TunnelDraft: Equatable {
         }
     }
 
-    /// Nil until every required field is filled with a valid value.
+    /// Nil until every required field is filled with a valid value. The same rules as tunnels added
+    /// from the command line or an AI assistant (TunnelInput).
     var tunnel: Tunnel? {
         guard let name = filled(name), let local = port(localPort), let method else { return nil }
         let idle = Int(idleMinutes.trimmingCharacters(in: .whitespaces)).map { max(0, $0) } ?? Tunnel.defaultIdleMinutes
-        return Tunnel(id: id, name: name, group: filled(group) ?? "Other", localPort: local,
-                      connectAtLogin: connectAtLogin, method: method, tags: Array(Tunnel.parseTags(tag).prefix(1)),
-                      startsOnConnect: startsOnConnect && supportsOnDemand, idleMinutes: idle)
+        return try? TunnelInput.validate(Tunnel(
+            id: id, name: name, group: filled(group) ?? "Other", localPort: local,
+            connectAtLogin: connectAtLogin, method: method, tags: Array(Tunnel.parseTags(tag).prefix(1)),
+            startsOnConnect: startsOnConnect && supportsOnDemand, idleMinutes: idle))
     }
 }

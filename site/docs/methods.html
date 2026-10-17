@@ -8,15 +8,15 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/methods.html">
+<link rel="canonical" href="https://portkeep.rattamnoon.com/docs/methods.html">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Portkeep">
 <meta property="og:title" content="Connection methods — Portkeep docs">
 <meta property="og:description" content="How Portkeep runs SSH (-L, -R, -D, ProxyJump), AWS SSM, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, with every field and worked examples.">
-<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/methods.html">
-<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:url" content="https://portkeep.rattamnoon.com/docs/methods.html">
+<meta property="og:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Connection methods — Portkeep docs">
 <meta name="twitter:description" content="How Portkeep runs SSH (-L, -R, -D, ProxyJump), AWS SSM, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, with every field and worked examples.">
-<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="twitter:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta name="author" content="Rattamnoon Kiratipisut">
 <link rel="stylesheet" href="../assets/style.css">
 <link rel="stylesheet" href="../assets/docs.css">
@@ -34,13 +34,13 @@
  "@graph": [
   {
    "@type": "TechArticle",
-   "@id": "https://rattamnoon.github.io/portkeep/docs/methods.html#article",
+   "@id": "https://portkeep.rattamnoon.com/docs/methods.html#article",
    "headline": "Connection methods",
    "description": "How Portkeep runs SSH (-L, -R, -D, ProxyJump), AWS SSM, kubectl port-forward, Google Cloud IAP, Cloudflare Access and custom commands, with every field and worked examples.",
-   "url": "https://rattamnoon.github.io/portkeep/docs/methods.html",
-   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/methods.html",
+   "url": "https://portkeep.rattamnoon.com/docs/methods.html",
+   "mainEntityOfPage": "https://portkeep.rattamnoon.com/docs/methods.html",
    "inLanguage": "en",
-   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "image": "https://portkeep.rattamnoon.com/assets/og.png",
    "dateModified": "2026-10-17",
    "author": {
     "@type": "Person",
@@ -48,12 +48,12 @@
     "url": "https://github.com/rattamnoon"
    },
    "about": {
-    "@id": "https://rattamnoon.github.io/portkeep/#app"
+    "@id": "https://portkeep.rattamnoon.com/#app"
    },
    "isPartOf": {
     "@type": "WebSite",
     "name": "Portkeep",
-    "url": "https://rattamnoon.github.io/portkeep/"
+    "url": "https://portkeep.rattamnoon.com/"
    }
   },
   {
@@ -63,19 +63,19 @@
      "@type": "ListItem",
      "position": 1,
      "name": "Portkeep",
-     "item": "https://rattamnoon.github.io/portkeep/"
+     "item": "https://portkeep.rattamnoon.com/"
     },
     {
      "@type": "ListItem",
      "position": 2,
      "name": "Docs",
-     "item": "https://rattamnoon.github.io/portkeep/docs/"
+     "item": "https://portkeep.rattamnoon.com/docs/"
     },
     {
      "@type": "ListItem",
      "position": 3,
      "name": "Connection methods",
-     "item": "https://rattamnoon.github.io/portkeep/docs/methods.html"
+     "item": "https://portkeep.rattamnoon.com/docs/methods.html"
     }
    ]
   },
@@ -150,6 +150,7 @@
       <li><a href="ports.html">Local ports &amp; on demand</a></li>
       <li><a href="settings.html">Settings</a></li>
       <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html">AI assistants</a></li>
       <li><a href="import-export.html">Import &amp; export</a></li>
       <li><a href="data.html">Files &amp; privacy</a></li>
       <li><a href="faq.html">FAQ &amp; limits</a></li>
@@ -187,7 +188,7 @@
 </ul>
 
 <h2 id="ssh">SSH<a class="anchor" href="#ssh" aria-label="Link to this section">#</a></h2>
-<p>Runs <code>ssh</code> (normally <code>/usr/bin/ssh</code>) with your <code>~/.ssh/config</code>, keys and agent. Use it for a database or service behind a bastion, for a SOCKS proxy, or to expose a local port on a server.</p>
+<p>Runs <code>ssh</code> from your login shell’s <code>PATH</code> (normally <code>/usr/bin/ssh</code>; the <a href="settings.html#tools">Tools</a> page shows which, and can point it elsewhere) with your <code>~/.ssh/config</code>, keys and agent. Use it for a database or service behind a bastion, for a SOCKS proxy, or to expose a local port on a server.</p>
 <dl class="fields">
   <div><dt>Forwarding</dt><dd><span class="ui">Local</span> (<code>-L</code>, the default), <span class="ui">Remote</span> (<code>-R</code>) or <span class="ui">SOCKS</span> (<code>-D</code>).</dd></div>
   <div><dt>Host</dt><dd>The SSH host to connect to: an alias from <code>~/.ssh/config</code> or <code>user@host</code>. Required.</dd></div>
@@ -245,7 +246,7 @@ brew install --cask session-manager-plugin</code></pre></div>
 
 <h3 id="ssm-sso">AWS sign-in (SSO)<a class="anchor" href="#ssm-sso" aria-label="Link to this section">#</a></h3>
 <p>When an SSO profile’s session has expired, the tunnel stops with <span class="msg">AWS sign-in expired for profile prod.</span> rather than retrying. Choose <span class="ui">Sign In to AWS…</span> in the row’s <span class="ui">⋯</span> menu: Portkeep runs <code>aws sso login --profile prod</code>, which opens your browser, and tries the tunnel again when it finishes.</p>
-<p>Advanced Options has one SSM setting, <span class="ui">Offer AWS sign-in when the session expires</span>, on by default. It is saved with the tunnel; in 0.3.0 the <span class="ui">Sign In to AWS…</span> action is offered for an expired sign-in either way.</p>
+<p>Advanced Options has one SSM setting, <span class="ui">Offer AWS sign-in when the session expires</span>, on by default. Switch it off and an expired sign-in offers only <span class="ui">Retry Now</span>, for when you sign in your own way.</p>
 
 <h3 id="ssm-example">Example: RDS through an SSM instance<a class="anchor" href="#ssm-example" aria-label="Link to this section">#</a></h3>
 <p>An RDS MySQL database that only instances in its VPC can reach, and an instance <code>i-0a3f5c9e2b7d41f08</code> with the SSM agent in that VPC:</p>
@@ -311,7 +312,7 @@ brew install --cask session-manager-plugin</code></pre></div>
     <a class="prev" href="tunnels.html" rel="prev"><span>Previous</span><strong>Adding tunnels</strong></a>
     <a class="next" href="status.html" rel="next"><span>Next</span><strong>Status &amp; troubleshooting</strong></a>
   </nav>
-  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
   </main>
 </div>
 

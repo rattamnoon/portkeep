@@ -251,17 +251,11 @@ final class ConfigSources {
     var awsProfiles: [AWSProfile] = []
     var kubeContexts: [String] = []
 
+    /// The same lists `portkeep discover` gives AI assistants.
     func load(tools: ToolPaths) async {
-        let home = FileManager.default.homeDirectoryForCurrentUser
-        if let text = try? String(contentsOf: home.appendingPathComponent(".ssh/config"), encoding: .utf8) {
-            sshHosts = SSHConfigParser.hosts(in: text)
-        }
-        if let text = try? String(contentsOf: home.appendingPathComponent(".aws/config"), encoding: .utf8) {
-            awsProfiles = AWSConfigParser.profiles(in: text)
-        }
-        if let kubectl = tools.url(for: "kubectl"),
-           let output = try? await ToolLocator.captureOutput(kubectl, ["config", "get-contexts", "-o", "name"]) {
-            kubeContexts = KubeContexts.parse(output)
-        }
+        let found = await Discovery.load(tools: tools)
+        sshHosts = found.sshHosts
+        awsProfiles = found.awsProfiles
+        kubeContexts = found.kubeContexts
     }
 }

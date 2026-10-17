@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Test
-        run: swift test
+        run: bash scripts/ci-test.sh
 
   app:
     name: Build app and UI smoke tests

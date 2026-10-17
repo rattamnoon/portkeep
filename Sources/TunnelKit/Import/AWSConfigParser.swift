@@ -1,4 +1,4 @@
-public struct AWSProfile: Equatable, Hashable, Sendable {
+public struct AWSProfile: Codable, Equatable, Hashable, Sendable {
     public var name: String
     public var region: String?
 

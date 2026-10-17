@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI assistants — Portkeep docs</title>
+<meta name="description" content="Let Claude, Cursor and other AI assistants list, add, test, start and fix your Portkeep tunnels through its MCP server, the portkeep CLI and an agent skill.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://portkeep.rattamnoon.com/docs/ai.html">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Portkeep">
+<meta property="og:title" content="AI assistants — Portkeep docs">
+<meta property="og:description" content="Let Claude, Cursor and other AI assistants list, add, test, start and fix your Portkeep tunnels through its MCP server, the portkeep CLI and an agent skill.">
+<meta property="og:url" content="https://portkeep.rattamnoon.com/docs/ai.html">
+<meta property="og:image" content="https://portkeep.rattamnoon.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI assistants — Portkeep docs">
+<meta name="twitter:description" content="Let Claude, Cursor and other AI assistants list, add, test, start and fix your Portkeep tunnels through its MCP server, the portkeep CLI and an agent skill.">
+<meta name="twitter:image" content="https://portkeep.rattamnoon.com/assets/og.png">
+<meta name="author" content="Rattamnoon Kiratipisut">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "@id": "https://portkeep.rattamnoon.com/docs/ai.html#article",
+   "headline": "Use Portkeep with AI assistants",
+   "description": "Let Claude, Cursor and other AI assistants list, add, test, start and fix your Portkeep tunnels through its MCP server, the portkeep CLI and an agent skill.",
+   "url": "https://portkeep.rattamnoon.com/docs/ai.html",
+   "mainEntityOfPage": "https://portkeep.rattamnoon.com/docs/ai.html",
+   "inLanguage": "en",
+   "image": "https://portkeep.rattamnoon.com/assets/og.png",
+   "dateModified": "2026-10-17",
+   "author": {
+    "@type": "Person",
+    "name": "Rattamnoon Kiratipisut",
+    "url": "https://github.com/rattamnoon"
+   },
+   "about": {
+    "@id": "https://portkeep.rattamnoon.com/#app"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Portkeep",
+    "url": "https://portkeep.rattamnoon.com/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Portkeep",
+     "item": "https://portkeep.rattamnoon.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://portkeep.rattamnoon.com/docs/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "AI assistants",
+     "item": "https://portkeep.rattamnoon.com/docs/ai.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5.5A2 2 0 0 0 11 3.5H5.5a2 2 0 0 0-2 2V11a2 2 0 0 0 2 2H7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M3.5 6h13M3.5 10h13M3.5 14h13"/></symbol>
+</svg>
+
+<header class="bar">
+  <nav class="bar-inner" aria-label="Site">
+    <a class="bar-brand" href="../" aria-label="Portkeep home"><img src="../assets/favicon.png" width="22" height="22" alt=""> Portkeep</a>
+    <div class="bar-links">
+      <a class="hide-narrow" href="./">Docs</a>
+      <a class="hide-narrow" href="../#faq">FAQ</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <button class="nav-toggle" type="button" aria-controls="docs-nav" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="docs">
+  <nav class="side" id="docs-nav" aria-label="Docs">
+    <p class="side-title">Documentation</p>
+    <ol>
+      <li><a href="./">Get started</a></li>
+      <li><a href="menu.html">The menu</a></li>
+      <li><a href="tunnels.html">Adding tunnels</a></li>
+      <li><a href="methods.html">Connection methods</a></li>
+      <li><a href="status.html">Status &amp; troubleshooting</a></li>
+      <li><a href="ports.html">Local ports &amp; on demand</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html" aria-current="page">AI assistants</a></li>
+      <li><a href="import-export.html">Import &amp; export</a></li>
+      <li><a href="data.html">Files &amp; privacy</a></li>
+      <li><a href="faq.html">FAQ &amp; limits</a></li>
+    </ol>
+    <div class="side-foot">
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Report a bug</a>
+    </div>
+  </nav>
+
+  <main class="doc" id="main">
+  <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
+  <h1>Use Portkeep with AI assistants</h1>
+  <p class="lede">New in 0.4. Tell Claude, Cursor or another assistant “add a tunnel to prod MySQL through SSM” and it fills in the tunnel, tests it and switches it on, while you watch it appear in the menu. Assistants reach Portkeep through its MCP server or the <code>portkeep</code> command.</p>
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#setup">Connecting an assistant</a></li>
+      <li><a href="#skill">The Portkeep skill</a></li>
+      <li><a href="#tools">What an assistant can do</a></li>
+      <li><a href="#asking">Asking for things</a></li>
+      <li><a href="#safety">What stays with you</a></li>
+      <li><a href="#troubleshooting">If it doesn’t work</a></li>
+    </ol>
+  </nav>
+
+<h2 id="setup">Connecting an assistant<a class="anchor" href="#setup" aria-label="Link to this section">#</a></h2>
+<p>The <a href="https://modelcontextprotocol.io">Model Context Protocol</a> (MCP) server is the <code>portkeep</code> tool inside the app, run as <code>portkeep mcp</code>. It forwards everything to the running Portkeep, starting it in the background if needed. <span class="ui">Settings › General › AI assistants</span> has both forms below ready to copy, with the right path for your Mac.</p>
+
+<h3 id="claude-code">Claude Code<a class="anchor" href="#claude-code" aria-label="Link to this section">#</a></h3>
+<div class="code"><pre><code>claude mcp add portkeep -- /Applications/Portkeep.app/Contents/Resources/bin/portkeep mcp</code></pre></div>
+
+<h3 id="desktop">Claude Desktop, Cursor and others<a class="anchor" href="#desktop" aria-label="Link to this section">#</a></h3>
+<p>Choose <span class="ui">Copy MCP Config</span> and paste it into the assistant’s MCP settings: <code>claude_desktop_config.json</code> (Claude Desktop › Settings › Developer › Edit Config), <code>~/.cursor/mcp.json</code> for Cursor, or wherever your assistant keeps its MCP servers. Merge it with any servers already there.</p>
+<div class="code"><pre><code>{
+  "mcpServers" : {
+    "portkeep" : {
+      "args" : [ "mcp" ],
+      "command" : "/Applications/Portkeep.app/Contents/Resources/bin/portkeep"
+    }
+  }
+}</code></pre></div>
+<p>Restart the assistant afterwards. If Portkeep isn’t in <code>/Applications</code>, the copied config has its real path.</p>
+
+<h3 id="cli">Without MCP<a class="anchor" href="#cli" aria-label="Link to this section">#</a></h3>
+<p>An agent that can run shell commands can use <code>portkeep</code> directly: every read takes <code>--json</code>, and <code>add</code> and <code>edit</code> take JSON. See <a href="automation.html#json">JSON and changing tunnels</a>.</p>
+
+<h2 id="skill">The Portkeep skill<a class="anchor" href="#skill" aria-label="Link to this section">#</a></h2>
+<p>The repository has a <a href="https://github.com/rattamnoon/portkeep/tree/main/skills/portkeep">skill</a> (<code>SKILL.md</code>, in the Agent Skills format) that teaches an agent the workflow and the rules: look up what is configured, read the method’s fields, add, test, start, and when something fails read the hint rather than guess. Install it for Claude Code:</p>
+<div class="code"><pre><code>git clone https://github.com/rattamnoon/portkeep.git
+cp -R portkeep/skills/portkeep ~/.claude/skills/</code></pre></div>
+<p>The MCP server also gives the assistant a short version of the same instructions when it connects, so the skill is optional with MCP and most useful for agents that use the command line.</p>
+
+<h2 id="tools">What an assistant can do<a class="anchor" href="#tools" aria-label="Link to this section">#</a></h2>
+<div class="table"><table>
+  <thead><tr><th>Tool</th><th>Does</th></tr></thead>
+  <tbody>
+    <tr><td><code>discover</code></td><td>Lists the <code>Host</code> aliases in <code>~/.ssh/config</code>, AWS profiles and regions, kube contexts, which tools are installed, and the ports tunnels use, so the assistant uses your real names.</td></tr>
+    <tr><td><code>describe_methods</code></td><td>Each connection method’s fields, defaults and an example tunnel.</td></tr>
+    <tr><td><code>list_tunnels</code>, <code>get_tunnel</code></td><td>Tunnels with their settings and state, and for a problem a reason and a hint saying what to do.</td></tr>
+    <tr><td><code>add_tunnel</code>, <code>update_tunnel</code>, <code>duplicate_tunnel</code></td><td>Create and change tunnels, with the same checks as the editor.</td></tr>
+    <tr><td><code>test_tunnel</code></td><td>Connects once and stops, like Test Connection, for a saved tunnel or settings not saved yet.</td></tr>
+    <tr><td><code>start_tunnel</code>, <code>stop_tunnel</code></td><td>Switch a tunnel, a group or everything, and wait for the result.</td></tr>
+    <tr><td><code>tunnel_logs</code></td><td>The end of a tunnel’s log.</td></tr>
+    <tr><td><code>list_groups</code>, <code>list_tags</code>, <code>add_group</code>, <code>add_tag</code></td><td>Groups and tags, with colours.</td></tr>
+    <tr><td><code>remove_tunnel</code></td><td>Deletes a tunnel. Marked as destructive, so assistants ask you first.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="asking">Asking for things<a class="anchor" href="#asking" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li>“Add a tunnel to the orders RDS in prod through SSM, instance i-0a3f5c9e2b7d41f08, on local port 3307.”</li>
+  <li>“Forward Grafana from the prod cluster’s monitoring namespace to port 3000 and start it.”</li>
+  <li>“Make a Staging copy of Orders MySQL that goes through staging-bastion instead.”</li>
+  <li>“Why is Prod MySQL red?”</li>
+  <li>“Switch everything in Development off.”</li>
+</ul>
+<p>The assistant reads the reason and hint Portkeep gives for a failure. For an expired AWS sign-in, a changed host key or a key missing from the agent, the fix is a command for you to run, such as <code>aws sso login --profile prod</code>, and the assistant should tell you rather than run it.</p>
+
+<h2 id="safety">What stays with you<a class="anchor" href="#safety" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li><strong>No secrets to hand over.</strong> Portkeep stores no passwords, keys or tokens; tunnels use your SSH agent and the AWS, gcloud and kubectl sign-ins you already have. Don’t paste a password into a tunnel for an assistant: there is no field for one.</li>
+  <li><strong>Only on this Mac.</strong> The MCP server talks to Portkeep over a local socket only your user account can open, and Portkeep sends nothing to any AI service. What the assistant sees (your tunnels’ settings, states and logs) goes to it because you connected it.</li>
+  <li><strong>The app stays in charge.</strong> Every change goes through Portkeep’s own checks and shows in the menu straight away; <code>tunnels.json</code> is only ever written by the app.</li>
+</ul>
+
+<h2 id="troubleshooting">If it doesn’t work<a class="anchor" href="#troubleshooting" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li><strong>The assistant doesn’t list Portkeep’s tools.</strong> Check the path in the config exists (<code>ls /Applications/Portkeep.app/Contents/Resources/bin/portkeep</code>) and restart the assistant. Running <code>portkeep mcp</code> in Terminal should print “MCP server ready on stdio” and wait; press <kbd>Control</kbd><kbd>D</kbd> to end it.</li>
+  <li><strong>“Portkeep isn’t answering on control.sock.”</strong> A Portkeep from before 0.4 is running. Quit it and open the new one.</li>
+  <li><strong>A change is refused.</strong> The message names the field and why, such as <span class="msg">SSH local forwarding needs destination {host, port}.</span> The assistant can usually fix it on its own.</li>
+</ul>
+
+  <nav class="pager" aria-label="Previous and next pages">
+    <a class="prev" href="automation.html" rel="prev"><span>Previous</span><strong>Command line &amp; URLs</strong></a>
+    <a class="next" href="import-export.html" rel="next"><span>Next</span><strong>Import &amp; export</strong></a>
+  </nav>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="foot-brand"><img src="../assets/favicon.png" width="18" height="18" alt=""> Portkeep</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Docs</a>
+      <a href="https://github.com/rattamnoon/portkeep">GitHub</a>
+      <a href="https://github.com/rattamnoon/portkeep/releases">Releases</a>
+      <a href="https://github.com/rattamnoon/portkeep/blob/main/LICENSE">MIT License</a>
+    </nav>
+    <p class="foot-copy">© 2026 Rattamnoon Kiratipisut</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    var toggle = document.querySelector('.nav-toggle');
+    var side = document.getElementById('docs-nav');
+    toggle.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('.code').forEach(function (block) {
+      if (!navigator.clipboard) return;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>';
+      var label = button.querySelector('span');
+      var timer;
+      button.addEventListener('click', function () {
+        var text = block.querySelector('code').innerText.replace(/\n$/, '');
+        navigator.clipboard.writeText(text).then(function () {
+          button.classList.add('is-done');
+          label.textContent = 'Copied';
+          clearTimeout(timer);
+          timer = setTimeout(function () { button.classList.remove('is-done'); label.textContent = 'Copy'; }, 2000);
+        });
+      });
+      block.appendChild(button);
+    });
+  })();
+</script>
+</body>
+</html>

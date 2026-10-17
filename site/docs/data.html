@@ -8,15 +8,15 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/data.html">
+<link rel="canonical" href="https://portkeep.rattamnoon.com/docs/data.html">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Portkeep">
 <meta property="og:title" content="Files &amp; privacy — Portkeep docs">
 <meta property="og:description" content="Where Portkeep keeps tunnels.json, session.json, running.json and status.json, how to back up and uninstall it, and what it does and does not store or send.">
-<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/data.html">
-<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:url" content="https://portkeep.rattamnoon.com/docs/data.html">
+<meta property="og:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Files &amp; privacy — Portkeep docs">
 <meta name="twitter:description" content="Where Portkeep keeps tunnels.json, session.json, running.json and status.json, how to back up and uninstall it, and what it does and does not store or send.">
-<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="twitter:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta name="author" content="Rattamnoon Kiratipisut">
 <link rel="stylesheet" href="../assets/style.css">
 <link rel="stylesheet" href="../assets/docs.css">
@@ -34,13 +34,13 @@
  "@graph": [
   {
    "@type": "TechArticle",
-   "@id": "https://rattamnoon.github.io/portkeep/docs/data.html#article",
+   "@id": "https://portkeep.rattamnoon.com/docs/data.html#article",
    "headline": "Files, backup and privacy",
    "description": "Where Portkeep keeps tunnels.json, session.json, running.json and status.json, how to back up and uninstall it, and what it does and does not store or send.",
-   "url": "https://rattamnoon.github.io/portkeep/docs/data.html",
-   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/data.html",
+   "url": "https://portkeep.rattamnoon.com/docs/data.html",
+   "mainEntityOfPage": "https://portkeep.rattamnoon.com/docs/data.html",
    "inLanguage": "en",
-   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "image": "https://portkeep.rattamnoon.com/assets/og.png",
    "dateModified": "2026-10-17",
    "author": {
     "@type": "Person",
@@ -48,12 +48,12 @@
     "url": "https://github.com/rattamnoon"
    },
    "about": {
-    "@id": "https://rattamnoon.github.io/portkeep/#app"
+    "@id": "https://portkeep.rattamnoon.com/#app"
    },
    "isPartOf": {
     "@type": "WebSite",
     "name": "Portkeep",
-    "url": "https://rattamnoon.github.io/portkeep/"
+    "url": "https://portkeep.rattamnoon.com/"
    }
   },
   {
@@ -63,19 +63,19 @@
      "@type": "ListItem",
      "position": 1,
      "name": "Portkeep",
-     "item": "https://rattamnoon.github.io/portkeep/"
+     "item": "https://portkeep.rattamnoon.com/"
     },
     {
      "@type": "ListItem",
      "position": 2,
      "name": "Docs",
-     "item": "https://rattamnoon.github.io/portkeep/docs/"
+     "item": "https://portkeep.rattamnoon.com/docs/"
     },
     {
      "@type": "ListItem",
      "position": 3,
      "name": "Files & privacy",
-     "item": "https://rattamnoon.github.io/portkeep/docs/data.html"
+     "item": "https://portkeep.rattamnoon.com/docs/data.html"
     }
    ]
   }
@@ -114,6 +114,7 @@
       <li><a href="ports.html">Local ports &amp; on demand</a></li>
       <li><a href="settings.html">Settings</a></li>
       <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html">AI assistants</a></li>
       <li><a href="import-export.html">Import &amp; export</a></li>
       <li><a href="data.html" aria-current="page">Files &amp; privacy</a></li>
       <li><a href="faq.html">FAQ &amp; limits</a></li>
@@ -127,7 +128,7 @@
   <main class="doc" id="main">
   <p class="crumbs"><a href="../">Portkeep</a> › <a href="./">Docs</a></p>
   <h1>Files, backup and privacy</h1>
-  <p class="lede">Portkeep keeps a handful of plain files in one folder, stores no secrets, and makes no network connections of its own. This page lists the files, how to back them up, and how to remove Portkeep completely.</p>
+  <p class="lede">Portkeep keeps a handful of plain files in one folder, stores no secrets, and makes one network request of its own: a daily check for a new release, which you can turn off. This page lists the files, how to back them up, and how to remove Portkeep completely.</p>
   <nav class="toc" aria-label="On this page">
     <p>On this page</p>
     <ol>
@@ -148,6 +149,7 @@
     <tr><td><code>session.json</code></td><td>Which tunnels are switched on, so the next launch can turn the same ones back on. Written the moment you switch one, so it survives a crash or a forced restart.</td></tr>
     <tr><td><code>running.json</code></td><td>The process IDs Portkeep started, so after a crash the next launch can stop any that are still running. It only stops a process whose start time matches, so it never touches an unrelated process that reused the ID.</td></tr>
     <tr><td><code>status.json</code></td><td>What each tunnel is doing right now, for the <a href="automation.html#status-json"><code>portkeep</code> command</a> and your scripts. Written by the app, never read back.</td></tr>
+    <tr><td><code>control.sock</code></td><td>While Portkeep runs, where it takes commands from <code>portkeep</code> and <a href="ai.html"><code>portkeep mcp</code></a>. A local socket only your user account can connect to; removed at quit.</td></tr>
   </tbody>
 </table></div>
 <p>App preferences (language, notifications, reopening tunnels, the last group tab) are in the usual macOS preferences for <code>com.rattamnoon.portkeep</code>. Tunnel logs are kept in memory only.</p>
@@ -211,7 +213,9 @@
 <h2 id="privacy">Privacy<a class="anchor" href="#privacy" aria-label="Link to this section">#</a></h2>
 <ul>
   <li><strong>No secrets.</strong> Portkeep stores no passwords, keys or tokens. Sign-in is left to the tools it runs and the agent, keychain, SSO cache or kubeconfig they already use.</li>
-  <li><strong>No network connections of its own.</strong> Portkeep has no analytics, no crash reporting and no update check. The only network traffic is what the tools you configure (<code>ssh</code>, <code>aws</code>, <code>kubectl</code> and so on) send, plus local connections on <code>127.0.0.1</code> to check that ports are open and, for on-demand tunnels, to pass your connections through.</li>
+  <li><strong>One network request of its own: the update check.</strong> Once a day Portkeep asks GitHub (<code>api.github.com/repos/rattamnoon/portkeep/releases/latest</code>) for the latest release. The request carries no information about you or your tunnels beyond what any web request does (your IP address and a <code>Portkeep/0.4.0</code> user agent). Turn it off with <span class="ui">Check for updates automatically</span> in <a href="settings.html#general">Settings › General</a>; <span class="ui">Check for Updates…</span> still works when you ask. There is no analytics or crash reporting. All other network traffic is what the tools you configure (<code>ssh</code>, <code>aws</code>, <code>kubectl</code> and so on) send, plus local connections on <code>127.0.0.1</code> to check that ports are open and, for on-demand tunnels, to pass your connections through.</li>
+  <li><strong>AI assistants see only what you connect them to.</strong> Portkeep sends nothing to any AI service. If you add its <a href="ai.html">MCP server</a> to an assistant, that assistant can read your tunnels’ settings, states and logs, and change tunnels, as the <code>portkeep</code> command can.</li>
+  <li><strong>Copy Diagnostics</strong> only copies to the clipboard; nothing is sent until you paste it somewhere.</li>
   <li><strong>What it reads.</strong> To fill its pickers it reads <code>~/.ssh/config</code> (and, for Import from SSH Config, the files it includes), <code>~/.aws/config</code>, and the output of <code>kubectl config get-contexts</code>. It runs <code>lsof</code> to name the process holding a taken port.</li>
   <li>It isn’t sandboxed, which is why it isn’t on the Mac App Store: the sandbox would stop it running your CLIs and reading your config.</li>
 </ul>
@@ -220,7 +224,7 @@
     <a class="prev" href="import-export.html" rel="prev"><span>Previous</span><strong>Import &amp; export</strong></a>
     <a class="next" href="faq.html" rel="next"><span>Next</span><strong>FAQ &amp; limits</strong></a>
   </nav>
-  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
   </main>
 </div>
 

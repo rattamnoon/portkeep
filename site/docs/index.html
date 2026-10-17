@@ -8,15 +8,15 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/">
+<link rel="canonical" href="https://portkeep.rattamnoon.com/docs/">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Portkeep">
 <meta property="og:title" content="Get started — Portkeep docs">
 <meta property="og:description" content="Install Portkeep, the macOS menu bar app that keeps port forwards up, open it the first time, and add your first tunnel in five steps.">
-<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/">
-<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:url" content="https://portkeep.rattamnoon.com/docs/">
+<meta property="og:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Get started — Portkeep docs">
 <meta name="twitter:description" content="Install Portkeep, the macOS menu bar app that keeps port forwards up, open it the first time, and add your first tunnel in five steps.">
-<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="twitter:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta name="author" content="Rattamnoon Kiratipisut">
 <link rel="stylesheet" href="../assets/style.css">
 <link rel="stylesheet" href="../assets/docs.css">
@@ -34,13 +34,13 @@
  "@graph": [
   {
    "@type": "TechArticle",
-   "@id": "https://rattamnoon.github.io/portkeep/docs/#article",
+   "@id": "https://portkeep.rattamnoon.com/docs/#article",
    "headline": "Portkeep docs: get started",
    "description": "Install Portkeep, the macOS menu bar app that keeps port forwards up, open it the first time, and add your first tunnel in five steps.",
-   "url": "https://rattamnoon.github.io/portkeep/docs/",
-   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/",
+   "url": "https://portkeep.rattamnoon.com/docs/",
+   "mainEntityOfPage": "https://portkeep.rattamnoon.com/docs/",
    "inLanguage": "en",
-   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "image": "https://portkeep.rattamnoon.com/assets/og.png",
    "dateModified": "2026-10-17",
    "author": {
     "@type": "Person",
@@ -48,12 +48,12 @@
     "url": "https://github.com/rattamnoon"
    },
    "about": {
-    "@id": "https://rattamnoon.github.io/portkeep/#app"
+    "@id": "https://portkeep.rattamnoon.com/#app"
    },
    "isPartOf": {
     "@type": "WebSite",
     "name": "Portkeep",
-    "url": "https://rattamnoon.github.io/portkeep/"
+    "url": "https://portkeep.rattamnoon.com/"
    }
   },
   {
@@ -63,13 +63,13 @@
      "@type": "ListItem",
      "position": 1,
      "name": "Portkeep",
-     "item": "https://rattamnoon.github.io/portkeep/"
+     "item": "https://portkeep.rattamnoon.com/"
     },
     {
      "@type": "ListItem",
      "position": 2,
      "name": "Docs",
-     "item": "https://rattamnoon.github.io/portkeep/docs/"
+     "item": "https://portkeep.rattamnoon.com/docs/"
     }
    ]
   },
@@ -144,6 +144,7 @@
       <li><a href="ports.html">Local ports &amp; on demand</a></li>
       <li><a href="settings.html">Settings</a></li>
       <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html">AI assistants</a></li>
       <li><a href="import-export.html">Import &amp; export</a></li>
       <li><a href="data.html">Files &amp; privacy</a></li>
       <li><a href="faq.html">FAQ &amp; limits</a></li>
@@ -226,14 +227,15 @@ brew install --cask session-manager-plugin google-cloud-sdk</code></pre></div>
   <li><a href="menu.html">The menu</a>: switches, group tabs, row states and the <span class="ui">⋯</span> actions.</li>
   <li><a href="status.html">Status and troubleshooting</a>: what each message means and how to fix it.</li>
   <li><a href="ports.html">Local ports and on demand</a>: sharing a port between environments, and tunnels that start when an app connects.</li>
-  <li><a href="automation.html">Command line and URLs</a>: <code>portkeep start "Orders MySQL"</code> and <code>portkeep://</code> links.</li>
+  <li><a href="automation.html">Command line and URLs</a>: <code>portkeep start "Orders MySQL"</code>, JSON for scripts, and <code>portkeep://</code> links.</li>
+  <li><a href="ai.html">AI assistants</a>: let Claude, Cursor and others add, test and fix tunnels for you.</li>
   <li><a href="import-export.html">Import and export</a>: bring in forwards from <code>~/.ssh/config</code>, or move tunnels to another Mac.</li>
 </ul>
 
   <nav class="pager" aria-label="Previous and next pages">
     <a class="next" href="menu.html" rel="next"><span>Next</span><strong>The menu</strong></a>
   </nav>
-  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
   </main>
 </div>
 

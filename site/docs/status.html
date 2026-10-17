@@ -8,15 +8,15 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="canonical" href="https://rattamnoon.github.io/portkeep/docs/status.html">
+<link rel="canonical" href="https://portkeep.rattamnoon.com/docs/status.html">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Portkeep">
 <meta property="og:title" content="Status &amp; troubleshooting — Portkeep docs">
 <meta property="og:description" content="What Connected, Connecting, Reconnecting, Standing by and Off mean in Portkeep, every failure message and its fix, how retries back off, sleep and wake, and the log.">
-<meta property="og:url" content="https://rattamnoon.github.io/portkeep/docs/status.html">
-<meta property="og:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta property="og:url" content="https://portkeep.rattamnoon.com/docs/status.html">
+<meta property="og:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Portkeep icon beside the name and tagline">
@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Status &amp; troubleshooting — Portkeep docs">
 <meta name="twitter:description" content="What Connected, Connecting, Reconnecting, Standing by and Off mean in Portkeep, every failure message and its fix, how retries back off, sleep and wake, and the log.">
-<meta name="twitter:image" content="https://rattamnoon.github.io/portkeep/assets/og.png">
+<meta name="twitter:image" content="https://portkeep.rattamnoon.com/assets/og.png">
 <meta name="author" content="Rattamnoon Kiratipisut">
 <link rel="stylesheet" href="../assets/style.css">
 <link rel="stylesheet" href="../assets/docs.css">
@@ -34,13 +34,13 @@
  "@graph": [
   {
    "@type": "TechArticle",
-   "@id": "https://rattamnoon.github.io/portkeep/docs/status.html#article",
+   "@id": "https://portkeep.rattamnoon.com/docs/status.html#article",
    "headline": "Status and troubleshooting",
    "description": "What Connected, Connecting, Reconnecting, Standing by and Off mean in Portkeep, every failure message and its fix, how retries back off, sleep and wake, and the log.",
-   "url": "https://rattamnoon.github.io/portkeep/docs/status.html",
-   "mainEntityOfPage": "https://rattamnoon.github.io/portkeep/docs/status.html",
+   "url": "https://portkeep.rattamnoon.com/docs/status.html",
+   "mainEntityOfPage": "https://portkeep.rattamnoon.com/docs/status.html",
    "inLanguage": "en",
-   "image": "https://rattamnoon.github.io/portkeep/assets/og.png",
+   "image": "https://portkeep.rattamnoon.com/assets/og.png",
    "dateModified": "2026-10-17",
    "author": {
     "@type": "Person",
@@ -48,12 +48,12 @@
     "url": "https://github.com/rattamnoon"
    },
    "about": {
-    "@id": "https://rattamnoon.github.io/portkeep/#app"
+    "@id": "https://portkeep.rattamnoon.com/#app"
    },
    "isPartOf": {
     "@type": "WebSite",
     "name": "Portkeep",
-    "url": "https://rattamnoon.github.io/portkeep/"
+    "url": "https://portkeep.rattamnoon.com/"
    }
   },
   {
@@ -63,19 +63,19 @@
      "@type": "ListItem",
      "position": 1,
      "name": "Portkeep",
-     "item": "https://rattamnoon.github.io/portkeep/"
+     "item": "https://portkeep.rattamnoon.com/"
     },
     {
      "@type": "ListItem",
      "position": 2,
      "name": "Docs",
-     "item": "https://rattamnoon.github.io/portkeep/docs/"
+     "item": "https://portkeep.rattamnoon.com/docs/"
     },
     {
      "@type": "ListItem",
      "position": 3,
      "name": "Status & troubleshooting",
-     "item": "https://rattamnoon.github.io/portkeep/docs/status.html"
+     "item": "https://portkeep.rattamnoon.com/docs/status.html"
     }
    ]
   }
@@ -114,6 +114,7 @@
       <li><a href="ports.html">Local ports &amp; on demand</a></li>
       <li><a href="settings.html">Settings</a></li>
       <li><a href="automation.html">Command line &amp; URLs</a></li>
+      <li><a href="ai.html">AI assistants</a></li>
       <li><a href="import-export.html">Import &amp; export</a></li>
       <li><a href="data.html">Files &amp; privacy</a></li>
       <li><a href="faq.html">FAQ &amp; limits</a></li>
@@ -135,6 +136,7 @@
       <li><a href="#reconnect">Reconnecting</a></li>
       <li><a href="#failures">Failures and their fixes</a></li>
       <li><a href="#logs">Logs</a></li>
+      <li><a href="#diagnostics">Diagnostics</a></li>
       <li><a href="#notifications">Notifications</a></li>
     </ol>
   </nav>
@@ -194,7 +196,7 @@ ssh bastion</code></pre></div>
 
 <h3 id="sso">AWS sign-in expired<a class="anchor" href="#sso" aria-label="Link to this section">#</a></h3>
 <p><span class="msg">AWS sign-in expired for profile prod.</span></p>
-<p>The AWS CLI said the profile’s SSO token has expired. Choose <span class="ui">Sign In to AWS…</span> in the <span class="ui">⋯</span> menu, which runs <code>aws sso login --profile prod</code> and opens your browser, or run it yourself in Terminal and then switch the tunnel off and on.</p>
+<p>The AWS CLI said the profile’s SSO token has expired. Choose <span class="ui">Sign In to AWS…</span> in the <span class="ui">⋯</span> menu, which runs <code>aws sso login --profile prod</code>, opens your browser, and tries the tunnel again when you have signed in. Or run it yourself in Terminal and then choose <span class="ui">Retry Now</span>. <span class="ui">Sign In to AWS…</span> is offered only while the tunnel’s <a href="methods.html#ssm-sso">Offer AWS sign-in when the session expires</a> is on.</p>
 
 <h3 id="plugin">Session Manager plugin missing<a class="anchor" href="#plugin" aria-label="Link to this section">#</a></h3>
 <p><span class="msg">session-manager-plugin is not installed.</span></p>
@@ -207,7 +209,7 @@ ssh bastion</code></pre></div>
 
 <h3 id="port-in-use">Port in use<a class="anchor" href="#port-in-use" aria-label="Link to this section">#</a></h3>
 <p><span class="msg">Port 8123 is in use by clickhouse-server</span></p>
-<p>Before starting, Portkeep checks that nothing listens on <code>127.0.0.1</code> on the local port. If something does, it names the process and doesn’t start. Choose <span class="ui">Use Port 18123</span> (the number varies) in the <span class="ui">⋯</span> menu to move the tunnel to a free port, use <span class="ui">Change Local Port…</span> to choose one, or quit the other program and switch the tunnel off and on. A tool that itself reports <code>address already in use</code> lands here too. See <a href="ports.html#conflicts">Port conflicts</a>.</p>
+<p>Before starting, Portkeep checks that nothing listens on <code>127.0.0.1</code> on the local port. If something does, it names the process and doesn’t start. Choose <span class="ui">Use Port 18123</span> (the number varies) in the <span class="ui">⋯</span> menu to move the tunnel to a free port, use <span class="ui">Change Local Port…</span> to choose one, or quit the other program and choose <span class="ui">Retry Now</span>. A tool that itself reports <code>address already in use</code> lands here too. See <a href="ports.html#conflicts">Port conflicts</a>.</p>
 
 <h3 id="tool-missing">Tool not found<a class="anchor" href="#tool-missing" aria-label="Link to this section">#</a></h3>
 <p><span class="msg">kubectl not found. Install it with brew install kubectl.</span></p>
@@ -230,7 +232,18 @@ ssh bastion</code></pre></div>
 
 <h2 id="logs">Logs<a class="anchor" href="#logs" aria-label="Link to this section">#</a></h2>
 <p><span class="ui">Show Log</span> (in a row’s <span class="ui">⋯</span> menu, or on the tunnel’s page in Settings) opens a window titled “&lt;name&gt; — Log” with the last 500 lines the tool printed, standard output and error together, updated every second. You can select and copy the text. Portkeep adds a few lines of its own, such as when an on-demand tunnel starts listening or stops after being idle.</p>
-<p>The log is kept in memory only: it starts empty when Portkeep launches and isn’t written to disk. When you <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">report a bug</a>, include the lines around the failure, with host names and account IDs removed.</p>
+<p>The log is kept in memory only: it starts empty when Portkeep launches and isn’t written to disk. <code>portkeep logs &lt;name&gt;</code> prints it in Terminal.</p>
+
+<h2 id="diagnostics">Diagnostics<a class="anchor" href="#diagnostics" aria-label="Link to this section">#</a></h2>
+<p><span class="ui">Copy Diagnostics</span> (in a row’s <span class="ui">⋯</span> menu, or at the bottom of the tunnel’s page in Settings) copies a report to paste into a <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">bug report</a>, as Markdown:</p>
+<ul>
+  <li>the Portkeep and macOS versions and the Mac’s architecture;</li>
+  <li>the path of each tool, as on the <a href="settings.html#tools">Tools</a> page, and which ones you set yourself;</li>
+  <li>the tunnel’s method, settings and the command it runs, with host names kept;</li>
+  <li>its state, with the failure reason;</li>
+  <li>the last 50 lines of its log, folded away.</li>
+</ul>
+<p>Your home folder is shortened to <code>~</code>. Portkeep stores no passwords, so there are none in it, but a custom command or extra SSH arguments are copied as you wrote them, and logs can name hosts and accounts: read it before you post. <span class="ui">Copy Diagnostics for All</span> in <a href="settings.html#general">Settings › General</a> does the same for every tunnel.</p>
 
 <h2 id="notifications">Notifications<a class="anchor" href="#notifications" aria-label="Link to this section">#</a></h2>
 <p>With <span class="ui">Notify when a tunnel drops</span> on in <a href="settings.html#general">Settings › General</a> (the default), macOS notifies you:</p>
@@ -245,7 +258,7 @@ ssh bastion</code></pre></div>
     <a class="prev" href="methods.html" rel="prev"><span>Previous</span><strong>Connection methods</strong></a>
     <a class="next" href="ports.html" rel="next"><span>Next</span><strong>Local ports &amp; on demand</strong></a>
   </nav>
-  <p class="edit">Docs for Portkeep 0.3.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
+  <p class="edit">Docs for Portkeep 0.4.0. Something wrong or missing? <a href="https://github.com/rattamnoon/portkeep/issues/new?template=bug_report.yml">Open an issue</a>.</p>
   </main>
 </div>
 
