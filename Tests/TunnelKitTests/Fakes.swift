@@ -114,3 +114,108 @@ final class Recorder<T: Sendable>: @unchecked Sendable {
 func settle() async {
     for _ in 0..<200 { await Task.yield() }
 }
+
+/// Wakes whoever waits on it each time something they watch changes. A waiter passes the
+/// `generation` it read before checking, so a change between the check and the wait isn't lost.
+final class Pulse: @unchecked Sendable {
+    private let lock = NSLock()
+    private var _generation = 0
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+
+    var generation: Int { lock.withLock { _generation } }
+
+    func ping() {
+        let woken = lock.withLock {
+            _generation += 1
+            defer { waiters = [] }
+            return waiters
+        }
+        woken.forEach { $0.resume() }
+    }
+
+    /// Returns once the generation has moved past `seen`.
+    func wait(after seen: Int) async {
+        await withCheckedContinuation { c in
+            let moved: Bool = lock.withLock {
+                if _generation != seen { return true }
+                waiters.append(c)
+                return false
+            }
+            if moved { c.resume() }
+        }
+    }
+}
+
+/// A clock that moves only when the test fires its sleepers, and pings `pulse` whenever something
+/// starts sleeping on it. `TestClock` gives no such signal, so a test could only guess, with yields
+/// or real sleeps, whether the code under test had reached its next sleep yet.
+final class ManualClock: Clock, @unchecked Sendable {
+    struct Instant: InstantProtocol {
+        var offset: Duration = .zero
+        func advanced(by duration: Duration) -> Instant { Instant(offset: offset + duration) }
+        func duration(to other: Instant) -> Duration { other.offset - offset }
+        static func < (lhs: Instant, rhs: Instant) -> Bool { lhs.offset < rhs.offset }
+    }
+
+    private struct Sleeper {
+        let deadline: Instant
+        let continuation: CheckedContinuation<Void, any Error>
+    }
+
+    let pulse: Pulse
+    private let lock = NSLock()
+    private var _now = Instant()
+    private var sleepers: [UUID: Sleeper] = [:]
+    private var cancelled: Set<UUID> = []
+
+    init(pulse: Pulse) { self.pulse = pulse }
+
+    var now: Instant { lock.withLock { _now } }
+    var minimumResolution: Duration { .zero }
+    var hasSleepers: Bool { lock.withLock { !sleepers.isEmpty } }
+
+    func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws {
+        let id = UUID()
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, any Error>) in
+                let early: (any Error)?? = lock.withLock {
+                    if cancelled.remove(id) != nil { return .some(CancellationError()) }
+                    if deadline <= _now { return .some(nil) }
+                    sleepers[id] = Sleeper(deadline: deadline, continuation: c)
+                    return .none
+                }
+                switch early {
+                case .some(let error?): c.resume(throwing: error)
+                case .some(nil): c.resume()
+                case .none: pulse.ping()
+                }
+            }
+        } onCancel: {
+            let c = lock.withLock {
+                guard let sleeper = sleepers.removeValue(forKey: id) else {
+                    cancelled.insert(id)
+                    return nil as CheckedContinuation<Void, any Error>?
+                }
+                return sleeper.continuation
+            }
+            c?.resume(throwing: CancellationError())
+        }
+    }
+
+    /// Wakes the earliest sleeper due by `limit`, moving the time to its deadline. False when none is.
+    func fireNext(upTo limit: Instant) -> Bool {
+        let due: Sleeper? = lock.withLock {
+            guard let (id, sleeper) = sleepers.filter({ $0.value.deadline <= limit }).min(by: { $0.value.deadline < $1.value.deadline })
+            else { return nil }
+            sleepers[id] = nil
+            _now = max(_now, sleeper.deadline)
+            return sleeper
+        }
+        due?.continuation.resume()
+        return due != nil
+    }
+
+    func set(now: Instant) {
+        lock.withLock { _now = max(_now, now) }
+    }
+}
