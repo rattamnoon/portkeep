@@ -10,7 +10,7 @@
 "Also used by %@" = "%@ 也在使用";
 "Any command that holds a port open" = "任何保持端口打开的命令";
 "Available" = "可用";
-"Portkeep Settings…" = "Portkeep 设置…";
+"Settings…" = "设置…";
 "Portkeep needs to relaunch to switch language." = "需要重新启动 Portkeep 才能切换语言。";
 "Portkeep watches the port and restarts the command when it stops." = "Portkeep 会监视端口，并在命令停止时重新启动它。";
 "Portkeep: %lld connected" = "Portkeep：已连接 %lld 个";
@@ -64,7 +64,7 @@
 "Port" = "端口";
 "Profile" = "配置文件";
 "Project" = "项目";
-"Quit Portkeep" = "退出 Portkeep";
+"Quit" = "退出";
 "Region" = "区域";
 "Relaunch Now" = "立即重新启动";
 "Remote" = "远程";
@@ -100,3 +100,6 @@
 "tunnels.json was written by a newer Portkeep. Changes won’t be saved." = "tunnels.json 由较新版本的 Portkeep 写入。更改将不会保存。";
 "Start" = "启动";
 "Stop" = "停止";
+"Settings" = "设置";
+"%lld of %lld connected" = "已连接 %1$lld / %2$lld";
+"Start or stop every tunnel" = "启动或停止所有隧道";

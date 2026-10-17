@@ -10,7 +10,7 @@
 "Also used by %@" = "%@ ใช้พอร์ตนี้อยู่ด้วย";
 "Any command that holds a port open" = "คำสั่งใดก็ได้ที่เปิดพอร์ตค้างไว้";
 "Available" = "ว่าง";
-"Portkeep Settings…" = "การตั้งค่า Portkeep…";
+"Settings…" = "การตั้งค่า…";
 "Portkeep needs to relaunch to switch language." = "ต้องเปิด Portkeep ใหม่เพื่อเปลี่ยนภาษา";
 "Portkeep watches the port and restarts the command when it stops." = "Portkeep คอยดูพอร์ต และรันคำสั่งใหม่เมื่อหยุดทำงาน";
 "Portkeep: %lld connected" = "Portkeep: เชื่อมต่อแล้ว %lld";
@@ -64,7 +64,7 @@
 "Port" = "พอร์ต";
 "Profile" = "โปรไฟล์";
 "Project" = "Project";
-"Quit Portkeep" = "ออกจาก Portkeep";
+"Quit" = "ออก";
 "Region" = "Region";
 "Relaunch Now" = "เปิดใหม่ตอนนี้";
 "Remote" = "Remote";
@@ -100,3 +100,6 @@
 "tunnels.json was written by a newer Portkeep. Changes won’t be saved." = "tunnels.json ถูกบันทึกโดย Portkeep เวอร์ชันใหม่กว่า การแก้ไขจะไม่ถูกบันทึก";
 "Start" = "เริ่ม";
 "Stop" = "หยุด";
+"Settings" = "การตั้งค่า";
+"%lld of %lld connected" = "เชื่อมต่อแล้ว %1$lld จาก %2$lld";
+"Start or stop every tunnel" = "เริ่มหรือหยุด tunnel ทั้งหมด";

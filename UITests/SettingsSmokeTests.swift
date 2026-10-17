@@ -89,7 +89,7 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertTrue(confirmRemove.waitForExistence(timeout: 3))
         confirmRemove.click()
         let gone = NSPredicate(format: "exists == false")
-        expectation(for: gone, evaluatedWith: app.staticTexts["Smoke HTTP 2"].firstMatch)
+        expectation(for: gone, evaluatedWith: app.outlines.staticTexts["Smoke HTTP 2"].firstMatch)
         waitForExpectations(timeout: 5)
         XCTAssertFalse(savedJSON.contains("Smoke HTTP"))
     }

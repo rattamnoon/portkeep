@@ -16,7 +16,7 @@ struct SettingsView: View {
 
     var body: some View {
         @Bindable var navigation = navigation
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             List(selection: $navigation.selection) {
                 ForEach(store.groups, id: \.self) { group in
                     let tunnels = filtered.filter { $0.group == group }
@@ -40,6 +40,8 @@ struct SettingsView: View {
             }
             .searchable(text: $search, placement: .sidebar)
             .navigationSplitViewColumnWidth(min: 200, ideal: 220)
+            // Like System Settings: the sidebar always shows, and its toggle crowded the window buttons.
+            .toolbar(removing: .sidebarToggle)
             .safeAreaInset(edge: .bottom) {
                 HStack(spacing: 2) {
                     Button { openAddWindow() } label: {
@@ -107,6 +109,8 @@ struct SettingsView: View {
         } actions: {
             Button("Add Tunnel…") { openAddWindow() }
         }
+        // Otherwise the window keeps the title of the tunnel that was just removed.
+        .navigationTitle("Settings")
     }
 }
 

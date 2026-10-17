@@ -8,54 +8,78 @@ struct MenuView: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 10) {
             header
-            Divider().padding(.horizontal, 10).padding(.bottom, 4)
 
             if let banner = store.banner {
                 Label(banner, systemImage: "exclamationmark.triangle")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .padding(.horizontal, 10).padding(.vertical, 6)
+                    .padding(.horizontal, 4)
             }
 
-            if store.tunnels.isEmpty {
-                emptyState
-            } else {
-                ForEach(store.groups, id: \.self) { group in
-                    let tunnels = store.tunnels.filter { $0.group == group }
-                    if !tunnels.isEmpty {
-                        Text(group)
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal, 10).padding(.top, 6).padding(.bottom, 2)
-                        ForEach(tunnels) { TunnelRow(tunnel: $0) }
+            VStack(alignment: .leading, spacing: 0) {
+                if store.tunnels.isEmpty {
+                    emptyState
+                } else {
+                    ForEach(store.groups, id: \.self) { group in
+                        let tunnels = store.tunnels.filter { $0.group == group }
+                        if !tunnels.isEmpty {
+                            Text(group.uppercased())
+                                .font(.system(size: 10, weight: .semibold))
+                                .tracking(0.4)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 2)
+                            ForEach(tunnels) { TunnelRow(tunnel: $0) }
+                        }
                     }
                 }
             }
+            .padding(4)
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.primary.opacity(0.05)))
 
-            Divider().padding(.horizontal, 10).padding(.vertical, 4)
-            MenuItem("Add Tunnel…") { open(.none, add: true) }
-            MenuItem("Portkeep Settings…") { open(store.tunnels.first.map { .tunnel($0.id) }, add: false) }
-            MenuItem("Quit Portkeep") { NSApplication.shared.terminate(nil) }
+            Button { open(.none, add: true) } label: {
+                Label("Add Tunnel…", systemImage: "plus")
+                    .frame(maxWidth: .infinity)
+            }
+            .controlSize(.large)
+
+            HStack(spacing: 8) {
+                Button { open(store.tunnels.first.map { .tunnel($0.id) }, add: false) } label: {
+                    Label("Settings", systemImage: "gearshape").frame(maxWidth: .infinity)
+                }
+                Button { NSApplication.shared.terminate(nil) } label: {
+                    Label("Quit", systemImage: "power").frame(maxWidth: .infinity)
+                }
+            }
+            .controlSize(.large)
         }
-        .padding(5)
-        .frame(width: 320)
+        .padding(12)
+        .frame(width: 330)
     }
 
     private var header: some View {
-        HStack {
-            Text("Tunnels").font(.system(size: 13, weight: .bold))
+        HStack(spacing: 10) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .frame(width: 34, height: 34)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(verbatim: "Portkeep").font(.system(size: 14, weight: .bold))
+                Text("\(store.connectedCount) of \(store.tunnels.count) connected")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+            }
             Spacer()
             Toggle("All tunnels", isOn: Binding(
                 get: { store.tunnels.contains { store.state(of: $0.id).isOn } },
                 set: { on in Task { on ? await store.startAll() : await store.stopAll() } }))
                 .toggleStyle(.switch)
-                .controlSize(.small)
                 .labelsHidden()
                 .disabled(store.tunnels.isEmpty)
+                .help("Start or stop every tunnel")
         }
-        .padding(.horizontal, 10).padding(.vertical, 6)
+        .padding(.horizontal, 4)
     }
 
     private var emptyState: some View {
@@ -76,29 +100,5 @@ struct MenuView: View {
             navigation.selection = selection
             openSettings()
         }
-    }
-}
-
-/// A plain full-width menu item with the system hover highlight.
-struct MenuItem: View {
-    let title: LocalizedStringKey
-    let action: () -> Void
-    @State private var hovering = false
-
-    init(_ title: LocalizedStringKey, action: @escaping () -> Void) {
-        self.title = title
-        self.action = action
-    }
-
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 10).padding(.vertical, 4)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .background(RoundedRectangle(cornerRadius: 5).fill(hovering ? Color.primary.opacity(0.08) : .clear))
-        .onHover { hovering = $0 }
     }
 }
