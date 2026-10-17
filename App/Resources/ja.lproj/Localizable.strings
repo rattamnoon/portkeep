@@ -164,3 +164,6 @@
 "Command line tool" = "コマンドラインツール";
 "Install Command Line Tool…" = "コマンドラインツールをインストール…";
 "Adds portkeep to your PATH: portkeep list, portkeep start <name>, portkeep stop-group <group>…" = "portkeep を PATH に追加します: portkeep list、portkeep start <名前>、portkeep stop-group <グループ>…";
+"Duplicate" = "複製";
+"%@ copy" = "%@ のコピー";
+"%@ copy %@" = "%1$@ のコピー %2$@";

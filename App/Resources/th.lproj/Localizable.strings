@@ -164,3 +164,6 @@
 "Command line tool" = "เครื่องมือบรรทัดคำสั่ง";
 "Install Command Line Tool…" = "ติดตั้งเครื่องมือบรรทัดคำสั่ง…";
 "Adds portkeep to your PATH: portkeep list, portkeep start <name>, portkeep stop-group <group>…" = "เพิ่ม portkeep ลงใน PATH: portkeep list, portkeep start <ชื่อ>, portkeep stop-group <กลุ่ม>…";
+"Duplicate" = "ทำสำเนา";
+"%@ copy" = "%@ สำเนา";
+"%@ copy %@" = "%1$@ สำเนา %2$@";

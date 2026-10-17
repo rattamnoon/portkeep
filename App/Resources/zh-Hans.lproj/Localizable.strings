@@ -164,3 +164,6 @@
 "Command line tool" = "命令行工具";
 "Install Command Line Tool…" = "安装命令行工具…";
 "Adds portkeep to your PATH: portkeep list, portkeep start <name>, portkeep stop-group <group>…" = "将 portkeep 加入 PATH：portkeep list、portkeep start <名称>、portkeep stop-group <分组>…";
+"Duplicate" = "复制";
+"%@ copy" = "%@ 副本";
+"%@ copy %@" = "%1$@ 副本 %2$@";

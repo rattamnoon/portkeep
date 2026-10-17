@@ -293,6 +293,21 @@ final class TunnelStore {
         }
     }
 
+    /// Adds a copy right after the tunnel, named "<name> copy", switched off. Returns its id.
+    @discardableResult
+    func duplicate(_ id: UUID) -> UUID? {
+        guard let index = file.tunnels.firstIndex(where: { $0.id == id }) else { return nil }
+        let original = file.tunnels[index]
+        let name = Tunnel.copyName(taken: file.tunnels.map(\.name)) { n in
+            n == 1 ? String(localized: "\(original.name) copy") : String(localized: "\(original.name) copy \(String(n))")
+        }
+        let copy = original.duplicate(named: name)
+        file.tunnels.insert(copy, at: index + 1)
+        persist()
+        makeSupervisor(for: copy)
+        return copy.id
+    }
+
     func delete(_ id: UUID) async {
         await turnOff(id)
         supervisors[id] = nil

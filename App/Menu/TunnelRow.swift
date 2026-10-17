@@ -94,6 +94,12 @@ struct TunnelRow: View {
                 AppActivation.bringForward()
                 navigation.showSettings()
             }
+            Button("Duplicate") {
+                guard let copy = store.duplicate(tunnel.id) else { return }
+                navigation.selection = .tunnel(copy)
+                AppActivation.bringForward()
+                navigation.showSettings()
+            }
             Button("Show Log") {
                 AppActivation.bringForward()
                 openWindow(id: "log", value: tunnel.id)

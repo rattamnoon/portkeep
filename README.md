@@ -91,7 +91,9 @@ Install the CLIs for the methods you use, for example `brew install awscli kubec
 
 When a tunnel needs you, the menu bar icon shows a dot and the row shows a warning. Open **⋯** on the row for:
 - the fix (use another port, sign in to AWS, retry);
-- **Change Local Port…**, **Copy Address**, **Edit Tunnel…** or **Show Log**.
+- **Change Local Port…**, **Copy Address**, **Edit Tunnel…**, **Duplicate** or **Show Log**.
+
+**Duplicate** copies a tunnel, settings and all, as "<name> copy" (switched off) and opens it in Settings: the quick way to add Development next to Production.
 
 If the icon is hidden under the notch, open Portkeep again from Finder or Spotlight and the Settings window comes up.
 
@@ -99,7 +101,7 @@ If the icon is hidden under the notch, open Portkeep again from Finder or Spotli
   <img src="docs/images/settings-en-light.png" width="720" alt="Settings window: tunnels by group in the sidebar, the selected tunnel's details on the right">
 </p>
 
-**Settings** lists every tunnel by group, with search over names, ports, groups and tags. Pick a tunnel to see its live status, **Start**/**Stop** it, edit it, or open its log. Right-click a group header for **Start All** and **Stop All**. Editing the name, group or tags of a running tunnel doesn't restart it.
+**Settings** lists every tunnel by group, with search over names, ports, groups and tags. Pick a tunnel to see its live status, **Start**/**Stop** it, edit it, or open its log. Right-click a group header for **Start All** and **Stop All**, or a tunnel for **Duplicate**. Editing the name, group or tags of a running tunnel doesn't restart it.
 
 ### Groups, tags and colours
 

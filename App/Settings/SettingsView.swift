@@ -29,6 +29,9 @@ struct SettingsView: View {
                                     Text(String(tunnel.localPort)).foregroundStyle(.secondary).monospacedDigit()
                                 }
                                 .tag(SettingsSelection.tunnel(tunnel.id))
+                                .contextMenu {
+                                    Button("Duplicate") { duplicate(tunnel.id) }
+                                }
                             }
                         } header: {
                             GroupHeader(name: group, hex: store.file.groupColors[group])
@@ -100,6 +103,11 @@ struct SettingsView: View {
         }
     }
 
+    /// Opens the editor on the copy.
+    private func duplicate(_ id: UUID) {
+        if let copy = store.duplicate(id) { navigation.selection = .tunnel(copy) }
+    }
+
     private var selectedID: UUID? {
         if case .tunnel(let id) = navigation.selection { return id }
         return nil
@@ -128,6 +136,7 @@ struct SettingsView: View {
 struct TunnelDetailView: View {
     let tunnel: Tunnel
     @Environment(TunnelStore.self) private var store
+    @Environment(Navigation.self) private var navigation
     @Environment(\.openWindow) private var openWindow
     @State private var draft: TunnelDraft
 
@@ -141,6 +150,10 @@ struct TunnelDetailView: View {
             statusCard.padding([.horizontal, .top], 20)
             TunnelEditor(draft: $draft, showsMethodPicker: true)
             HStack {
+                Button("Duplicate") {
+                    if let copy = store.duplicate(tunnel.id) { navigation.selection = .tunnel(copy) }
+                }
+                .accessibilityIdentifier("detail.duplicate")
                 Spacer()
                 Button("Revert") { draft = TunnelDraft(tunnel) }
                     .disabled(draft == TunnelDraft(tunnel))

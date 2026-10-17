@@ -236,6 +236,24 @@ public struct Tunnel: Codable, Identifiable, Hashable, Sendable {
     public var runsOnDemand: Bool { startsOnConnect && supportsOnDemand }
 }
 
+extension Tunnel {
+    /// The same tunnel under a new id and `name`.
+    public func duplicate(named name: String) -> Tunnel {
+        var copy = self
+        copy.id = UUID()
+        copy.name = name
+        return copy
+    }
+
+    /// The first of `label(1)`, `label(2)`, … ("Redis copy", "Redis copy 2") not in `taken`, ignoring case.
+    public static func copyName(taken: [String], label: (Int) -> String) -> String {
+        let used = Set(taken.map { $0.lowercased() })
+        var n = 1
+        while used.contains(label(n).lowercased()) { n += 1 }
+        return label(n)
+    }
+}
+
 /// Colours for tags and groups. Any colour can be chosen; it is stored as "#RRGGBB".
 public enum LabelColor {
     /// Starting colours, one picked per name so a new tag or group has a colour before anyone chooses.

@@ -50,3 +50,23 @@ import Testing
     #expect(LabelColor.hex(red: 1, green: 0.5, blue: 0) == "#FF8000")
     #expect(LabelColor.presets.contains(LabelColor.defaultHex(for: "anything")))
 }
+
+@Test func duplicateKeepsEverythingButIdAndName() {
+    let original = Tunnel(name: "Redis", group: "Staging", localPort: 16379, connectAtLogin: true,
+                          method: .ssh(SSHConfig(mode: .local, host: "jump", destination: Endpoint(host: "redis", port: 6379))),
+                          tags: ["cache"], startsOnConnect: true, idleMinutes: 5)
+    let copy = original.duplicate(named: "Redis copy")
+    #expect(copy.id != original.id)
+    #expect(copy.name == "Redis copy")
+    var renamed = copy
+    renamed.id = original.id
+    renamed.name = original.name
+    #expect(renamed == original)
+}
+
+@Test func copyNamesCountUp() {
+    let label: (Int) -> String = { $0 == 1 ? "Redis copy" : "Redis copy \($0)" }
+    #expect(Tunnel.copyName(taken: ["Redis"], label: label) == "Redis copy")
+    #expect(Tunnel.copyName(taken: ["Redis", "redis COPY"], label: label) == "Redis copy 2")
+    #expect(Tunnel.copyName(taken: ["Redis", "Redis copy", "Redis copy 2"], label: label) == "Redis copy 3")
+}
