@@ -60,7 +60,7 @@ Requires macOS 14 Sonoma or later (Apple silicon or Intel).
 brew install --cask rattamnoon/tap/portkeep
 ```
 
-Update with `brew upgrade --cask portkeep`.
+This also puts the [`portkeep` command](#command-line-and-urls) on your `PATH`. Update with `brew upgrade --cask portkeep`.
 
 **Download.** Get `Portkeep-<version>.dmg` from [Releases](https://github.com/rattamnoon/portkeep/releases), open it and drag Portkeep to Applications.
 
@@ -81,7 +81,7 @@ Install the CLIs for the methods you use, for example `brew install awscli kubec
 
 ## Use
 
-1. Click the tunnel icon in the menu bar, then **Add Tunnel…**
+1. Click the `[•]` icon in the menu bar, then **Add Tunnel…**
 2. Pick a method and fill in the fields. Hosts from `~/.ssh/config`, AWS profiles and kube contexts you already have are offered in pickers.
 3. Choose a local port, a group and a tag (one per tunnel). The **Runs** box shows the exact command.
 4. Press **Test Connection** to check it, then **Add Tunnel**.
@@ -99,7 +99,7 @@ If the icon is hidden under the notch, open Portkeep again from Finder or Spotli
   <img src="docs/images/settings-en-light.png" width="720" alt="Settings window: tunnels by group in the sidebar, the selected tunnel's details on the right">
 </p>
 
-**Settings** lists every tunnel by group, with search over names, ports, groups and tags. Pick a tunnel to see its live status, **Start**/**Stop** it, edit it, or open its log. Right-click a group header for **Start All** and **Stop All**, or a tunnel for **Duplicate**. Editing the name, group or tags of a running tunnel doesn't restart it.
+**Settings** lists every tunnel by name under its group, with search over names, ports, groups and tags. Pick a tunnel to see its live status, **Start**/**Stop** it, edit it, or open its log. Right-click a group header for **Start All** and **Stop All**, or a tunnel for **Duplicate**. Editing the name, group or tags of a running tunnel doesn't restart it.
 
 ### Groups, tags and colours
 
@@ -132,7 +132,7 @@ In **Settings › General › Tunnels**:
 
 ### Command line and URLs
 
-**Settings › General › Install Command Line Tool…** links `portkeep` into `/usr/local/bin` when it can write there, otherwise `~/.local/bin` (and tells you if that isn't on your `PATH`). If neither works it shows the `sudo ln -s` line to paste.
+Homebrew installs `portkeep` for you. Otherwise, **Settings › General › Install Command Line Tool…** links `portkeep` into `/usr/local/bin` when it can write there, otherwise `~/.local/bin` (and tells you if that isn't on your `PATH`). If neither works it shows the `sudo ln -s` line to paste.
 
 ```
 portkeep list                        # name, group, port, state
@@ -190,17 +190,21 @@ If `tunnels.json` can't be read, Portkeep moves it aside to `tunnels.json.broken
 swift test                                   # TunnelKit unit tests
 xcodegen generate                            # Portkeep.xcodeproj (not committed)
 xcodebuild test -scheme Portkeep -destination 'platform=macOS'   # UI smoke tests
-swift scripts/make-icon.swift                # redraw the app icon
+swift scripts/make-icon.swift                # redraw the app icon and docs/images/icon.png
 ```
 
 UI smoke tests drive real windows, so run them on a Mac you aren't using or rely on CI. For demo data and screenshots, run `PORTKEEP_DEMO=1 PORTKEEP_SHOW=menu,settings,add,labels PORTKEEP_DATA_DIR=$(mktemp -d) Portkeep.app/Contents/MacOS/Portkeep`.
 
 ### Releases
 
-To cut a release, push a tag (`git tag v0.2.0 && git push origin v0.2.0`) or run **Actions › Release › Run workflow** with a version.
+To cut a release, push a tag (`git tag v0.4.0 && git push origin v0.4.0`) or run **Actions › Release › Run workflow** with a version.
 - The [Release workflow](.github/workflows/release.yml) builds `Portkeep-<version>.dmg`, creates the tag if needed, and publishes a GitHub Release with notes and a SHA-256.
 - It signs and notarizes when the Developer ID secrets listed at the top of the workflow are set. Otherwise it publishes an unsigned build, labelled as such.
 - To build locally: `scripts/release.sh <version>`, or `UNSIGNED=1 scripts/release.sh <version>`.
+
+## Contributing
+
+Bug reports and ideas are welcome in [Issues](https://github.com/rattamnoon/portkeep/issues). For a bug, include the tunnel's method, what the menu said, and the lines from **Show Log**. Pull requests should pass `swift test` and build with `xcodebuild`; CI runs the UI smoke tests.
 
 ## License
 
