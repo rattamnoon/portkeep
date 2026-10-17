@@ -31,14 +31,14 @@ final class TunnelStore {
         return seen
     }
 
-    /// With BURROW_DEBUG=1, commands and state changes are appended to debug.log beside tunnels.json (UI tests).
+    /// With PORTKEEP_DEBUG=1, commands and state changes are appended to debug.log beside tunnels.json (UI tests).
     @ObservationIgnored private let debugLog: URL?
 
     init(directory: URL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        .appendingPathComponent("Burrow")) {
+        .appendingPathComponent("Portkeep")) {
         fileURL = directory.appendingPathComponent("tunnels.json")
         reaper = OrphanReaper(file: directory.appendingPathComponent("running.json"))
-        debugLog = ProcessInfo.processInfo.environment["BURROW_DEBUG"] == "1"
+        debugLog = ProcessInfo.processInfo.environment["PORTKEEP_DEBUG"] == "1"
             ? directory.appendingPathComponent("debug.log") : nil
     }
 
@@ -64,7 +64,7 @@ final class TunnelStore {
         case .newerSchema(let loaded):
             file = loaded
             readOnly = true
-            banner = String(localized: "tunnels.json was written by a newer Burrow. Changes won’t be saved.")
+            banner = String(localized: "tunnels.json was written by a newer Portkeep. Changes won’t be saved.")
         case .broken(let backup):
             file = TunnelFile()
             banner = String(localized: "tunnels.json couldn’t be read, so it was moved to \(backup.lastPathComponent).")
@@ -87,7 +87,7 @@ final class TunnelStore {
         }
     }
 
-    /// Sample tunnels with fixed states and no processes, for screenshots (BURROW_DEMO=1). Nothing is saved.
+    /// Sample tunnels with fixed states and no processes, for screenshots (PORTKEEP_DEMO=1). Nothing is saved.
     func loadDemo() {
         readOnly = true
         let now = Date.now
@@ -281,7 +281,7 @@ final class TunnelStore {
         updateLoginItem()
     }
 
-    /// Burrow opens at login only while some tunnel asks to connect at login (spec §5.5).
+    /// Portkeep opens at login only while some tunnel asks to connect at login (spec §5.5).
     private func updateLoginItem() {
         let wanted = file.tunnels.contains(where: \.connectAtLogin)
         let service = SMAppService.mainApp

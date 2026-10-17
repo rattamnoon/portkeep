@@ -1,4 +1,4 @@
-/* Burrow app strings. Keys are the English text. */
+/* Portkeep app strings. Keys are the English text. */
 "%@ not found. Install it with %@." = "%1$@ が見つかりません。%2$@ でインストールしてください。";
 "%@ — Log" = "%@ — ログ";
 "Actions for %@" = "%@ の操作";
@@ -10,11 +10,11 @@
 "Also used by %@" = "%@ も使用しています";
 "Any command that holds a port open" = "ポートを開き続ける任意のコマンド";
 "Available" = "空き";
-"Burrow Settings…" = "Burrow の設定…";
-"Burrow needs to relaunch to switch language." = "言語を切り替えるには Burrow を再起動する必要があります。";
-"Burrow watches the port and restarts the command when it stops." = "Burrow はポートを監視し、コマンドが停止すると再起動します。";
-"Burrow: %lld connected" = "Burrow：%lld 件接続中";
-"Burrow: %lld connected, needs attention" = "Burrow：%lld 件接続中、要確認あり";
+"Portkeep Settings…" = "Portkeep の設定…";
+"Portkeep needs to relaunch to switch language." = "言語を切り替えるには Portkeep を再起動する必要があります。";
+"Portkeep watches the port and restarts the command when it stops." = "Portkeep はポートを監視し、コマンドが停止すると再起動します。";
+"Portkeep: %lld connected" = "Portkeep：%lld 件接続中";
+"Portkeep: %lld connected, needs attention" = "Portkeep：%lld 件接続中、要確認あり";
 "Cancel" = "キャンセル";
 "Choose %@" = "%@ を選択";
 "Command" = "コマンド";
@@ -64,7 +64,7 @@
 "Port" = "ポート";
 "Profile" = "プロファイル";
 "Project" = "プロジェクト";
-"Quit Burrow" = "Burrow を終了";
+"Quit Portkeep" = "Portkeep を終了";
 "Region" = "リージョン";
 "Relaunch Now" = "今すぐ再起動";
 "Remote" = "リモート";
@@ -97,6 +97,6 @@
 "Zone" = "ゾーン";
 "e.g. %@" = "例：%@";
 "tunnels.json couldn’t be read, so it was moved to %@." = "tunnels.json を読み込めなかったため、%@ に移動しました。";
-"tunnels.json was written by a newer Burrow. Changes won’t be saved." = "tunnels.json は新しいバージョンの Burrow で書き込まれています。変更は保存されません。";
+"tunnels.json was written by a newer Portkeep. Changes won’t be saved." = "tunnels.json は新しいバージョンの Portkeep で書き込まれています。変更は保存されません。";
 "Start" = "開始";
 "Stop" = "停止";

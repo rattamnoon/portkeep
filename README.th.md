@@ -1,13 +1,13 @@
-# Burrow
+# Portkeep
 
 **เปิด port forward ค้างไว้ได้ตลอด จาก menu bar**
 
-Burrow เป็นแอป menu bar บน macOS สำหรับ tunnel ที่ต้องเปิดทุกวัน เช่น ฐานข้อมูล, cache, dashboard หรือ SOCKS proxy ที่อยู่หลัง SSH jump host, AWS Session Manager, Kubernetes และอื่น ๆ ตั้งชื่อ tunnel ครั้งเดียว กดเปิดได้ในคลิกเดียว แล้ว Burrow จะคอยดูแลให้ต่ออยู่ ถ้าหลุดจะบอกว่าตัวไหน เพราะอะไร และกำลังต่อใหม่ให้อยู่
+Portkeep เป็นแอป menu bar บน macOS สำหรับ tunnel ที่ต้องเปิดทุกวัน เช่น ฐานข้อมูล, cache, dashboard หรือ SOCKS proxy ที่อยู่หลัง SSH jump host, AWS Session Manager, Kubernetes และอื่น ๆ ตั้งชื่อ tunnel ครั้งเดียว กดเปิดได้ในคลิกเดียว แล้ว Portkeep จะคอยดูแลให้ต่ออยู่ ถ้าหลุดจะบอกว่าตัวไหน เพราะอะไร และกำลังต่อใหม่ให้อยู่
 
 [English](README.md)
 
 <p align="center">
-  <img src="docs/images/menu-th-light.png" width="320" alt="เมนู Burrow ภาษาไทย">
+  <img src="docs/images/menu-th-light.png" width="320" alt="เมนู Portkeep ภาษาไทย">
   &nbsp;&nbsp;
   <img src="docs/images/settings-th-light.png" width="480" alt="หน้าต่างการตั้งค่า ภาษาไทย">
 </p>
@@ -22,22 +22,22 @@ Burrow เป็นแอป menu bar บน macOS สำหรับ tunnel ท
 
 ## วิธีเชื่อมต่อที่รองรับ
 
-SSH (`-L` / `-R` / `-D`, ProxyJump), AWS SSM `start-session`, `kubectl port-forward`, Google Cloud IAP, Cloudflare Access และคำสั่งกำหนดเองที่เปิดพอร์ตค้างไว้ Burrow เรียกเครื่องมือที่คุณใช้อยู่แล้ว ใช้ config และ credential เดิม และแสดงคำสั่งจริงที่จะรัน ไม่เก็บรหัสผ่าน คีย์ หรือ token ใด ๆ
+SSH (`-L` / `-R` / `-D`, ProxyJump), AWS SSM `start-session`, `kubectl port-forward`, Google Cloud IAP, Cloudflare Access และคำสั่งกำหนดเองที่เปิดพอร์ตค้างไว้ Portkeep เรียกเครื่องมือที่คุณใช้อยู่แล้ว ใช้ config และ credential เดิม และแสดงคำสั่งจริงที่จะรัน ไม่เก็บรหัสผ่าน คีย์ หรือ token ใด ๆ
 
 ## ติดตั้ง
 
 ต้องใช้ macOS 14 Sonoma ขึ้นไป
 
-- **ดาวน์โหลด**: เวอร์ชันที่ notarize แล้วจะอยู่ที่หน้า [Releases](https://github.com/rattamnoon/burrow/releases) *(ยังไม่มี)*
-- **Homebrew** (เมื่อออกเวอร์ชันแรก): `brew install --cask rattamnoon/tap/burrow`
+- **ดาวน์โหลด**: เวอร์ชันที่ notarize แล้วจะอยู่ที่หน้า [Releases](https://github.com/rattamnoon/portkeep/releases) *(ยังไม่มี)*
+- **Homebrew** (เมื่อออกเวอร์ชันแรก): `brew install --cask rattamnoon/tap/portkeep`
 - **Build เอง**:
 
 ```
 brew install xcodegen
-git clone https://github.com/rattamnoon/burrow.git && cd burrow
+git clone https://github.com/rattamnoon/portkeep.git && cd portkeep
 xcodegen generate
-xcodebuild -scheme Burrow -configuration Release -derivedDataPath build build
-open build/Build/Products/Release/Burrow.app
+xcodebuild -scheme Portkeep -configuration Release -derivedDataPath build build
+open build/Build/Products/Release/Portkeep.app
 ```
 
 ## วิธีใช้

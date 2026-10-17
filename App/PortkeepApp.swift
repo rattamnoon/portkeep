@@ -2,7 +2,7 @@ import SwiftUI
 import TunnelKit
 
 @main
-struct BurrowApp: App {
+struct PortkeepApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
 
     var body: some Scene {
@@ -59,8 +59,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let environment = ProcessInfo.processInfo.environment
 
     override init() {
-        // BURROW_DATA_DIR points the app at another folder (development and screenshots).
-        store = environment["BURROW_DATA_DIR"].map { TunnelStore(directory: URL(fileURLWithPath: $0)) } ?? TunnelStore()
+        // PORTKEEP_DATA_DIR points the app at another folder (development and screenshots).
+        store = environment["PORTKEEP_DATA_DIR"].map { TunnelStore(directory: URL(fileURLWithPath: $0)) } ?? TunnelStore()
         super.init()
     }
 
@@ -79,23 +79,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         termSource?.resume()
         AppActivation.observeWindowCloses()
 
-        switch environment["BURROW_APPEARANCE"] {
+        switch environment["PORTKEEP_APPEARANCE"] {
         case "light": NSApp.appearance = NSAppearance(named: .aqua)
         case "dark": NSApp.appearance = NSAppearance(named: .darkAqua)
         default: break
         }
 
-        if environment["BURROW_DEMO"] == "1" {
+        if environment["PORTKEEP_DEMO"] == "1" {
             store.loadDemo()
         } else {
             events = SystemEvents(store: store)
             Task { await store.start() }
         }
-        if let show = environment["BURROW_SHOW"] { showPreview(show) }
+        if let show = environment["PORTKEEP_SHOW"] { showPreview(show) }
     }
 
     /// Opens a view in an ordinary window so it can be captured with `screencapture -l`.
-    /// Writes the window number to `$BURROW_DATA_DIR/window-<name>.txt`.
+    /// Writes the window number to `$PORTKEEP_DATA_DIR/window-<name>.txt`.
     private func showPreview(_ names: String) {
         AppActivation.bringForward()
         for name in names.split(separator: ",").map(String.init) {
@@ -113,7 +113,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 continue
             }
             let window = NSWindow(contentViewController: NSHostingController(rootView: view))
-            window.title = "Burrow"
+            window.title = "Portkeep"
             if name == "menu" { window.styleMask = [.borderless]; window.hasShadow = true }
             window.isReleasedWhenClosed = false
             window.makeKeyAndOrderFront(nil)
@@ -127,7 +127,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 window.setFrame(frame, display: true)
             }
             previewWindows.append(window)
-            if let dir = environment["BURROW_DATA_DIR"] {
+            if let dir = environment["PORTKEEP_DATA_DIR"] {
                 try? "\(window.windowNumber)".write(toFile: "\(dir)/window-\(name).txt", atomically: true, encoding: .utf8)
             }
         }

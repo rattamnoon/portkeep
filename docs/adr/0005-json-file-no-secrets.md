@@ -8,7 +8,7 @@ Definitions are small (tens of records), must survive reinstalls, and users will
 
 ## Decision
 
-Store everything in `~/Library/Application Support/Burrow/tunnels.json` with a `schemaVersion`, written atomically (temp file + rename). Unknown keys are preserved. The app stores no passwords, keys or tokens.
+Store everything in `~/Library/Application Support/Portkeep/tunnels.json` with a `schemaVersion`, written atomically (temp file + rename). Unknown keys are preserved. The app stores no passwords, keys or tokens.
 
 ## Consequences
 

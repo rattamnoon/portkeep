@@ -8,7 +8,7 @@ struct MenuBarLabel: View {
 
     var body: some View {
         Image(nsImage: Self.glyph(dot: attention))
-            .accessibilityLabel(attention ? Text("Burrow: \(connected) connected, needs attention") : Text("Burrow: \(connected) connected"))
+            .accessibilityLabel(attention ? Text("Portkeep: \(connected) connected, needs attention") : Text("Portkeep: \(connected) connected"))
     }
 
     static func glyph(dot: Bool) -> NSImage {

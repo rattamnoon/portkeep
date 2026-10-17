@@ -36,8 +36,8 @@ struct MenuView: View {
 
             Divider().padding(.horizontal, 10).padding(.vertical, 4)
             MenuItem("Add Tunnel…") { open(.none, add: true) }
-            MenuItem("Burrow Settings…") { open(store.tunnels.first.map { .tunnel($0.id) }, add: false) }
-            MenuItem("Quit Burrow") { NSApplication.shared.terminate(nil) }
+            MenuItem("Portkeep Settings…") { open(store.tunnels.first.map { .tunnel($0.id) }, add: false) }
+            MenuItem("Quit Portkeep") { NSApplication.shared.terminate(nil) }
         }
         .padding(5)
         .frame(width: 320)

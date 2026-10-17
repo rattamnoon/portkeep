@@ -33,10 +33,10 @@ jobs:
       - name: Generate project
         run: xcodegen generate
       - name: Build
-        run: xcodebuild build -scheme Burrow -destination 'platform=macOS' -derivedDataPath build
+        run: xcodebuild build -scheme Portkeep -destination 'platform=macOS' -derivedDataPath build
       - name: UI smoke tests
         run: |
-          xcodebuild test -scheme Burrow -destination 'platform=macOS' -derivedDataPath build \
+          xcodebuild test -scheme Portkeep -destination 'platform=macOS' -derivedDataPath build \
             -resultBundlePath build/ui-tests.xcresult
       - name: Upload UI test results
         if: failure()

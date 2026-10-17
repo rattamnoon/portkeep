@@ -1,4 +1,4 @@
-name: Burrow
+name: Portkeep
 options:
   bundleIdPrefix: com.rattamnoon
   developmentLanguage: en
@@ -8,7 +8,7 @@ packages:
   TunnelKit:
     path: .
 targets:
-  Burrow:
+  Portkeep:
     type: application
     platform: macOS
     sources:
@@ -17,39 +17,39 @@ targets:
       - package: TunnelKit
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.rattamnoon.burrow
-        PRODUCT_NAME: Burrow
+        PRODUCT_BUNDLE_IDENTIFIER: com.rattamnoon.portkeep
+        PRODUCT_NAME: Portkeep
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         SWIFT_EMIT_LOC_STRINGS: YES
         ENABLE_HARDENED_RUNTIME: YES
-        CODE_SIGN_ENTITLEMENTS: App/Resources/Burrow.entitlements
+        CODE_SIGN_ENTITLEMENTS: App/Resources/Portkeep.entitlements
         INFOPLIST_FILE: App/Resources/Info.plist
         GENERATE_INFOPLIST_FILE: NO
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "-"
-  BurrowUITests:
+  PortkeepUITests:
     type: bundle.ui-testing
     platform: macOS
     sources:
       - path: UITests
     dependencies:
-      - target: Burrow
+      - target: Portkeep
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.rattamnoon.burrow.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: com.rattamnoon.portkeep.uitests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_VERSION: "5.0"
-        TEST_TARGET_NAME: Burrow
+        TEST_TARGET_NAME: Portkeep
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "-"
 schemes:
-  Burrow:
+  Portkeep:
     build:
       targets:
-        Burrow: all
+        Portkeep: all
     test:
       targets:
-        - BurrowUITests
+        - PortkeepUITests

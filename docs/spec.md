@@ -1,10 +1,10 @@
-# Burrow — v1 Specification
+# Portkeep — v1 Specification
 
 Status: draft · 2026-10-17 · Product context: [PRODUCT.md](../PRODUCT.md) · Decisions: [adr/](adr/) · UI: [design canvas](https://claude.ai/artifact/QabMvafdQJC15Zn8NMYZe4) (page "Apple-style")
 
 ## 1. What it is
 
-A macOS menu bar app that keeps named port forwards up. Each tunnel is started by the user's own CLI (`ssh`, `aws`, `kubectl`, `gcloud`, `cloudflared`, or any command), watched by probing its local port, and restarted when it drops. The app is called Burrow (repo `rattamnoon/burrow`, bundle id `com.rattamnoon.burrow`).
+A macOS menu bar app that keeps named port forwards up. Each tunnel is started by the user's own CLI (`ssh`, `aws`, `kubectl`, `gcloud`, `cloudflared`, or any command), watched by probing its local port, and restarted when it drops. The app is called Portkeep (repo `rattamnoon/portkeep`, bundle id `com.rattamnoon.portkeep`).
 
 ## 2. Scope
 
@@ -133,7 +133,7 @@ Follows the design canvas, page "Apple-style": light/dark menu, conflict submenu
 
 ## 8. Data
 
-Stored at `~/Library/Application Support/Burrow/tunnels.json` (ADR-0005), written atomically.
+Stored at `~/Library/Application Support/Portkeep/tunnels.json` (ADR-0005), written atomically.
 
 ```json
 {
@@ -171,6 +171,6 @@ VoiceOver labels on every row and the menu bar item; full keyboard navigation in
 
 ## 10. Open questions
 
-- ~~Product name and bundle identifier.~~ Burrow, `com.rattamnoon.burrow` (2026-10-17).
+- ~~Product name and bundle identifier.~~ Portkeep, `com.rattamnoon.portkeep` (2026-10-17).
 - Licence and price (free/open source vs paid).
 - Whether v1.1 adds askpass for passphrase/OTP prompts.

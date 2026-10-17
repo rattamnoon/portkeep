@@ -3,7 +3,7 @@ name: Release
 # Two ways to cut a release:
 #   - push a tag:            git tag v0.2.0 && git push origin v0.2.0
 #   - Actions › Release › Run workflow, enter 0.2.0 (creates the tag on the chosen commit)
-# Each run builds Burrow-<version>.dmg and publishes a GitHub Release with notes and a checksum.
+# Each run builds Portkeep-<version>.dmg and publishes a GitHub Release with notes and a checksum.
 #
 # Signed and notarized when these repository secrets exist, unsigned otherwise:
 #   MACOS_CERTIFICATE_P12        base64 of the "Developer ID Application" .p12
@@ -85,7 +85,7 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
           security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
           rm "$RUNNER_TEMP/cert.p12"
-          xcrun notarytool store-credentials burrow-notary \
+          xcrun notarytool store-credentials portkeep-notary \
             --apple-id "$NOTARY_APPLE_ID" --team-id "$TEAM_ID" --password "$NOTARY_PASSWORD" --keychain "$KEYCHAIN"
           echo "NOTARY_KEYCHAIN=$KEYCHAIN" >> "$GITHUB_ENV"
 
@@ -110,21 +110,21 @@ jobs:
           {
             echo "## Install"
             echo
-            echo "Download \`Burrow-$VERSION.dmg\`, open it and drag Burrow to Applications. Requires macOS 14 or later."
+            echo "Download \`Portkeep-$VERSION.dmg\`, open it and drag Portkeep to Applications. Requires macOS 14 or later."
             echo
             if [ "$HAS_SIGNING" != true ]; then
-              echo "> **Unsigned build.** macOS will refuse to open it at first: right-click Burrow in Applications, choose **Open**, then **Open** again."
+              echo "> **Unsigned build.** macOS will refuse to open it at first: right-click Portkeep in Applications, choose **Open**, then **Open** again."
               echo
             fi
-            echo "SHA-256: \`$(cut -d' ' -f1 "build/release/Burrow-$VERSION.dmg.sha256")\`"
+            echo "SHA-256: \`$(cut -d' ' -f1 "build/release/Portkeep-$VERSION.dmg.sha256")\`"
           } > "$NOTES"
-          FLAGS=(--title "Burrow $VERSION" --notes-file "$NOTES" --generate-notes --verify-tag)
+          FLAGS=(--title "Portkeep $VERSION" --notes-file "$NOTES" --generate-notes --verify-tag)
           if [ "${{ github.event_name }}" = workflow_dispatch ]; then
-            FLAGS=(--title "Burrow $VERSION" --notes-file "$NOTES" --generate-notes --target "$GITHUB_SHA")
+            FLAGS=(--title "Portkeep $VERSION" --notes-file "$NOTES" --generate-notes --target "$GITHUB_SHA")
           fi
           if [ "$PRERELEASE" = true ] || [[ "$VERSION" == *-* ]]; then FLAGS+=(--prerelease); fi
           gh release create "$TAG" "${FLAGS[@]}" \
-            "build/release/Burrow-$VERSION.dmg" "build/release/Burrow-$VERSION.dmg.sha256"
+            "build/release/Portkeep-$VERSION.dmg" "build/release/Portkeep-$VERSION.dmg.sha256"
 
       - name: Clean up keychain
         if: always() && env.NOTARY_KEYCHAIN != ''

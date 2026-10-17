@@ -1,4 +1,4 @@
-/* Burrow app strings. Keys are the English text. */
+/* Portkeep app strings. Keys are the English text. */
 "%@ not found. Install it with %@." = "未找到 %1$@。请使用 %2$@ 安装。";
 "%@ — Log" = "%@ — 日志";
 "Actions for %@" = "%@ 的操作";
@@ -10,11 +10,11 @@
 "Also used by %@" = "%@ 也在使用";
 "Any command that holds a port open" = "任何保持端口打开的命令";
 "Available" = "可用";
-"Burrow Settings…" = "Burrow 设置…";
-"Burrow needs to relaunch to switch language." = "需要重新启动 Burrow 才能切换语言。";
-"Burrow watches the port and restarts the command when it stops." = "Burrow 会监视端口，并在命令停止时重新启动它。";
-"Burrow: %lld connected" = "Burrow：已连接 %lld 个";
-"Burrow: %lld connected, needs attention" = "Burrow：已连接 %lld 个，有需要处理的项目";
+"Portkeep Settings…" = "Portkeep 设置…";
+"Portkeep needs to relaunch to switch language." = "需要重新启动 Portkeep 才能切换语言。";
+"Portkeep watches the port and restarts the command when it stops." = "Portkeep 会监视端口，并在命令停止时重新启动它。";
+"Portkeep: %lld connected" = "Portkeep：已连接 %lld 个";
+"Portkeep: %lld connected, needs attention" = "Portkeep：已连接 %lld 个，有需要处理的项目";
 "Cancel" = "取消";
 "Choose %@" = "选择%@";
 "Command" = "命令";
@@ -64,7 +64,7 @@
 "Port" = "端口";
 "Profile" = "配置文件";
 "Project" = "项目";
-"Quit Burrow" = "退出 Burrow";
+"Quit Portkeep" = "退出 Portkeep";
 "Region" = "区域";
 "Relaunch Now" = "立即重新启动";
 "Remote" = "远程";
@@ -97,6 +97,6 @@
 "Zone" = "可用区";
 "e.g. %@" = "例如 %@";
 "tunnels.json couldn’t be read, so it was moved to %@." = "无法读取 tunnels.json，已将其移至 %@。";
-"tunnels.json was written by a newer Burrow. Changes won’t be saved." = "tunnels.json 由较新版本的 Burrow 写入。更改将不会保存。";
+"tunnels.json was written by a newer Portkeep. Changes won’t be saved." = "tunnels.json 由较新版本的 Portkeep 写入。更改将不会保存。";
 "Start" = "启动";
 "Stop" = "停止";

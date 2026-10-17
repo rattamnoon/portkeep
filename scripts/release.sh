@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds Burrow-<version>.dmg (ADR-0001), signed and notarized unless UNSIGNED=1.
+# Builds Portkeep-<version>.dmg (ADR-0001), signed and notarized unless UNSIGNED=1.
 #
 # Usage: scripts/release.sh <version> [build-number]
 #
@@ -7,8 +7,8 @@
 #   - a "Developer ID Application" certificate in a keychain on the search list
 #   - DEVELOPER_ID   e.g. "Developer ID Application: Your Name (TEAMID)"
 #   - TEAM_ID        e.g. "ABCDE12345"
-#   - a notarytool keychain profile named burrow-notary:
-#       xcrun notarytool store-credentials burrow-notary --apple-id <id> --team-id <TEAMID>
+#   - a notarytool keychain profile named portkeep-notary:
+#       xcrun notarytool store-credentials portkeep-notary --apple-id <id> --team-id <TEAMID>
 #     NOTARY_KEYCHAIN points at the keychain holding it when that isn't the login keychain (CI).
 # UNSIGNED=1 builds an ad-hoc signed dmg with no notarization (Gatekeeper will warn).
 # Nothing secret is read from or written to the repository.
@@ -24,9 +24,9 @@ fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/build/release"
-ARCHIVE="$OUT/Burrow.xcarchive"
-APP="$OUT/export/Burrow.app"
-DMG="$OUT/Burrow-$VERSION.dmg"
+ARCHIVE="$OUT/Portkeep.xcarchive"
+APP="$OUT/export/Portkeep.app"
+DMG="$OUT/Portkeep-$VERSION.dmg"
 
 rm -rf "$OUT"
 mkdir -p "$OUT/export"
@@ -36,14 +36,14 @@ xcodegen generate
 
 if [ "$UNSIGNED" = 1 ]; then
   xcodebuild archive \
-    -scheme Burrow -configuration Release -destination 'generic/platform=macOS' \
+    -scheme Portkeep -configuration Release -destination 'generic/platform=macOS' \
     -archivePath "$ARCHIVE" \
     MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD" \
     CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- ONLY_ACTIVE_ARCH=NO
-  cp -R "$ARCHIVE/Products/Applications/Burrow.app" "$APP"
+  cp -R "$ARCHIVE/Products/Applications/Portkeep.app" "$APP"
 else
   xcodebuild archive \
-    -scheme Burrow -configuration Release -destination 'generic/platform=macOS' \
+    -scheme Portkeep -configuration Release -destination 'generic/platform=macOS' \
     -archivePath "$ARCHIVE" \
     MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD" \
     CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$DEVELOPER_ID" DEVELOPMENT_TEAM="$TEAM_ID" \
@@ -67,11 +67,11 @@ STAGE="$OUT/dmg"
 mkdir -p "$STAGE"
 cp -R "$APP" "$STAGE/"
 ln -s /Applications "$STAGE/Applications"
-hdiutil create -volname "Burrow $VERSION" -srcfolder "$STAGE" -ov -format UDZO "$DMG"
+hdiutil create -volname "Portkeep $VERSION" -srcfolder "$STAGE" -ov -format UDZO "$DMG"
 
 if [ "$UNSIGNED" != 1 ]; then
   codesign --sign "$DEVELOPER_ID" --timestamp "$DMG"
-  NOTARY_ARGS=(--keychain-profile burrow-notary)
+  NOTARY_ARGS=(--keychain-profile portkeep-notary)
   [ -n "${NOTARY_KEYCHAIN:-}" ] && NOTARY_ARGS+=(--keychain "$NOTARY_KEYCHAIN")
   xcrun notarytool submit "$DMG" "${NOTARY_ARGS[@]}" --wait
   xcrun stapler staple "$DMG"

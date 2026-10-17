@@ -26,7 +26,7 @@ struct GeneralView: View {
                 }
                 if selection != launched {
                     HStack {
-                        Text("Burrow needs to relaunch to switch language.")
+                        Text("Portkeep needs to relaunch to switch language.")
                             .font(.caption).foregroundStyle(.secondary)
                         Spacer()
                         Button("Relaunch Now", action: Self.relaunch)

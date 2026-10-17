@@ -35,7 +35,7 @@ enum MethodKind: String, CaseIterable, Identifiable {
         case .kubernetes: String(localized: "Uses kubectl and your kubeconfig contexts.")
         case .iap: String(localized: "Needs the gcloud CLI, signed in.")
         case .cloudflare: String(localized: "Needs cloudflared. Signs in through the browser.")
-        case .custom: String(localized: "Burrow watches the port and restarts the command when it stops.")
+        case .custom: String(localized: "Portkeep watches the port and restarts the command when it stops.")
         }
     }
 

@@ -1,4 +1,4 @@
-/* Burrow app strings. Keys are the English text. */
+/* Portkeep app strings. Keys are the English text. */
 "%@ not found. Install it with %@." = "ไม่พบ %1$@ ติดตั้งด้วย %2$@";
 "%@ — Log" = "%@ — Log";
 "Actions for %@" = "การทำงานสำหรับ %@";
@@ -10,11 +10,11 @@
 "Also used by %@" = "%@ ใช้พอร์ตนี้อยู่ด้วย";
 "Any command that holds a port open" = "คำสั่งใดก็ได้ที่เปิดพอร์ตค้างไว้";
 "Available" = "ว่าง";
-"Burrow Settings…" = "การตั้งค่า Burrow…";
-"Burrow needs to relaunch to switch language." = "ต้องเปิด Burrow ใหม่เพื่อเปลี่ยนภาษา";
-"Burrow watches the port and restarts the command when it stops." = "Burrow คอยดูพอร์ต และรันคำสั่งใหม่เมื่อหยุดทำงาน";
-"Burrow: %lld connected" = "Burrow: เชื่อมต่อแล้ว %lld";
-"Burrow: %lld connected, needs attention" = "Burrow: เชื่อมต่อแล้ว %lld มีรายการที่ต้องดู";
+"Portkeep Settings…" = "การตั้งค่า Portkeep…";
+"Portkeep needs to relaunch to switch language." = "ต้องเปิด Portkeep ใหม่เพื่อเปลี่ยนภาษา";
+"Portkeep watches the port and restarts the command when it stops." = "Portkeep คอยดูพอร์ต และรันคำสั่งใหม่เมื่อหยุดทำงาน";
+"Portkeep: %lld connected" = "Portkeep: เชื่อมต่อแล้ว %lld";
+"Portkeep: %lld connected, needs attention" = "Portkeep: เชื่อมต่อแล้ว %lld มีรายการที่ต้องดู";
 "Cancel" = "ยกเลิก";
 "Choose %@" = "เลือก %@";
 "Command" = "คำสั่ง";
@@ -64,7 +64,7 @@
 "Port" = "พอร์ต";
 "Profile" = "โปรไฟล์";
 "Project" = "Project";
-"Quit Burrow" = "ออกจาก Burrow";
+"Quit Portkeep" = "ออกจาก Portkeep";
 "Region" = "Region";
 "Relaunch Now" = "เปิดใหม่ตอนนี้";
 "Remote" = "Remote";
@@ -97,6 +97,6 @@
 "Zone" = "Zone";
 "e.g. %@" = "เช่น %@";
 "tunnels.json couldn’t be read, so it was moved to %@." = "อ่าน tunnels.json ไม่ได้ จึงย้ายไปไว้ที่ %@";
-"tunnels.json was written by a newer Burrow. Changes won’t be saved." = "tunnels.json ถูกบันทึกโดย Burrow เวอร์ชันใหม่กว่า การแก้ไขจะไม่ถูกบันทึก";
+"tunnels.json was written by a newer Portkeep. Changes won’t be saved." = "tunnels.json ถูกบันทึกโดย Portkeep เวอร์ชันใหม่กว่า การแก้ไขจะไม่ถูกบันทึก";
 "Start" = "เริ่ม";
 "Stop" = "หยุด";
