@@ -1,0 +1,23 @@
+// swift-tools-version: 6.0
+import PackageDescription
+
+let package = Package(
+    name: "TunnelKit",
+    platforms: [.macOS(.v14)],
+    products: [
+        .library(name: "TunnelKit", targets: ["TunnelKit"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/pointfreeco/swift-clocks", from: "1.0.0"),
+    ],
+    targets: [
+        .target(name: "TunnelKit"),
+        .testTarget(
+            name: "TunnelKitTests",
+            dependencies: [
+                "TunnelKit",
+                .product(name: "Clocks", package: "swift-clocks"),
+            ]
+        ),
+    ]
+)
