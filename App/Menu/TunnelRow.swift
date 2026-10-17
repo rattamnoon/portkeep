@@ -50,17 +50,14 @@ struct TunnelRow: View {
                         .lineLimit(state.needsAttention ? 2 : 1)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                // Tags get their own line so none is cut off.
-                if !tunnel.tags.isEmpty {
-                    HStack(spacing: 4) {
-                        ForEach(tunnel.tags, id: \.self) { TagChip(tag: $0, hex: store.file.tagColor($0)) }
-                    }
-                    .fixedSize()
-                    .padding(.top, 1)
+                if let tag = tunnel.tags.first {
+                    TagChip(tag: tag, hex: store.file.tagColor(tag)).padding(.top, 1)
                 }
             }
+            // The text column takes the free width first; a Spacer here split it in half and cut names short.
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
             .accessibilityElement(children: .combine)
-            Spacer(minLength: 4)
             if showsWarning {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .symbolRenderingMode(.multicolor)
