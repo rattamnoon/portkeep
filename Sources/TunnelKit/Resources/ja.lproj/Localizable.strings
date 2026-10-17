@@ -4,7 +4,6 @@
 "Connecting…" = "接続中…";
 "Connected · %@" = "接続済み · %@";
 "Reconnecting… %@" = "再接続中… %@";
-"Port %@ is used by %@" = "ポート %1$@ は %2$@ が使用しています";
 "Port %@ is in use by %@" = "ポート %1$@ は %2$@ が使用中です";
 "Port %@ is in use" = "ポート %@ は使用中です";
 "Host key changed for %@. Check it, then remove the old key from known_hosts." = "%@ のホストキーが変更されました。確認してから known_hosts の古いキーを削除してください。";

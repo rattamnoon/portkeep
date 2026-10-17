@@ -128,10 +128,6 @@ struct TunnelRow: View {
             return
         }
         guard port != tunnel.localPort else { return }
-        if let other = store.tunnels.first(where: { $0.localPort == port && $0.id != tunnel.id }) {
-            showProblem(String(localized: "Port \(String(port)) is already used by \(other.name)."))
-            return
-        }
         var updated = tunnel
         updated.localPort = port
         Task { await store.save(updated) }

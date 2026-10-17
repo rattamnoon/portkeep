@@ -31,6 +31,7 @@ A terminal tab running `ssh -N -L 5432:db:5432 bastion` works until the laptop s
 
   Each comes with the fix one click away.
 - **No port clashes.** Portkeep checks the port before starting, names the process holding it, and offers a free one.
+- **One switch per port.** Tunnels may share a local port, such as Production and Development MySQL both on 3306. Switching one on switches the other off first, so changing environment is one click and your client keeps the same address.
 
 ## Connection methods
 

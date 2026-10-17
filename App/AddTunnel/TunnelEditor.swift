@@ -162,8 +162,9 @@ struct TunnelEditor: View {
 
     private var portStatus: (text: LocalizedStringKey, color: Color) {
         guard let port = Int(draft.localPort), (1...65535).contains(port) else { return ("", .secondary) }
+        // Sharing a port is allowed: switching one on switches the other off.
         if let other = store.tunnels.first(where: { $0.localPort == port && $0.id != draft.id }) {
-            return ("Also used by \(other.name)", .orange)
+            return ("Shared with \(other.name)", .secondary)
         }
         if store.tunnel(draft.id)?.localPort == port, store.state(of: draft.id).isOn { return ("", .secondary) }
         return store.ports.isFree(port) ? ("Available", .secondary) : ("In use", .orange)

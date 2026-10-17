@@ -7,7 +7,6 @@
 "Add one, or pick a host from ~/.ssh/config." = "เพิ่มใหม่ หรือเลือก host จาก ~/.ssh/config";
 "Advanced Options" = "ตัวเลือกขั้นสูง";
 "All tunnels" = "Tunnel ทั้งหมด";
-"Also used by %@" = "%@ ใช้พอร์ตนี้อยู่ด้วย";
 "Any command that holds a port open" = "คำสั่งใดก็ได้ที่เปิดพอร์ตค้างไว้";
 "Available" = "ว่าง";
 "Settings…" = "การตั้งค่า…";
@@ -108,7 +107,6 @@
 "A running tunnel restarts on the new port." = "ถ้า tunnel ทำงานอยู่ จะเริ่มใหม่บนพอร์ตใหม่";
 "Change" = "เปลี่ยน";
 "Enter a port from 1 to 65535." = "ใส่พอร์ตระหว่าง 1 ถึง 65535";
-"Port %@ is already used by %@." = "พอร์ต %1$@ ถูกใช้โดย %2$@ อยู่แล้ว";
 "Groups & Tags" = "กลุ่มและแท็ก";
 "Groups" = "กลุ่ม";
 "Tags" = "แท็ก";
@@ -138,3 +136,4 @@
 "1 tunnel" = "1 tunnel";
 "Reopen tunnels that were on when Portkeep quit" = "เปิด tunnel ที่เปิดค้างไว้ก่อนปิด Portkeep ให้อีกครั้ง";
 "Tunnels set to Connect at login always start." = "tunnel ที่ตั้งเชื่อมต่อเมื่อเข้าสู่ระบบจะเริ่มเสมอ";
+"Shared with %@" = "ใช้พอร์ตร่วมกับ %@";

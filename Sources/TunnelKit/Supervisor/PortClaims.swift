@@ -1,6 +1,8 @@
 import Foundation
 
 /// Which tunnel owns each local port, so two tunnels on one port never both run (spec §5.4).
+/// Tunnels may share a port on purpose (Production and Development MySQL both on 3306): switching
+/// one on switches the other off.
 public struct PortClaims: Sendable {
     private var holders: [Int: UUID] = [:]
 
@@ -19,20 +21,28 @@ public struct PortClaims: Sendable {
 
     public func holder(of port: Int) -> UUID? { holders[port] }
 
-    public enum Start: Equatable, Sendable {
-        case start
-        case blocked(by: UUID)
+    public struct SwitchOn: Equatable, Sendable {
+        /// Tunnels to start, in list order.
+        public var start: [UUID]
+        /// Tunnels outside the set that hold a port one of `start` needs; stop these first.
+        public var stop: [UUID]
+
+        public init(start: [UUID], stop: [UUID]) {
+            self.start = start
+            self.stop = stop
+        }
     }
 
-    /// Claims ports for every tunnel set to connect at login, plus any in `alsoStart` (those that were
-    /// on when the app last quit), in file order: the first tunnel on a port starts, later ones are
-    /// blocked by it.
-    public mutating func planLogin(_ tunnels: [Tunnel], alsoStart: Set<UUID> = []) -> [(id: UUID, start: Start)] {
-        tunnels.filter { $0.connectAtLogin || alsoStart.contains($0.id) }.map { tunnel in
-            if let holder = claim(tunnel.localPort, by: tunnel.id) {
-                return (tunnel.id, .blocked(by: holder))
-            }
-            return (tunnel.id, .start)
+    /// What switching on `tunnels` (in list order) together does, one tunnel per local port.
+    /// A port already held by one of them stays with it; otherwise the first one on the port takes it,
+    /// stopping whichever other tunnel holds it. The rest sharing that port stay off.
+    public func planSwitchOn(_ tunnels: [Tunnel]) -> SwitchOn {
+        var decided = Set(tunnels.filter { holders[$0.localPort] == $0.id }.map(\.localPort))
+        var plan = SwitchOn(start: [], stop: [])
+        for tunnel in tunnels where decided.insert(tunnel.localPort).inserted {
+            if let holder = holders[tunnel.localPort], !plan.stop.contains(holder) { plan.stop.append(holder) }
+            plan.start.append(tunnel.id)
         }
+        return plan
     }
 }

@@ -84,14 +84,6 @@ public actor TunnelSupervisor<C: Clock> where C.Duration == Duration {
         self.tools = tools
     }
 
-    /// Marks the tunnel blocked because another tunnel holds its port; it stays on and
-    /// starts when kicked after the other one lets go.
-    public func blockByOtherTunnel() async {
-        wantsOn = true
-        await stopLoop()
-        state = .blocked(nil)
-    }
-
     // MARK: Loop
 
     private func resetRetries() {

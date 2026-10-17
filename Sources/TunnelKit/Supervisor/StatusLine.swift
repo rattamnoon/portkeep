@@ -26,7 +26,7 @@ extension Tunnel {
 }
 
 /// The one-line status under a tunnel's name (spec §7).
-public func statusLine(_ state: TunnelState, tunnel: Tunnel, now: Date, blockedBy: String? = nil) -> String {
+public func statusLine(_ state: TunnelState, tunnel: Tunnel, now: Date) -> String {
     let port = String(tunnel.localPort)
     switch state {
     case .off:
@@ -38,7 +38,6 @@ public func statusLine(_ state: TunnelState, tunnel: Tunnel, now: Date, blockedB
     case .retrying(let reason, _, _):
         return L10n.text("Reconnecting… \(retryReason(reason, tunnel: tunnel))")
     case .blocked(let owner):
-        if let blockedBy { return L10n.text("Port \(port) is used by \(blockedBy)") }
         if let owner { return L10n.text("Port \(port) is in use by \(owner.command)") }
         return L10n.text("Port \(port) is in use")
     case .failed(let reason):

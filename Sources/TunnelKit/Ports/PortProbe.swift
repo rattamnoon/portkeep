@@ -27,14 +27,22 @@ public struct SystemPorts: PortChecking {
         guard fd >= 0 else { return false }
         defer { close(fd) }
         var addr = Self.loopback(port)
-        return withUnsafePointer(to: &addr) {
+        let error = withUnsafePointer(to: &addr) {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                Darwin.bind(fd, $0, socklen_t(MemoryLayout<sockaddr_in>.size)) == 0
+                Darwin.bind(fd, $0, socklen_t(MemoryLayout<sockaddr_in>.size)) == 0 ? 0 : errno
             }
         }
+        if error == 0 { return true }
+        // A tunnel stopped while a client was connected leaves its connections in TIME_WAIT for
+        // about 30 s, which fails a plain bind. Nothing listens there, though: the next tunnel can have it.
+        return error == EADDRINUSE && !Self.connects(port, timeoutMilliseconds: 250)
     }
 
     public func accepts(_ port: Int) async -> Bool {
+        Self.connects(port, timeoutMilliseconds: 1000)
+    }
+
+    private static func connects(_ port: Int, timeoutMilliseconds: Int32) -> Bool {
         let fd = socket(AF_INET, SOCK_STREAM, 0)
         guard fd >= 0 else { return false }
         defer { close(fd) }
@@ -49,7 +57,7 @@ public struct SystemPorts: PortChecking {
         guard errno == EINPROGRESS else { return false }
 
         var pfd = pollfd(fd: fd, events: Int16(POLLOUT), revents: 0)
-        guard poll(&pfd, 1, 1000) == 1 else { return false }
+        guard poll(&pfd, 1, timeoutMilliseconds) == 1 else { return false }
         var error: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
         getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &len)

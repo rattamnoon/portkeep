@@ -11,8 +11,6 @@ final class TunnelStore {
 
     private(set) var file = TunnelFile()
     private(set) var states: [UUID: TunnelState] = [:]
-    /// Tunnels waiting because another tunnel holds their port: waiting id → holder id.
-    private(set) var blockedBy: [UUID: UUID] = [:]
     var banner: String?
     private(set) var tools = ToolPaths(searchPath: ToolLocator.fallbackPath, overrides: [:])
     private(set) var readOnly = false
@@ -91,15 +89,8 @@ final class TunnelStore {
         for tunnel in file.tunnels { makeSupervisor(for: tunnel) }
         let restore = Self.restoresOnLaunch ? loadSession() : []
         debug("start: restoring \(restore.count) tunnel(s)")
-        for (id, start) in claims.planLogin(file.tunnels, alsoStart: restore) {
-            wantedOn.insert(id)
-            switch start {
-            case .start: await supervisors[id]?.turnOn()
-            case .blocked(let holder):
-                blockedBy[id] = holder
-                await supervisors[id]?.blockByOtherTunnel()
-            }
-        }
+        // Two of them on one port: the first in the list starts, the other stays off.
+        await switchOn(file.tunnels.filter { $0.connectAtLogin || restore.contains($0.id) }.map(\.id))
     }
 
     /// Sample tunnels with fixed states and no processes, for screenshots (PORTKEEP_DEMO=1). Nothing is saved.
@@ -182,17 +173,27 @@ final class TunnelStore {
         if state(of: id).isOn { await turnOff(id) } else { await turnOn(id) }
     }
 
+    /// Switching on a tunnel whose port another tunnel holds switches that one off first, so
+    /// tunnels sharing a port act as one switch between environments.
     func turnOn(_ id: UUID) async {
-        guard let tunnel = tunnel(id), let supervisor = supervisors[id] else {
-            debug("turnOn \(id): no tunnel or supervisor")
-            return
+        await switchOn([id])
+    }
+
+    /// Switches on `ids` together, one tunnel per local port (the first in list order wins).
+    func switchOn(_ ids: [UUID]) async {
+        let wanted = Set(ids)
+        let plan = claims.planSwitchOn(file.tunnels.filter { wanted.contains($0.id) })
+        for holder in plan.stop {
+            debug("switchOn: stopping \(tunnel(holder)?.name ?? "?") to free its port")
+            await turnOff(holder)
         }
-        remember(id, on: true)
-        if let holder = claims.claim(tunnel.localPort, by: id) {
-            blockedBy[id] = holder
-            await supervisor.blockByOtherTunnel()
-        } else {
-            blockedBy[id] = nil
+        for id in plan.start {
+            guard let tunnel = tunnel(id), let supervisor = supervisors[id] else {
+                debug("turnOn \(id): no tunnel or supervisor")
+                continue
+            }
+            remember(id, on: true)
+            _ = claims.claim(tunnel.localPort, by: id)
             await supervisor.turnOn()
         }
     }
@@ -200,21 +201,18 @@ final class TunnelStore {
     func turnOff(_ id: UUID) async {
         guard let tunnel = tunnel(id) else { return }
         remember(id, on: false)
-        blockedBy[id] = nil
         await supervisors[id]?.turnOff()
         claims.release(tunnel.localPort, by: id)
-        // Hand the port to the next tunnel waiting for it.
-        if let waiting = blockedBy.first(where: { $0.value == id })?.key {
-            await turnOn(waiting)
-        }
     }
 
+    func isOn(_ id: UUID) -> Bool { wantedOn.contains(id) || state(of: id).isOn }
+
     func startAll() async {
-        for tunnel in file.tunnels where !state(of: tunnel.id).isOn { await turnOn(tunnel.id) }
+        await switchOn(file.tunnels.map(\.id))
     }
 
     func stopAll() async {
-        for tunnel in file.tunnels where state(of: tunnel.id).isOn { await turnOff(tunnel.id) }
+        for tunnel in file.tunnels where isOn(tunnel.id) { await turnOff(tunnel.id) }
     }
 
     func kickAll() async {
@@ -235,6 +233,8 @@ final class TunnelStore {
             persist()
             if old.localPort != tunnel.localPort, state(of: tunnel.id).isOn {
                 claims.release(old.localPort, by: tunnel.id)
+                // Moving onto a port another running tunnel holds switches that one off, as turning on does.
+                if let holder = claims.holder(of: tunnel.localPort) { await turnOff(holder) }
                 _ = claims.claim(tunnel.localPort, by: tunnel.id)
             }
             // Only a change to how it connects restarts it; renaming or retagging doesn't.
@@ -378,8 +378,7 @@ final class TunnelStore {
 
     func statusText(_ id: UUID, now: Date = .now) -> String {
         guard let tunnel = tunnel(id) else { return "" }
-        let holderName = blockedBy[id].flatMap { self.tunnel($0)?.name }
-        return statusLine(state(of: id), tunnel: tunnel, now: now, blockedBy: holderName)
+        return statusLine(state(of: id), tunnel: tunnel, now: now)
     }
 
     var connectedCount: Int { states.values.filter { if case .connected = $0 { true } else { false } }.count }
