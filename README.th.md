@@ -40,8 +40,9 @@ Portkeep ใช้เครื่องมือที่คุณมีอย�
 
 ต้องใช้ macOS 14 Sonoma ขึ้นไป
 
-- **ดาวน์โหลด**: จะมีให้ที่หน้า [Releases](https://github.com/rattamnoon/portkeep/releases) *(ยังไม่มี)*
-- **Homebrew** (เมื่อออกเวอร์ชันแรก): `brew install --cask rattamnoon/tap/portkeep`
+- **Homebrew** (แนะนำ): `brew install --cask rattamnoon/tap/portkeep` อัปเดตด้วย `brew upgrade --cask portkeep`
+- **ดาวน์โหลด**: ไฟล์ `Portkeep-<version>.dmg` ที่หน้า [Releases](https://github.com/rattamnoon/portkeep/releases) เปิดแล้วลากไปไว้ใน Applications
+- release ยังไม่ได้ notarize ครั้งแรก macOS อาจเตือนว่าตรวจแอปไม่ได้ ให้คลิกขวาที่ Portkeep ใน Applications แล้วเลือก **Open** หรือรัน `xattr -dr com.apple.quarantine /Applications/Portkeep.app`
 - **Build เอง**:
 
 ```

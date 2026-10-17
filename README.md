@@ -53,13 +53,17 @@ Portkeep drives the tools you already use, with your existing config and credent
 
 Requires macOS 14 Sonoma or later (Apple silicon or Intel).
 
-**Download.** Builds will be published on the [Releases](https://github.com/rattamnoon/portkeep/releases) page. *(Not available yet.)*
-
-**Homebrew**, once the first release is out:
+**Homebrew** (recommended):
 
 ```
 brew install --cask rattamnoon/tap/portkeep
 ```
+
+Update with `brew upgrade --cask portkeep`.
+
+**Download.** Get `Portkeep-<version>.dmg` from [Releases](https://github.com/rattamnoon/portkeep/releases), open it and drag Portkeep to Applications.
+
+Releases aren't notarized yet, so the first time macOS may say it can't check the app. Right-click Portkeep in Applications and choose **Open**, or run `xattr -dr com.apple.quarantine /Applications/Portkeep.app`.
 
 **Build from source**
 
