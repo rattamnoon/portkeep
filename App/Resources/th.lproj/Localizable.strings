@@ -194,3 +194,14 @@
 "Copied" = "คัดลอกแล้ว";
 "Claude Code" = "Claude Code";
 "Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code." = "ให้ Claude, Cursor และผู้ช่วยอื่นที่รองรับ MCP ดูรายการ เพิ่ม ทดสอบ และเปิด tunnel ของคุณได้ วางการตั้งค่าในหน้าตั้งค่า MCP ของผู้ช่วย หรือรันคำสั่งนี้สำหรับ Claude Code";
+"Portkeep %@ is available" = "Portkeep %@ พร้อมให้อัปเดตแล้ว";
+"Release Notes" = "รายละเอียดรุ่น";
+"Copy Upgrade Command" = "คัดลอกคำสั่งอัปเกรด";
+"Download" = "ดาวน์โหลด";
+"Updates" = "อัปเดต";
+"Check for updates automatically" = "ตรวจหาอัปเดตอัตโนมัติ";
+"Check for Updates…" = "ตรวจหาอัปเดต…";
+"Portkeep %@" = "Portkeep %@";
+"Couldn’t check for updates. Try again later." = "ตรวจหาอัปเดตไม่ได้ ลองใหม่ภายหลัง";
+"Portkeep %@ is the latest version." = "Portkeep %@ เป็นรุ่นล่าสุดแล้ว";
+"Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent." = "วันละครั้ง Portkeep จะถาม GitHub ว่ามีรุ่นใหม่หรือไม่ เป็นการเชื่อมต่อเครือข่ายเดียวที่ Portkeep ทำเอง และไม่ส่งข้อมูลของคุณหรือ tunnel ใด ๆ ออกไป";

@@ -194,3 +194,14 @@
 "Copied" = "コピーしました";
 "Claude Code" = "Claude Code";
 "Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code." = "Claude、Cursor など MCP に対応したアシスタントが、トンネルの一覧・追加・テスト・開始を行えるようにします。設定をアシスタントの MCP 設定に貼り付けるか、Claude Code ではこのコマンドを実行してください。";
+"Portkeep %@ is available" = "Portkeep %@ が利用可能です";
+"Release Notes" = "リリースノート";
+"Copy Upgrade Command" = "アップグレードコマンドをコピー";
+"Download" = "ダウンロード";
+"Updates" = "アップデート";
+"Check for updates automatically" = "アップデートを自動的に確認";
+"Check for Updates…" = "アップデートを確認…";
+"Portkeep %@" = "Portkeep %@";
+"Couldn’t check for updates. Try again later." = "アップデートを確認できませんでした。しばらくしてから再度お試しください。";
+"Portkeep %@ is the latest version." = "Portkeep %@ は最新バージョンです。";
+"Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent." = "Portkeep は 1 日に 1 回、GitHub に最新リリースを問い合わせます。Portkeep が自分から行う通信はこれだけで、あなたやトンネルに関する情報は送信しません。";

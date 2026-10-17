@@ -28,6 +28,10 @@ struct MenuView: View {
         VStack(alignment: .leading, spacing: 10) {
             header
 
+            if let release = UpdateChecker.shared.available {
+                UpdateBanner(release: release).padding(.horizontal, 4)
+            }
+
             if let banner = store.banner {
                 Label(banner, systemImage: "exclamationmark.triangle")
                     .font(.caption)

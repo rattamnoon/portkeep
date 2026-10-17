@@ -194,3 +194,14 @@
 "Copied" = "已拷贝";
 "Claude Code" = "Claude Code";
 "Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code." = "让 Claude、Cursor 等支持 MCP 的助手列出、添加、测试和启动你的隧道。将配置粘贴到助手的 MCP 设置中，或为 Claude Code 运行该命令。";
+"Portkeep %@ is available" = "Portkeep %@ 现已推出";
+"Release Notes" = "发布说明";
+"Copy Upgrade Command" = "拷贝升级命令";
+"Download" = "下载";
+"Updates" = "更新";
+"Check for updates automatically" = "自动检查更新";
+"Check for Updates…" = "检查更新…";
+"Portkeep %@" = "Portkeep %@";
+"Couldn’t check for updates. Try again later." = "无法检查更新，请稍后再试。";
+"Portkeep %@ is the latest version." = "Portkeep %@ 已是最新版本。";
+"Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent." = "Portkeep 每天向 GitHub 查询一次最新版本。这是 Portkeep 自己发出的唯一请求，不会发送任何关于你或你的隧道的信息。";

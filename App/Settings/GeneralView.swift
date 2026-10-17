@@ -16,6 +16,8 @@ struct GeneralView: View {
     @State private var sshForwards: [SSHConfigForward]?
     @State private var launched = GeneralView.current
     @State private var copied: String?
+    @AppStorage("checkForUpdates") private var checkForUpdates = true
+    private var updates: UpdateChecker { .shared }
 
     var body: some View {
         Form {
@@ -90,6 +92,24 @@ struct GeneralView: View {
                 Text("AI assistants")
             } footer: {
                 Text("Lets Claude, Cursor and other assistants that support MCP list, add, test and start your tunnels. Paste the config into the assistant’s MCP settings, or run the command for Claude Code.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
+                Toggle("Check for updates automatically", isOn: $checkForUpdates)
+                LabeledContent {
+                    Button("Check for Updates…") { Task { await updates.check(manual: true) } }
+                        .disabled(updates.checking)
+                } label: {
+                    Text("Portkeep \(UpdateChecker.currentVersion)")
+                    if let result = updates.manualResult { Text(result) }
+                }
+                if let release = updates.available {
+                    UpdateBanner(release: release)
+                }
+            } header: {
+                Text("Updates")
+            } footer: {
+                Text("Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {

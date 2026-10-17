@@ -118,6 +118,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         } else {
             UNUserNotificationCenter.current().delegate = self
             events = SystemEvents(store: store)
+            UpdateChecker.shared.start()
             Task {
                 await store.start()
                 control.start(store: store)
