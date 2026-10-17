@@ -19,6 +19,8 @@ final class TunnelStore {
     @ObservationIgnored private var claims = PortClaims()
     @ObservationIgnored private var runner: any ProcessRunning = SystemRunner(path: ToolLocator.fallbackPath)
     @ObservationIgnored let ports: any PortChecking = SystemPorts()
+    /// The data folder: tunnels.json, status.json, control.sock.
+    @ObservationIgnored let directory: URL
     @ObservationIgnored private let fileURL: URL
     @ObservationIgnored private let reaper: OrphanReaper
     @ObservationIgnored private let notifications = DropNotifications()
@@ -53,6 +55,7 @@ final class TunnelStore {
 
     init(directory: URL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         .appendingPathComponent("Portkeep")) {
+        self.directory = directory
         fileURL = directory.appendingPathComponent("tunnels.json")
         sessionURL = directory.appendingPathComponent("session.json")
         statusURL = directory.appendingPathComponent("status.json")
@@ -105,7 +108,8 @@ final class TunnelStore {
         // Two of them on one port: the first in the list starts, the other stays off.
         await switchOn(file.tunnels.filter { $0.connectAtLogin || restore.contains($0.id) }.map(\.id))
         started = true
-        scheduleStatusWrite()
+        // Straight away rather than coalesced: `portkeep list` may be waiting on it.
+        writeStatus(running: true)
         for (action, target) in pendingCommands { await perform(action, on: target) }
         pendingCommands = []
     }
@@ -513,6 +517,9 @@ final class TunnelStore {
 
     /// Portkeep opens at login only while some tunnel asks to connect at login (spec §5.5).
     private func updateLoginItem() {
+        // A development data folder (UI tests, screenshots, trying a build) leaves the installed
+        // app's login item alone: it shares the bundle identifier.
+        guard ProcessInfo.processInfo.environment["PORTKEEP_DATA_DIR"] == nil else { return }
         let wanted = file.tunnels.contains(where: \.connectAtLogin)
         let service = SMAppService.mainApp
         do {

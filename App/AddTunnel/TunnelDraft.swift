@@ -193,12 +193,14 @@ struct TunnelDraft: Equatable {
         }
     }
 
-    /// Nil until every required field is filled with a valid value.
+    /// Nil until every required field is filled with a valid value. The same rules as tunnels added
+    /// from the command line or an AI assistant (TunnelInput).
     var tunnel: Tunnel? {
         guard let name = filled(name), let local = port(localPort), let method else { return nil }
         let idle = Int(idleMinutes.trimmingCharacters(in: .whitespaces)).map { max(0, $0) } ?? Tunnel.defaultIdleMinutes
-        return Tunnel(id: id, name: name, group: filled(group) ?? "Other", localPort: local,
-                      connectAtLogin: connectAtLogin, method: method, tags: Array(Tunnel.parseTags(tag).prefix(1)),
-                      startsOnConnect: startsOnConnect && supportsOnDemand, idleMinutes: idle)
+        return try? TunnelInput.validate(Tunnel(
+            id: id, name: name, group: filled(group) ?? "Other", localPort: local,
+            connectAtLogin: connectAtLogin, method: method, tags: Array(Tunnel.parseTags(tag).prefix(1)),
+            startsOnConnect: startsOnConnect && supportsOnDemand, idleMinutes: idle))
     }
 }
