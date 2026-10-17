@@ -73,14 +73,18 @@ private struct Client {
     }
 
     /// Sends `text` and returns what comes back: "" when the other side closed instead.
+    /// The blocking read runs on its own thread: on a Swift concurrency thread it would hold one of the
+    /// few cooperative threads for up to 5 s, starving the proxy and supervisor it is waiting on.
     func roundTrip(_ text: String) async -> String {
         let fd = self.fd
-        return await Task.detached {
-            _ = text.withCString { write(fd, $0, strlen($0)) }
-            var buffer = [UInt8](repeating: 0, count: 256)
-            let n = read(fd, &buffer, buffer.count)
-            return n > 0 ? String(decoding: buffer[..<n], as: UTF8.self) : ""
-        }.value
+        return await withCheckedContinuation { continuation in
+            Thread.detachNewThread {
+                _ = text.withCString { write(fd, $0, strlen($0)) }
+                var buffer = [UInt8](repeating: 0, count: 256)
+                let n = read(fd, &buffer, buffer.count)
+                continuation.resume(returning: n > 0 ? String(decoding: buffer[..<n], as: UTF8.self) : "")
+            }
+        }
     }
 
     func close() { Darwin.close(fd) }

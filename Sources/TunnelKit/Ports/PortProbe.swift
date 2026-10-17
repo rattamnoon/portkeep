@@ -38,8 +38,14 @@ public struct SystemPorts: PortChecking {
         return error == EADDRINUSE && !Self.connects(port, timeoutMilliseconds: 250)
     }
 
+    /// The connect blocks for up to a second, so it waits on a dispatch thread rather than holding a
+    /// Swift concurrency thread every tunnel's supervisor shares.
     public func accepts(_ port: Int) async -> Bool {
-        Self.connects(port, timeoutMilliseconds: 1000)
+        await withCheckedContinuation { continuation in
+            DispatchQueue.global().async {
+                continuation.resume(returning: Self.connects(port, timeoutMilliseconds: 1000))
+            }
+        }
     }
 
     private static func connects(_ port: Int, timeoutMilliseconds: Int32) -> Bool {
