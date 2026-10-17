@@ -6,6 +6,8 @@
 
 <p align="center"><strong>Keep your port forwards up, from the menu bar.</strong></p>
 
+<p align="center"><a href="https://rattamnoon.github.io/portkeep/">rattamnoon.github.io/portkeep</a></p>
+
 Portkeep is a macOS menu bar app for the tunnels you open every day: databases, caches, dashboards and SOCKS proxies behind SSH jump hosts, AWS Session Manager, Kubernetes and more. Name each tunnel once and switch it on when you need it. Portkeep keeps it alive. When a tunnel drops, Portkeep says which one, why, and that it is already reconnecting.
 
 <p align="center">
@@ -204,7 +206,7 @@ To cut a release, push a tag (`git tag v0.4.0 && git push origin v0.4.0`) or run
 
 ## Contributing
 
-Bug reports and ideas are welcome in [Issues](https://github.com/rattamnoon/portkeep/issues). For a bug, include the tunnel's method, what the menu said, and the lines from **Show Log**. Pull requests should pass `swift test` and build with `xcodebuild`; CI runs the UI smoke tests.
+Bug reports and ideas are welcome in [Issues](https://github.com/rattamnoon/portkeep/issues). For a bug, include the tunnel's method, what the menu said, and the lines from **Show Log**. Pull requests should pass `swift test` and build with `xcodebuild`; CI runs the UI smoke tests. See [CONTRIBUTING.md](CONTRIBUTING.md) for the details.
 
 ## License
 
