@@ -6,6 +6,7 @@
 "Add Tunnel…" = "添加隧道…";
 "Add one, or pick a host from ~/.ssh/config." = "添加一个，或从 ~/.ssh/config 中选择主机。";
 "Advanced Options" = "高级选项";
+"All" = "全部";
 "All tunnels" = "所有隧道";
 "Any command that holds a port open" = "任何保持端口打开的命令";
 "Available" = "可用";

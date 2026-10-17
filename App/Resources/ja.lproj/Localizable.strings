@@ -6,6 +6,7 @@
 "Add Tunnel…" = "トンネルを追加…";
 "Add one, or pick a host from ~/.ssh/config." = "追加するか、~/.ssh/config からホストを選んでください。";
 "Advanced Options" = "詳細オプション";
+"All" = "すべて";
 "All tunnels" = "すべてのトンネル";
 "Any command that holds a port open" = "ポートを開き続ける任意のコマンド";
 "Available" = "空き";

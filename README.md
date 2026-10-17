@@ -85,7 +85,7 @@ Install the CLIs for the methods you use, for example `brew install awscli kubec
 2. Pick a method and fill in the fields. Hosts from `~/.ssh/config`, AWS profiles and kube contexts you already have are offered in pickers.
 3. Choose a local port, a group and a tag (one per tunnel). The **Runs** box shows the exact command.
 4. Press **Test Connection** to check it, then **Add Tunnel**.
-5. Use a tunnel's switch in the menu to start or stop it. Each group header has a switch for the whole group, and the switch at the top starts or stops them all. Tunnels sharing a port aren't started together: the first one in the list wins.
+5. Use a tunnel's switch in the menu to start or stop it. Each group header has a switch for the whole group, and the switch at the top starts or stops them all. With more than one group, tabs under the header show **All** or a single group, each with its connected count; the menu remembers the last one. Tunnels sharing a port aren't started together: the first one in the list wins.
 
 When a tunnel needs you, the menu bar icon shows a dot and the row shows a warning. Open **⋯** on the row for:
 - the fix (use another port, sign in to AWS, retry);

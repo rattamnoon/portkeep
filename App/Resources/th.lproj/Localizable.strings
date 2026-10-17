@@ -6,6 +6,7 @@
 "Add Tunnel…" = "เพิ่ม Tunnel…";
 "Add one, or pick a host from ~/.ssh/config." = "เพิ่มใหม่ หรือเลือก host จาก ~/.ssh/config";
 "Advanced Options" = "ตัวเลือกขั้นสูง";
+"All" = "ทั้งหมด";
 "All tunnels" = "Tunnel ทั้งหมด";
 "Any command that holds a port open" = "คำสั่งใดก็ได้ที่เปิดพอร์ตค้างไว้";
 "Available" = "ว่าง";
