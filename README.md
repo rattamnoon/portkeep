@@ -143,7 +143,7 @@ If `tunnels.json` can't be read, Portkeep moves it aside to `tunnels.json.broken
 - Authentication must already work without typing; passwords, passphrase prompts and OTP aren't supported yet. Add passphrase keys with `ssh-add --apple-use-keychain`.
 - There is no sync between Macs, import/export or Shortcuts support yet.
 - Builds from source are ad-hoc signed. Until notarized releases are published, macOS warns when you open a copy on another Mac.
-- Portkeep is not on the Mac App Store, because the sandbox would stop it running your CLIs and reading your config ([ADR-0001](docs/adr/0001-distribute-outside-app-store.md)).
+- Portkeep is not on the Mac App Store, because the sandbox would stop it running your CLIs and reading your config.
 
 ## Development
 
@@ -155,8 +155,6 @@ swift scripts/make-icon.swift                # redraw the app icon
 ```
 
 UI smoke tests drive real windows, so run them on a Mac you aren't using or rely on CI. For demo data and screenshots, run `PORTKEEP_DEMO=1 PORTKEEP_SHOW=menu,settings,add,labels PORTKEEP_DATA_DIR=$(mktemp -d) Portkeep.app/Contents/MacOS/Portkeep`.
-
-Design and decisions: [spec](docs/spec.md) · [ADRs](docs/adr/) · [v1 plan](docs/superpowers/plans/2026-10-17-tunnels-v1.md).
 
 ### Releases
 
