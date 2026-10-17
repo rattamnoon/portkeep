@@ -136,3 +136,5 @@
 "Renaming a group moves its tunnels with it. A group can be removed once it's empty." = "เปลี่ยนชื่อกลุ่มแล้ว tunnel จะย้ายตาม ลบกลุ่มได้เมื่อไม่มี tunnel เหลืออยู่";
 "Removing a tag takes it off every tunnel that has it." = "ลบแท็กแล้ว tunnel ที่มีแท็กนี้จะถูกเอาแท็กออกด้วย";
 "1 tunnel" = "1 tunnel";
+"Reopen tunnels that were on when Portkeep quit" = "เปิด tunnel ที่เปิดค้างไว้ก่อนปิด Portkeep ให้อีกครั้ง";
+"Tunnels set to Connect at login always start." = "tunnel ที่ตั้งเชื่อมต่อเมื่อเข้าสู่ระบบจะเริ่มเสมอ";

@@ -36,20 +36,12 @@ struct TunnelRow: View {
             .frame(width: 26, height: 26)
             .accessibilityHidden(true)
 
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
-                    Text(tunnel.name).lineLimit(1).layoutPriority(2)
+                    Text(tunnel.name).lineLimit(1)
                     Text(":\(String(tunnel.localPort))")
                         .font(.system(size: 11).monospacedDigit())
                         .foregroundStyle(.secondary)
-                        .layoutPriority(1)
-                    if let first = tunnel.tags.first {
-                        TagChip(tag: first, hex: store.file.tagColor(first))
-                    }
-                    if tunnel.tags.count > 1 {
-                        Text("+\(tunnel.tags.count - 1)").font(.system(size: 10)).foregroundStyle(.secondary)
-                            .help(tunnel.tags.dropFirst().joined(separator: ", "))
-                    }
                 }
                 TimelineView(.periodic(from: .now, by: 30)) { context in
                     Text(store.statusText(tunnel.id, now: context.date))
@@ -57,6 +49,14 @@ struct TunnelRow: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(state.needsAttention ? 2 : 1)
                         .fixedSize(horizontal: false, vertical: true)
+                }
+                // Tags get their own line so none is cut off.
+                if !tunnel.tags.isEmpty {
+                    HStack(spacing: 4) {
+                        ForEach(tunnel.tags, id: \.self) { TagChip(tag: $0, hex: store.file.tagColor($0)) }
+                    }
+                    .fixedSize()
+                    .padding(.top, 1)
                 }
             }
             .accessibilityElement(children: .combine)

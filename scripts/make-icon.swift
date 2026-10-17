@@ -1,5 +1,8 @@
 // Draws the Portkeep app icon and writes App/Resources/Assets.xcassets/AppIcon.appiconset.
 // Run from the repo root: swift scripts/make-icon.swift
+//
+// Monochrome: a graphite squircle with a tunnel seen head-on, three arches receding into the
+// mountain and the light at the end of it.
 import AppKit
 
 let set = URL(fileURLWithPath: "App/Resources/Assets.xcassets/AppIcon.appiconset")
@@ -7,57 +10,69 @@ try FileManager.default.createDirectory(at: set, withIntermediateDirectories: tr
 try Data(#"{"info":{"author":"xcode","version":1}}"#.utf8)
     .write(to: set.deletingLastPathComponent().appendingPathComponent("Contents.json"))
 
-/// The icon at `side` pixels, on Apple's 1024 grid: an 824 squircle with a white archway and a lit port.
 func render(_ side: Int) -> Data {
     let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: side, pixelsHigh: side, bitsPerSample: 8,
                                samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
                                colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
     NSGraphicsContext.saveGraphicsState()
     NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
-    let s = CGFloat(side) / 1024
     let ctx = NSGraphicsContext.current!.cgContext
-    ctx.scaleBy(x: s, y: s)
+    ctx.scaleBy(x: CGFloat(side) / 1024, y: CGFloat(side) / 1024)
 
-    // Squircle body with a soft drop shadow.
+    // Body: Apple's 824 squircle on the 1024 grid, with a soft drop shadow.
     let body = NSRect(x: 100, y: 100, width: 824, height: 824)
     let squircle = NSBezierPath(roundedRect: body, xRadius: 185, yRadius: 185)
     ctx.saveGState()
-    ctx.setShadow(offset: CGSize(width: 0, height: -10), blur: 24, color: NSColor.black.withAlphaComponent(0.35).cgColor)
-    NSColor(red: 0.07, green: 0.16, blue: 0.42, alpha: 1).setFill()
+    ctx.setShadow(offset: CGSize(width: 0, height: -12), blur: 28, color: NSColor.black.withAlphaComponent(0.4).cgColor)
+    NSColor(white: 0.1, alpha: 1).setFill()
     squircle.fill()
     ctx.restoreGState()
-    NSGradient(colors: [
-        NSColor(red: 0.16, green: 0.42, blue: 0.95, alpha: 1),
-        NSColor(red: 0.05, green: 0.14, blue: 0.45, alpha: 1),
-    ])!.draw(in: squircle, angle: -90)
+    NSGradient(colors: [NSColor(white: 0.26, alpha: 1), NSColor(white: 0.07, alpha: 1)])!.draw(in: squircle, angle: -90)
 
-    // Ground line and nested arches: the tunnel mouth.
-    NSColor.white.setStroke()
-    func arch(_ halfWidth: CGFloat, _ top: CGFloat, width: CGFloat) {
+    // A hairline highlight along the top edge, like machined metal.
+    ctx.saveGState()
+    squircle.addClip()
+    let rim = NSBezierPath(roundedRect: body.insetBy(dx: 3, dy: 3), xRadius: 182, yRadius: 182)
+    rim.lineWidth = 4
+    NSGradient(colors: [NSColor(white: 1, alpha: 0.22), NSColor(white: 1, alpha: 0)])!
+        .draw(in: rim, angle: -90)
+    NSColor(white: 1, alpha: 0.10).setStroke()
+    rim.stroke()
+    ctx.restoreGState()
+
+    // The light at the end of the tunnel, a soft glow behind the innermost arch.
+    let center = NSPoint(x: 512, y: 430)
+    let glow = NSGradient(colors: [NSColor(white: 1, alpha: 0.55), NSColor(white: 1, alpha: 0)])!
+    glow.draw(fromCenter: center, radius: 0, toCenter: center, radius: 190, options: [])
+
+    // Three arches, each further in: narrower, thinner and dimmer.
+    let base: CGFloat = 300
+    let arches: [(halfWidth: CGFloat, height: CGFloat, width: CGFloat, alpha: CGFloat)] = [
+        (270, 470, 54, 1.0), (178, 330, 40, 0.75), (98, 205, 30, 0.5),
+    ]
+    for arch in arches {
         let path = NSBezierPath()
-        path.lineWidth = width
+        path.lineWidth = arch.width
         path.lineCapStyle = .round
         path.lineJoinStyle = .round
-        let base: CGFloat = 300
-        path.move(to: NSPoint(x: 512 - halfWidth, y: base))
-        path.line(to: NSPoint(x: 512 - halfWidth, y: top - halfWidth))
-        path.appendArc(withCenter: NSPoint(x: 512, y: top - halfWidth), radius: halfWidth, startAngle: 180, endAngle: 0, clockwise: true)
-        path.line(to: NSPoint(x: 512 + halfWidth, y: base))
+        let shoulder = base + arch.height - arch.halfWidth
+        path.move(to: NSPoint(x: 512 - arch.halfWidth, y: base))
+        path.line(to: NSPoint(x: 512 - arch.halfWidth, y: shoulder))
+        path.appendArc(withCenter: NSPoint(x: 512, y: shoulder), radius: arch.halfWidth,
+                       startAngle: 180, endAngle: 0, clockwise: true)
+        path.line(to: NSPoint(x: 512 + arch.halfWidth, y: base))
+        NSColor(white: 1, alpha: arch.alpha).setStroke()
         path.stroke()
     }
-    arch(250, 760, width: 56)
-    arch(130, 600, width: 48)
-    let ground = NSBezierPath()
-    ground.lineWidth = 56
-    ground.lineCapStyle = .round
-    ground.move(to: NSPoint(x: 210, y: 300))
-    ground.line(to: NSPoint(x: 814, y: 300))
-    ground.stroke()
 
-    // The kept port: a warm light inside the tunnel.
-    let glow = NSRect(x: 512 - 44, y: 370, width: 88, height: 88)
-    NSGradient(colors: [NSColor(red: 1, green: 0.85, blue: 0.4, alpha: 1), NSColor(red: 1, green: 0.62, blue: 0.2, alpha: 1)])!
-        .draw(in: NSBezierPath(ovalIn: glow), relativeCenterPosition: NSPoint(x: 0, y: 0.3))
+    // Ground line.
+    let ground = NSBezierPath()
+    ground.lineWidth = 54
+    ground.lineCapStyle = .round
+    ground.move(to: NSPoint(x: 200, y: base))
+    ground.line(to: NSPoint(x: 824, y: base))
+    NSColor.white.setStroke()
+    ground.stroke()
 
     NSGraphicsContext.restoreGraphicsState()
     return rep.representation(using: .png, properties: [:])!

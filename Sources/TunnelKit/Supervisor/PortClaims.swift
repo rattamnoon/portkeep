@@ -24,10 +24,11 @@ public struct PortClaims: Sendable {
         case blocked(by: UUID)
     }
 
-    /// Claims ports for every tunnel set to connect at login, in file order: the first tunnel on a
-    /// port starts, later ones are blocked by it.
-    public mutating func planLogin(_ tunnels: [Tunnel]) -> [(id: UUID, start: Start)] {
-        tunnels.filter(\.connectAtLogin).map { tunnel in
+    /// Claims ports for every tunnel set to connect at login, plus any in `alsoStart` (those that were
+    /// on when the app last quit), in file order: the first tunnel on a port starts, later ones are
+    /// blocked by it.
+    public mutating func planLogin(_ tunnels: [Tunnel], alsoStart: Set<UUID> = []) -> [(id: UUID, start: Start)] {
+        tunnels.filter { $0.connectAtLogin || alsoStart.contains($0.id) }.map { tunnel in
             if let holder = claim(tunnel.localPort, by: tunnel.id) {
                 return (tunnel.id, .blocked(by: holder))
             }

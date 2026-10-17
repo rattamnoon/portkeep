@@ -7,10 +7,17 @@ struct GeneralView: View {
     ]
 
     @State private var selection = GeneralView.current
+    @AppStorage("restoreTunnelsOnLaunch") private var restoreTunnels = true
     @State private var launched = GeneralView.current
 
     var body: some View {
         Form {
+            Section {
+                Toggle("Reopen tunnels that were on when Portkeep quit", isOn: $restoreTunnels)
+            } footer: {
+                Text("Tunnels set to Connect at login always start.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
             Section {
                 Picker("Language", selection: $selection) {
                     Text("Same as macOS").tag("")

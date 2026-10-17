@@ -31,6 +31,17 @@ import Testing
     #expect(plan.map(\.start) == [.start, .blocked(by: a.id)])
 }
 
+@Test func launchAlsoRestoresTunnelsThatWereOn() {
+    let ssh = TunnelMethod.ssh(SSHConfig(mode: .local, host: "jump"))
+    let login = Tunnel(name: "A", group: "g", localPort: 1001, connectAtLogin: true, method: ssh)
+    let wasOn = Tunnel(name: "B", group: "g", localPort: 1002, method: ssh)
+    let wasOff = Tunnel(name: "C", group: "g", localPort: 1003, method: ssh)
+    var claims = PortClaims()
+    let plan = claims.planLogin([login, wasOn, wasOff], alsoStart: [wasOn.id])
+    #expect(plan.map(\.id) == [login.id, wasOn.id])
+    #expect(plan.allSatisfy { $0.start == .start })
+}
+
 @Test func secondClaimReturnsHolder() {
     let a = UUID(), b = UUID()
     var claims = PortClaims()

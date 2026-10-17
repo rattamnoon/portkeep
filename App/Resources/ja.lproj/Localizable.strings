@@ -136,3 +136,5 @@
 "Renaming a group moves its tunnels with it. A group can be removed once it's empty." = "グループ名を変更すると、そのトンネルも一緒に移動します。空になったグループは削除できます。";
 "Removing a tag takes it off every tunnel that has it." = "タグを削除すると、そのタグが付いたすべてのトンネルから外れます。";
 "1 tunnel" = "1 件のトンネル";
+"Reopen tunnels that were on when Portkeep quit" = "Portkeep 終了時にオンだったトンネルを再度開く";
+"Tunnels set to Connect at login always start." = "「ログイン時に接続」のトンネルは常に開始します。";

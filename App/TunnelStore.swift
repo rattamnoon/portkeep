@@ -34,9 +34,21 @@ final class TunnelStore {
     /// With PORTKEEP_DEBUG=1, commands and state changes are appended to debug.log beside tunnels.json (UI tests).
     @ObservationIgnored private let debugLog: URL?
 
+    /// Tunnels the user has switched on (kept even while they retry or fail), saved to session.json
+    /// so the next launch can turn the same ones back on.
+    @ObservationIgnored private var wantedOn: Set<UUID> = []
+    @ObservationIgnored private let sessionURL: URL
+
+    /// Settings › General: turn back on what was on when Portkeep quit. On unless switched off.
+    static var restoresOnLaunch: Bool {
+        get { UserDefaults.standard.object(forKey: "restoreTunnelsOnLaunch") as? Bool ?? true }
+        set { UserDefaults.standard.set(newValue, forKey: "restoreTunnelsOnLaunch") }
+    }
+
     init(directory: URL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         .appendingPathComponent("Portkeep")) {
         fileURL = directory.appendingPathComponent("tunnels.json")
+        sessionURL = directory.appendingPathComponent("session.json")
         reaper = OrphanReaper(file: directory.appendingPathComponent("running.json"))
         debugLog = ProcessInfo.processInfo.environment["PORTKEEP_DEBUG"] == "1"
             ? directory.appendingPathComponent("debug.log") : nil
@@ -77,7 +89,10 @@ final class TunnelStore {
         tools = ToolPaths(searchPath: path, overrides: file.toolPaths)
 
         for tunnel in file.tunnels { makeSupervisor(for: tunnel) }
-        for (id, start) in claims.planLogin(file.tunnels) {
+        let restore = Self.restoresOnLaunch ? loadSession() : []
+        debug("start: restoring \(restore.count) tunnel(s)")
+        for (id, start) in claims.planLogin(file.tunnels, alsoStart: restore) {
+            wantedOn.insert(id)
             switch start {
             case .start: await supervisors[id]?.turnOn()
             case .blocked(let holder):
@@ -144,6 +159,24 @@ final class TunnelStore {
 
     func state(of id: UUID) -> TunnelState { states[id] ?? .off }
 
+    // MARK: Session (what was on)
+
+    private func remember(_ id: UUID, on: Bool) {
+        let changed = on ? wantedOn.insert(id).inserted : wantedOn.remove(id) != nil
+        guard changed, !readOnly else { return }
+        // Written straight away rather than at quit, so a crash or forced restart keeps it too.
+        let ids = wantedOn.map(\.uuidString).sorted()
+        try? JSONEncoder().encode(["on": ids]).write(to: sessionURL, options: .atomic)
+    }
+
+    private func loadSession() -> Set<UUID> {
+        guard let data = try? Data(contentsOf: sessionURL),
+              let saved = try? JSONDecoder().decode([String: [String]].self, from: data)
+        else { return [] }
+        let known = Set(file.tunnels.map(\.id))
+        return Set((saved["on"] ?? []).compactMap(UUID.init(uuidString:))).intersection(known)
+    }
+
     func toggle(_ id: UUID) async {
         debug("toggle \(id) from \(state(of: id))")
         if state(of: id).isOn { await turnOff(id) } else { await turnOn(id) }
@@ -154,6 +187,7 @@ final class TunnelStore {
             debug("turnOn \(id): no tunnel or supervisor")
             return
         }
+        remember(id, on: true)
         if let holder = claims.claim(tunnel.localPort, by: id) {
             blockedBy[id] = holder
             await supervisor.blockByOtherTunnel()
@@ -165,6 +199,7 @@ final class TunnelStore {
 
     func turnOff(_ id: UUID) async {
         guard let tunnel = tunnel(id) else { return }
+        remember(id, on: false)
         blockedBy[id] = nil
         await supervisors[id]?.turnOff()
         claims.release(tunnel.localPort, by: id)

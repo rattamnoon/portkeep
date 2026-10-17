@@ -1,25 +1,35 @@
-# Portkeep
+<p align="center">
+  <img src="docs/images/icon.png" width="128" alt="Portkeep icon">
+</p>
 
-**Keep your port forwards up, from the menu bar.**
+<h1 align="center">Portkeep</h1>
 
-Portkeep is a macOS menu bar app for the tunnels you open every day: databases, caches, dashboards and SOCKS proxies behind SSH jump hosts, AWS Session Manager, Kubernetes and more. Name each tunnel once, switch it on with a click, and Portkeep keeps it alive. When one drops it tells you which, why, and that it is already reconnecting.
+<p align="center"><strong>Keep your port forwards up, from the menu bar.</strong></p>
+
+Portkeep is a macOS menu bar app for the tunnels you open every day: databases, caches, dashboards and SOCKS proxies behind SSH jump hosts, AWS Session Manager, Kubernetes and more. Name each tunnel once and switch it on when you need it. Portkeep keeps it alive. When a tunnel drops, Portkeep says which one, why, and that it is already reconnecting.
 
 [ภาษาไทย](README.th.md)
 
 <p align="center">
-  <img src="docs/images/menu-en-light.png" width="320" alt="Portkeep menu with tunnels grouped by environment">
+  <img src="docs/images/menu-en-light.png" width="330" alt="Portkeep menu: tunnels grouped by environment, each with a switch, status and tags">
   &nbsp;&nbsp;
-  <img src="docs/images/menu-en-dark.png" width="320" alt="The same menu in dark mode">
+  <img src="docs/images/menu-en-dark.png" width="330" alt="The same menu in dark mode">
 </p>
 
 ## Why
 
-A terminal tab running `ssh -N -L 5432:db:5432 bastion` works until the laptop sleeps, the Wi-Fi changes or the session times out, and then your database client is the first to find out. Portkeep replaces those tabs with:
+A terminal tab running `ssh -N -L 5432:db:5432 bastion` works until the laptop sleeps, the Wi-Fi changes or the session times out. Then your database client is the first to find out. Portkeep replaces those tabs:
 
-- **One switch per tunnel.** Grouped by environment (UAT, Production, …), with the local port next to each.
-- **Honest status.** A tunnel is *Connected* only when its local port actually accepts connections, not just because a process is alive.
-- **Automatic reconnect.** After sleep, a network change or a dropped session, with backoff (1 s → 60 s) and no retries burned while you're offline.
-- **Failures that explain themselves.** "Host key changed for bastion", "AWS sign-in expired for profile prod", "Port 8123 is in use by clickhouse-server", each with the fix one click away.
+- **A switch per tunnel.** Each tunnel sits under a group (Production, Development, …) with its local port, live status and tags.
+- **Honest status.** A tunnel shows *Connected* only when its local port actually accepts connections; a running process isn't enough.
+- **Automatic reconnect.** It reconnects after sleep, a network change or a dropped session. Retries back off from 1 s to 60 s, and no retries are spent while you're offline.
+- **It remembers.** Tunnels that were on when Portkeep quit come back on at the next launch, including after a restart.
+- **Failures explain themselves.**
+  - "Host key changed for bastion"
+  - "AWS sign-in expired for profile prod"
+  - "Port 8123 is in use by clickhouse-server"
+
+  Each comes with the fix one click away.
 - **No port clashes.** Portkeep checks the port before starting, names the process holding it, and offers a free one.
 
 ## Connection methods
@@ -28,7 +38,7 @@ A terminal tab running `ssh -N -L 5432:db:5432 bastion` works until the laptop s
 |---|---|---|
 | SSH (local `-L`, remote `-R`, SOCKS `-D`, ProxyJump) | `ssh` | Keys in your agent or keychain, hosts in `~/.ssh/config` |
 | AWS Session Manager (to a remote host through an instance, or to the instance) | `aws ssm start-session` | AWS CLI + `session-manager-plugin`; SSO profiles sign in when they expire |
-| Kubernetes | `kubectl port-forward` | `kubectl` and a kubeconfig context |
+| Kubernetes (service, deployment or pod) | `kubectl port-forward` | `kubectl` and a kubeconfig context |
 | Google Cloud IAP | `gcloud compute start-iap-tunnel` | `gcloud`, signed in |
 | Cloudflare Access | `cloudflared access tcp` | `cloudflared` |
 | Custom command | anything that holds a port open (`{port}` is replaced) | — |
@@ -43,9 +53,9 @@ Portkeep drives the tools you already use, with your existing config and credent
 
 Requires macOS 14 Sonoma or later (Apple silicon or Intel).
 
-**Download** — notarized builds will be published on the [Releases](https://github.com/rattamnoon/portkeep/releases) page. *(Not available yet.)*
+**Download.** Builds will be published on the [Releases](https://github.com/rattamnoon/portkeep/releases) page. *(Not available yet.)*
 
-**Homebrew** — once the first release is out:
+**Homebrew**, once the first release is out:
 
 ```
 brew install --cask rattamnoon/tap/portkeep
@@ -58,30 +68,57 @@ brew install xcodegen
 git clone https://github.com/rattamnoon/portkeep.git && cd portkeep
 xcodegen generate
 xcodebuild -scheme Portkeep -configuration Release -derivedDataPath build build
-open build/Build/Products/Release/Portkeep.app
+ditto build/Build/Products/Release/Portkeep.app /Applications/Portkeep.app
+open /Applications/Portkeep.app
 ```
 
 Install the CLIs for the methods you use, for example `brew install awscli kubectl cloudflared` and `brew install --cask session-manager-plugin google-cloud-sdk`.
 
 ## Use
 
-1. Click the archway icon in the menu bar, then **Add Tunnel…**
-2. Pick a method, fill in the fields (hosts, AWS profiles and kube contexts you already have are offered in the pickers), and choose a local port. The **Runs** box shows the command Portkeep will run.
-3. Press **Test Connection** to check it, then **Add Tunnel**.
-4. Click a tunnel in the menu to switch it on or off. The switch at the top starts or stops them all.
-5. Turn on **Connect at login** for tunnels you always want; Portkeep then opens at login and starts them.
+1. Click the tunnel icon in the menu bar, then **Add Tunnel…**
+2. Pick a method and fill in the fields. Hosts from `~/.ssh/config`, AWS profiles and kube contexts you already have are offered in pickers.
+3. Choose a local port, a group, and any tags. The **Runs** box shows the exact command.
+4. Press **Test Connection** to check it, then **Add Tunnel**.
+5. Use a tunnel's switch in the menu to start or stop it. The switch at the top starts or stops them all.
 
-When a tunnel needs you, the menu bar icon shows a dot and the row shows a warning. Hover it and open **⋯** for the fix (use another port, sign in to AWS, retry), **Copy Address**, **Edit Tunnel…** or **Show Log**.
+When a tunnel needs you, the menu bar icon shows a dot and the row shows a warning. Open **⋯** on the row for:
+- the fix (use another port, sign in to AWS, retry);
+- **Change Local Port…**, **Copy Address**, **Edit Tunnel…** or **Show Log**.
+
+If the icon is hidden under the notch, open Portkeep again from Finder or Spotlight and the Settings window comes up.
 
 <p align="center">
-  <img src="docs/images/settings-en-light.png" width="720" alt="Settings window with tunnels in the sidebar and the selected tunnel's details">
+  <img src="docs/images/settings-en-light.png" width="720" alt="Settings window: tunnels by group in the sidebar, the selected tunnel's details on the right">
 </p>
 
-**Settings** lists every tunnel by group with search. Pick one to see its live status, edit it, or open its log. **Tools** shows where each CLI was found (from your login shell's `PATH`) and lets you override it. **General** sets the language.
+**Settings** lists every tunnel by group, with search over names, ports, groups and tags. Pick a tunnel to see its live status, **Start**/**Stop** it, edit it, or open its log. Editing the name, group or tags of a running tunnel doesn't restart it.
+
+### Groups, tags and colours
+
+Portkeep starts with five groups and six tags, each with a colour:
+- **Groups:** Production, Staging, Development, Local, Other
+- **Tags:** db, cache, analytics, web, internal, readonly
+
+In **Settings › Groups & Tags** you can:
+- add a group or tag with any colour (system colour picker or presets);
+- rename one, and its tunnels follow;
+- remove one. A group must be empty first; removing a tag takes it off its tunnels.
+
+When editing a tunnel, type a new group or tag right in the form.
+
+<p align="center">
+  <img src="docs/images/labels-en-light.png" width="720" alt="Groups & Tags settings with colour wells and add rows">
+</p>
+
+### Tools and General
+
+- **Tools** shows where each CLI was found on your login shell's `PATH`, with a ✓ or ⚠. Type a path or use **Choose…** to use a different binary; **Reset** goes back to the one found.
+- **General** sets the language and whether Portkeep reopens the tunnels that were on when it quit (on by default). Tunnels set to **Connect at login** always start, and Portkeep adds itself as a login item while any tunnel uses that setting.
 
 ## Languages
 
-English, ไทย, 简体中文 and 日本語. Portkeep follows your macOS language; change it under **Settings › General › Language** (Portkeep relaunches) or per app in **System Settings › General › Language & Region**.
+English, ไทย, 简体中文 and 日本語. Portkeep follows your macOS language. To change it, use **Settings › General › Language** (Portkeep relaunches) or set it per app in **System Settings › General › Language & Region**.
 
 <p align="center">
   <img src="docs/images/menu-th-light.png" width="240" alt="Menu in Thai">
@@ -91,18 +128,22 @@ English, ไทย, 简体中文 and 日本語. Portkeep follows your macOS lang
 
 ## Where things live
 
-| What | Where |
+All in `~/Library/Application Support/Portkeep/`:
+
+| File | What |
 |---|---|
-| Tunnel definitions | `~/Library/Application Support/Portkeep/tunnels.json` (plain JSON, safe to back up) |
-| Running children (for cleanup after a crash) | `~/Library/Application Support/Portkeep/running.json` |
+| `tunnels.json` | Tunnels, groups, tags, colours and tool paths. Plain JSON, safe to back up or edit while Portkeep is quit. |
+| `session.json` | Which tunnels are switched on, to reopen them at the next launch. |
+| `running.json` | Child processes, so they can be stopped after a crash. |
 
 If `tunnels.json` can't be read, Portkeep moves it aside to `tunnels.json.broken-<date>` instead of overwriting it.
 
 ## Limits in this version
 
-- Authentication must already work without typing: passwords, passphrase prompts and OTP aren't supported yet. Add passphrase keys with `ssh-add --apple-use-keychain`.
-- No sync between Macs, import/export, or Shortcuts yet.
-- Not on the Mac App Store: the sandbox would stop Portkeep from running your CLIs and reading your config ([ADR-0001](docs/adr/0001-distribute-outside-app-store.md)).
+- Authentication must already work without typing; passwords, passphrase prompts and OTP aren't supported yet. Add passphrase keys with `ssh-add --apple-use-keychain`.
+- There is no sync between Macs, import/export or Shortcuts support yet.
+- Builds from source are ad-hoc signed. Until notarized releases are published, macOS warns when you open a copy on another Mac.
+- Portkeep is not on the Mac App Store, because the sandbox would stop it running your CLIs and reading your config ([ADR-0001](docs/adr/0001-distribute-outside-app-store.md)).
 
 ## Development
 
@@ -110,15 +151,19 @@ If `tunnels.json` can't be read, Portkeep moves it aside to `tunnels.json.broken
 swift test                                   # TunnelKit unit tests
 xcodegen generate                            # Portkeep.xcodeproj (not committed)
 xcodebuild test -scheme Portkeep -destination 'platform=macOS'   # UI smoke tests
+swift scripts/make-icon.swift                # redraw the app icon
 ```
 
-UI smoke tests drive real windows; run them on a Mac you aren't using, or rely on CI. Demo data and screenshots: `PORTKEEP_DEMO=1 PORTKEEP_SHOW=menu,settings,add PORTKEEP_DATA_DIR=$(mktemp -d) Portkeep.app/Contents/MacOS/Portkeep`.
+UI smoke tests drive real windows, so run them on a Mac you aren't using or rely on CI. For demo data and screenshots, run `PORTKEEP_DEMO=1 PORTKEEP_SHOW=menu,settings,add,labels PORTKEEP_DATA_DIR=$(mktemp -d) Portkeep.app/Contents/MacOS/Portkeep`.
 
-Design and decisions: [spec](docs/spec.md) · [ADRs](docs/adr/) · [v1 plan](docs/superpowers/plans/2026-10-17-tunnels-v1.md). 
+Design and decisions: [spec](docs/spec.md) · [ADRs](docs/adr/) · [v1 plan](docs/superpowers/plans/2026-10-17-tunnels-v1.md).
 
 ### Releases
 
-Push a tag (`git tag v0.2.0 && git push origin v0.2.0`) or run **Actions › Release › Run workflow** with a version. The [Release workflow](.github/workflows/release.yml) builds `Portkeep-<version>.dmg`, creates the tag if needed, and publishes a GitHub Release with notes and a SHA-256. It signs and notarizes when the Developer ID secrets listed at the top of the workflow are set, and otherwise publishes an unsigned build labelled as such. Locally: `scripts/release.sh <version>` (or `UNSIGNED=1 scripts/release.sh <version>`).
+To cut a release, push a tag (`git tag v0.2.0 && git push origin v0.2.0`) or run **Actions › Release › Run workflow** with a version.
+- The [Release workflow](.github/workflows/release.yml) builds `Portkeep-<version>.dmg`, creates the tag if needed, and publishes a GitHub Release with notes and a SHA-256.
+- It signs and notarizes when the Developer ID secrets listed at the top of the workflow are set. Otherwise it publishes an unsigned build, labelled as such.
+- To build locally: `scripts/release.sh <version>`, or `UNSIGNED=1 scripts/release.sh <version>`.
 
 ## License
 
