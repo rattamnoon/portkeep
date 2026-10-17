@@ -166,7 +166,8 @@ struct TunnelDetailView: View {
         }
         .padding(12)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background))
-        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(.separator))
+        // Border only: an overlay shape takes every click inside it, which made the card's buttons dead.
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(.separator).allowsHitTesting(false))
     }
 }
 

@@ -24,6 +24,19 @@ private struct Harness {
 
     var state: TunnelState { get async { await supervisor.state } }
 
+    /// Moves the test clock forward in 250 ms steps, letting the supervisor schedule its next wait
+    /// after each one. A single big jump only fires the sleeps already registered, which on a busy
+    /// CI runner can be none of them.
+    func advance(_ duration: Duration) async {
+        var left = duration
+        while left > .zero {
+            let step = min(.milliseconds(250), left)
+            await clock.advance(by: step)
+            await settle()
+            left -= step
+        }
+    }
+
     /// Gets to Connected: launch, port accepts on the first poll.
     func connect() async {
         await supervisor.turnOn()
@@ -33,7 +46,7 @@ private struct Harness {
     /// Make the current process die with `status` and let the supervisor react.
     func crash(_ status: Int32 = 1) async throws {
         runner.last?.exit(status)
-        await clock.advance(by: .seconds(1))
+        await advance(.seconds(1))
         try await Task.sleep(for: .milliseconds(200))
         await settle()
     }
@@ -44,7 +57,7 @@ private struct Harness {
     h.ports.acceptsQueue = [false, false]
     await h.supervisor.turnOn()
     await settle()
-    await h.clock.advance(by: .milliseconds(500))
+    await h.advance(.milliseconds(500))
     await settle()
     #expect(h.states.all == [.checking, .starting, .connected(since: base)])
 }
@@ -72,7 +85,7 @@ private struct Harness {
     h.ports.acceptsDefault = false
     await h.supervisor.turnOn()
     await settle()
-    await h.clock.advance(by: .seconds(20))
+    await h.advance(.seconds(20))
     await settle()
     #expect(await h.state == .retrying(.readinessTimeout, attempt: 1, until: base.addingTimeInterval(1)))
     #expect(h.runner.launches[0].terminated)
@@ -91,7 +104,7 @@ private struct Harness {
         }
         let wait = until.timeIntervalSince(base)
         waits.append(wait)
-        await h.clock.advance(by: .seconds(wait))
+        await h.advance(.seconds(wait))
     }
     #expect(waits == [1, 2, 4, 8, 16, 30, 60])
 }
@@ -106,7 +119,7 @@ private struct Harness {
     try await Task.sleep(for: .milliseconds(200))
     await settle()
     #expect(await h.state == .failed(.authFailed))
-    await h.clock.advance(by: .seconds(120))
+    await h.advance(.seconds(120))
     await settle()
     #expect(h.runner.launches.count == 1)
 }
@@ -115,10 +128,10 @@ private struct Harness {
     let h = Harness()
     await h.connect()
     h.ports.acceptsDefault = false
-    await h.clock.advance(by: .seconds(10))
+    await h.advance(.seconds(10))
     await settle()
     #expect(await h.state == .connected(since: base))
-    await h.clock.advance(by: .seconds(10))
+    await h.advance(.seconds(10))
     await settle()
     #expect(await h.state == .retrying(.stoppedResponding, attempt: 1, until: base.addingTimeInterval(1)))
 }
@@ -128,10 +141,10 @@ private struct Harness {
     await h.connect()
     try await h.crash()
     #expect(await h.state == .retrying(.unknown(status: 1), attempt: 1, until: base.addingTimeInterval(1)))
-    await h.clock.advance(by: .seconds(1))
+    await h.advance(.seconds(1))
     await settle()
     #expect(await h.state == .connected(since: base))
-    await h.clock.advance(by: .seconds(61))
+    await h.advance(.seconds(61))
     await settle()
     try await h.crash()
     guard case .retrying(_, let attempt, let until) = await h.state else {
@@ -161,7 +174,7 @@ private struct Harness {
     try await Task.sleep(for: .milliseconds(200))
     await settle()
     await h.supervisor.setNetworkAvailable(false)
-    await h.clock.advance(by: .seconds(300))
+    await h.advance(.seconds(300))
     await settle()
     #expect(await h.state == .retrying(.unknown(status: 1), attempt: 1, until: base.addingTimeInterval(1)))
     #expect(h.runner.launches.count == 1)
@@ -208,10 +221,10 @@ private struct Harness {
     await h.supervisor.turnOn()
     await settle()
     #expect(await h.state == .starting)
-    await h.clock.advance(by: .seconds(3))
+    await h.advance(.seconds(3))
     await settle()
     #expect(await h.state == .connected(since: base))
-    await h.clock.advance(by: .seconds(30))
+    await h.advance(.seconds(30))
     await settle()
     #expect(await h.state == .connected(since: base))
 }
