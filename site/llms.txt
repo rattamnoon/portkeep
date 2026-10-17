@@ -11,7 +11,8 @@ Key facts:
 - Tunnels may share a local port (for example production and development MySQL on 3306); switching one on switches the other off first.
 - On-demand tunnels hold the port and open the real tunnel when a client connects, then stop after 10 idle minutes.
 - Portkeep never stores passwords, keys or tokens. It uses your existing ~/.ssh/config, AWS profiles and kubeconfig, so authentication must already work without typing.
-- Command line: `portkeep list | status | start | stop | toggle | start-group | stop-group | start-all | stop-all | open`, and the same actions as `portkeep://` URLs.
+- Command line: `portkeep list | status | start | stop | toggle | start-group | stop-group | start-all | stop-all | open`, and the same actions as `portkeep://` URLs. From 0.4: `get | add | edit | remove | duplicate | test | logs | methods | discover` with `--json`.
+- AI assistants (from 0.4): `portkeep mcp` is an MCP server (list, add, update, test, start and stop tunnels; describe methods; discover SSH hosts, AWS profiles and kube contexts). Agent skill: https://github.com/rattamnoon/portkeep/tree/main/skills/portkeep
 - Interface languages: English, Thai, Simplified Chinese, Japanese.
 - Not on the Mac App Store (the sandbox would stop it running your CLIs). Releases are not notarized yet.
 

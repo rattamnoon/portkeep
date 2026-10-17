@@ -144,7 +144,18 @@ portkeep start-group Development     # also stop-group, start-all, stop-all
 portkeep open                        # Settings
 ```
 
-Names and groups match ignoring case. Changes go to Portkeep in the background, launching it if needed; `list` and `status` read `status.json`. The same commands work as URLs from anywhere that opens links (Shortcuts, Raycast, a script's `open`):
+Names and groups match ignoring case. Changes go to Portkeep over `control.sock` in its data folder, launching it in the background if needed; `list` and `status` read `status.json`. Every read takes `--json`, and tunnels can be created and changed from the shell:
+
+```
+portkeep list --json
+portkeep add --json '{"name": "Grafana", "localPort": 3000, "method": {"kubernetes": {"context": "prod", "namespace": "monitoring", "resource": "svc/grafana", "remotePort": 3000}}}'
+portkeep edit Grafana --json '{"localPort": 3001}'
+portkeep test Grafana                # connect once, like Test Connection
+portkeep logs Grafana -n 20
+portkeep methods ssm                 # each method's fields, defaults and an example
+portkeep discover                    # SSH hosts, AWS profiles, kube contexts, tools
+portkeep remove Grafana --yes        # also duplicate, add-group, add-tag; portkeep help lists all
+``` The same commands work as URLs from anywhere that opens links (Shortcuts, Raycast, a script's `open`):
 
 ```
 portkeep://start?name=Orders%20MySQL
@@ -154,6 +165,21 @@ portkeep://open?name=Redis
 ```
 
 `name` also takes a tunnel's id from `tunnels.json`.
+
+### Use with AI assistants
+
+Claude, Cursor and other assistants that speak [MCP](https://modelcontextprotocol.io) can list, add, test, start and fix tunnels for you ("add a tunnel to prod MySQL through SSM"). `portkeep mcp` is the server; it forwards to the running app, so the menu updates as the assistant works.
+
+- **Claude Code**: `claude mcp add portkeep -- /Applications/Portkeep.app/Contents/Resources/bin/portkeep mcp`
+- **Claude Desktop, Cursor and others**: **Settings › General › AI assistants › Copy MCP Config** copies this, to paste into the assistant's MCP settings (`claude_desktop_config.json`, `~/.cursor/mcp.json`):
+
+  ```json
+  {"mcpServers": {"portkeep": {"command": "/Applications/Portkeep.app/Contents/Resources/bin/portkeep", "args": ["mcp"]}}}
+  ```
+
+The skill in [`skills/portkeep`](skills/portkeep/SKILL.md) teaches an agent the workflow (discover, describe the method, add, test, start, read the hint when it fails) and the rules (ask before removing, no passwords in tunnels). Install it for Claude Code with `cp -R skills/portkeep ~/.claude/skills/`. Agents working without MCP can use the same operations through `portkeep … --json`; [`AGENTS.md`](AGENTS.md) points them there.
+
+Portkeep stores no secrets, so there are none to hand an assistant: tunnels use your SSH agent and keys, AWS SSO, gcloud and kubectl sign-ins.
 
 ## Languages
 
@@ -175,6 +201,7 @@ All in `~/Library/Application Support/Portkeep/`:
 | `session.json` | Which tunnels are switched on, to reopen them at the next launch. |
 | `running.json` | Child processes, so they can be stopped after a crash. |
 | `status.json` | What each tunnel is doing right now, for the `portkeep` command. Written by the app, never read back. |
+| `control.sock` | Where the running app takes commands from `portkeep` and `portkeep mcp`. Only your user can connect; removed at quit. |
 
 If `tunnels.json` can't be read, Portkeep moves it aside to `tunnels.json.broken-<date>` instead of overwriting it.
 
