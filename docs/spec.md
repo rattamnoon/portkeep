@@ -1,10 +1,10 @@
-# Burrow — v1 Specification
+# Portkeep — v1 Specification
 
 Status: draft · 2026-10-17 · Product context: [PRODUCT.md](../PRODUCT.md) · Decisions: [adr/](adr/) · UI: [design canvas](https://claude.ai/artifact/QabMvafdQJC15Zn8NMYZe4) (page "Apple-style")
 
 ## 1. What it is
 
-A macOS menu bar app that keeps named port forwards up. Each tunnel is started by the user's own CLI (`ssh`, `aws`, `kubectl`, `gcloud`, `cloudflared`, or any command), watched by probing its local port, and restarted when it drops. The app is called Burrow (repo `rattamnoon/burrow`, bundle id `com.rattamnoon.burrow`).
+A macOS menu bar app that keeps named port forwards up. Each tunnel is started by the user's own CLI (`ssh`, `aws`, `kubectl`, `gcloud`, `cloudflared`, or any command), watched by probing its local port, and restarted when it drops. The app is called Portkeep (repo `rattamnoon/portkeep`, bundle id `com.rattamnoon.portkeep`).
 
 ## 2. Scope
 
@@ -118,6 +118,8 @@ Classified from the last 50 stderr lines and exit status. First match wins.
 | portInUse | `Address already in use` | no → Blocked (§5.4) | Port {L} is in use. |
 | unknown | anything else | yes | Exited ({status}). See log. |
 
+Not from stderr: `toolMissing` (§5.6, no retry), `readinessTimeout` (port never accepted within 20 s, retry), `stoppedResponding` (was Connected, two health probes failed, retry).
+
 ## 7. Interface
 
 Follows the design canvas, page "Apple-style": light/dark menu, conflict submenu, Settings window, Add Tunnel sheet.
@@ -131,7 +133,7 @@ Follows the design canvas, page "Apple-style": light/dark menu, conflict submenu
 
 ## 8. Data
 
-Stored at `~/Library/Application Support/Burrow/tunnels.json` (ADR-0005), written atomically.
+Stored at `~/Library/Application Support/Portkeep/tunnels.json` (ADR-0005), written atomically.
 
 ```json
 {
@@ -160,7 +162,7 @@ Stored at `~/Library/Application Support/Burrow/tunnels.json` (ADR-0005), writte
 - `method` is a tagged union: `ssh`, `ssm`, `kubernetes`, `iap`, `cloudflare`, `custom`, fields as in §4.
 - Unknown top-level keys are preserved on rewrite. A file with a higher `schemaVersion` opens read-only with a banner.
 - A file that fails to parse is never overwritten: it is renamed to `tunnels.json.broken-{yyyyMMdd-HHmmss}`, the app starts empty, and a banner names the backup.
-- PIDs of running children are recorded in `running.json` beside it. On launch, any recorded PID still alive whose executable matches the recorded one is terminated (crash leftovers), then the file is cleared.
+- PIDs of running children are recorded in `running.json` beside it. On launch, any recorded PID still alive with the recorded start time is terminated with its process group (crash leftovers), then the file is cleared.
 - No secrets are stored. Keys stay in the agent/keychain; AWS credentials stay in `~/.aws`.
 
 ## 9. Accessibility
@@ -169,6 +171,6 @@ VoiceOver labels on every row and the menu bar item; full keyboard navigation in
 
 ## 10. Open questions
 
-- ~~Product name and bundle identifier.~~ Burrow, `com.rattamnoon.burrow` (2026-10-17).
+- ~~Product name and bundle identifier.~~ Portkeep, `com.rattamnoon.portkeep` (2026-10-17).
 - Licence and price (free/open source vs paid).
 - Whether v1.1 adds askpass for passphrase/OTP prompts.
