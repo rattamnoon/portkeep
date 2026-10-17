@@ -473,6 +473,31 @@ final class TunnelStore {
 
     func log(for id: UUID) -> [String] { supervisors[id]?.log.lines ?? [] }
 
+    /// Copy Diagnostics: Markdown for a GitHub issue about these tunnels (all of them when nil).
+    func diagnostics(for ids: [UUID]? = nil) -> String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let found = ToolPaths(searchPath: tools.searchPath, overrides: [:])
+        let env = Diagnostics.Environment(
+            appVersion: info["CFBundleShortVersionString"] as? String ?? "?",
+            build: info["CFBundleVersion"] as? String ?? "?",
+            macOS: ProcessInfo.processInfo.operatingSystemVersionString,
+            architecture: Diagnostics.machine,
+            tools: Discovery.toolNames.map { name in
+                let custom = file.toolPaths[name].map { !$0.isEmpty } ?? false
+                return (name, custom ? file.toolPaths[name] : found.url(for: name)?.path, custom)
+            },
+            toolPaths: tools)
+        let chosen = ids.map { wanted in file.tunnels.filter { wanted.contains($0.id) } } ?? file.tunnels
+        return Diagnostics.markdown(env, tunnels: chosen.map {
+            Diagnostics.Entry(tunnel: $0, state: state(of: $0.id), log: log(for: $0.id))
+        })
+    }
+
+    func copyDiagnostics(for ids: [UUID]? = nil) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(diagnostics(for: ids), forType: .string)
+    }
+
     func tunnel(_ id: UUID) -> Tunnel? { file.tunnels.first { $0.id == id } }
 
     func statusText(_ id: UUID, now: Date = .now) -> String {

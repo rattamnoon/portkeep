@@ -150,6 +150,8 @@ struct TunnelDetailView: View {
                     if let copy = store.duplicate(tunnel.id) { navigation.selection = .tunnel(copy) }
                 }
                 .accessibilityIdentifier("detail.duplicate")
+                Button("Copy Diagnostics") { store.copyDiagnostics(for: [tunnel.id]) }
+                    .help("Settings, state and the last 50 log lines as Markdown, for a bug report")
                 Spacer()
                 Button("Revert") { draft = TunnelDraft(tunnel) }
                     .disabled(draft == TunnelDraft(tunnel))

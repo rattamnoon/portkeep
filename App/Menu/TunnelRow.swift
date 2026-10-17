@@ -101,6 +101,7 @@ struct TunnelRow: View {
                 AppActivation.bringForward()
                 openWindow(id: "log", value: tunnel.id)
             }
+            Button("Copy Diagnostics") { store.copyDiagnostics(for: [tunnel.id]) }
         } label: {
             Image(systemName: "ellipsis")
         }

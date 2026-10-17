@@ -205,3 +205,8 @@
 "Couldn’t check for updates. Try again later." = "アップデートを確認できませんでした。しばらくしてから再度お試しください。";
 "Portkeep %@ is the latest version." = "Portkeep %@ は最新バージョンです。";
 "Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent." = "Portkeep は 1 日に 1 回、GitHub に最新リリースを問い合わせます。Portkeep が自分から行う通信はこれだけで、あなたやトンネルに関する情報は送信しません。";
+"Copy Diagnostics" = "診断情報をコピー";
+"Copy Diagnostics for All" = "すべての診断情報をコピー";
+"Report a problem" = "問題を報告";
+"Versions, tool paths, and each tunnel’s settings, state and last 50 log lines, as Markdown to paste into a GitHub issue. Portkeep stores no passwords; check hostnames before posting." = "バージョン、ツールのパス、各トンネルの設定・状態・直近 50 行のログを、GitHub の Issue に貼り付けられる Markdown にします。Portkeep はパスワードを保存しません。投稿前にホスト名を確認してください。";
+"Settings, state and the last 50 log lines as Markdown, for a bug report" = "設定・状態・直近 50 行のログを Markdown で（バグ報告用）";

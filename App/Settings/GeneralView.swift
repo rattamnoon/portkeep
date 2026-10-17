@@ -95,6 +95,16 @@ struct GeneralView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {
+                LabeledContent("Report a problem") {
+                    Button(copied == "diagnostics" ? "Copied" : "Copy Diagnostics for All") {
+                        copy(store.diagnostics(), as: "diagnostics")
+                    }
+                }
+            } footer: {
+                Text("Versions, tool paths, and each tunnel’s settings, state and last 50 log lines, as Markdown to paste into a GitHub issue. Portkeep stores no passwords; check hostnames before posting.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
                 Toggle("Check for updates automatically", isOn: $checkForUpdates)
                 LabeledContent {
                     Button("Check for Updates…") { Task { await updates.check(manual: true) } }

@@ -205,3 +205,8 @@
 "Couldn’t check for updates. Try again later." = "无法检查更新，请稍后再试。";
 "Portkeep %@ is the latest version." = "Portkeep %@ 已是最新版本。";
 "Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent." = "Portkeep 每天向 GitHub 查询一次最新版本。这是 Portkeep 自己发出的唯一请求，不会发送任何关于你或你的隧道的信息。";
+"Copy Diagnostics" = "拷贝诊断信息";
+"Copy Diagnostics for All" = "拷贝全部诊断信息";
+"Report a problem" = "报告问题";
+"Versions, tool paths, and each tunnel’s settings, state and last 50 log lines, as Markdown to paste into a GitHub issue. Portkeep stores no passwords; check hostnames before posting." = "版本、工具路径，以及每条隧道的设置、状态和最后 50 行日志，以 Markdown 格式粘贴到 GitHub issue。Portkeep 不保存密码；发布前请检查主机名。";
+"Settings, state and the last 50 log lines as Markdown, for a bug report" = "设置、状态和最后 50 行日志（Markdown），用于报告错误";

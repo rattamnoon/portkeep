@@ -408,7 +408,7 @@ public final class ControlRouter {
     }
 
     /// A stable name for a failure, for scripts and agents.
-    public static func code(_ reason: FailureReason) -> String {
+    nonisolated public static func code(_ reason: FailureReason) -> String {
         switch reason {
         case .hostKeyChanged: "hostKeyChanged"
         case .authFailed: "authFailed"
@@ -425,7 +425,7 @@ public final class ControlRouter {
     }
 
     /// What to do about a failure, in English, with the command to run when there is one.
-    public static func hint(_ reason: FailureReason, tunnel: Tunnel) -> String {
+    nonisolated public static func hint(_ reason: FailureReason, tunnel: Tunnel) -> String {
         let host = tunnel.remoteName
         switch reason {
         case .hostKeyChanged:

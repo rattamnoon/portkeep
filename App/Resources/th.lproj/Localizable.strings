@@ -205,3 +205,8 @@
 "Couldn’t check for updates. Try again later." = "ตรวจหาอัปเดตไม่ได้ ลองใหม่ภายหลัง";
 "Portkeep %@ is the latest version." = "Portkeep %@ เป็นรุ่นล่าสุดแล้ว";
 "Once a day Portkeep asks GitHub for the latest release. It’s the only request Portkeep makes on its own; nothing about you or your tunnels is sent." = "วันละครั้ง Portkeep จะถาม GitHub ว่ามีรุ่นใหม่หรือไม่ เป็นการเชื่อมต่อเครือข่ายเดียวที่ Portkeep ทำเอง และไม่ส่งข้อมูลของคุณหรือ tunnel ใด ๆ ออกไป";
+"Copy Diagnostics" = "คัดลอกข้อมูลวินิจฉัย";
+"Copy Diagnostics for All" = "คัดลอกข้อมูลวินิจฉัยทั้งหมด";
+"Report a problem" = "แจ้งปัญหา";
+"Versions, tool paths, and each tunnel’s settings, state and last 50 log lines, as Markdown to paste into a GitHub issue. Portkeep stores no passwords; check hostnames before posting." = "เวอร์ชัน path ของเครื่องมือ และการตั้งค่า สถานะ กับ log 50 บรรทัดล่าสุดของแต่ละ tunnel ในรูปแบบ Markdown สำหรับวางใน GitHub issue Portkeep ไม่เก็บรหัสผ่าน แต่ควรตรวจชื่อโฮสต์ก่อนโพสต์";
+"Settings, state and the last 50 log lines as Markdown, for a bug report" = "การตั้งค่า สถานะ และ log 50 บรรทัดล่าสุดเป็น Markdown สำหรับแจ้งบั๊ก";

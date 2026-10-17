@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time. The menu's message and the lines from **Show Log** (open **⋯** on the tunnel's row) usually say most of what's needed. Remove hostnames, account ids or anything else you'd rather not post.
+        Thanks for taking the time. On Portkeep 0.4 or later, **Copy Diagnostics** (open **⋯** on the tunnel's row, or Settings › General › **Copy Diagnostics for All**) gathers the versions, the tunnel's settings, its state and the end of its log; paste it in the Diagnostics box below. Otherwise the menu's message and the lines from **Show Log** usually say most of what's needed. Remove hostnames, account ids or anything else you'd rather not post.
   - type: input
     id: version
     attributes:
@@ -37,6 +37,11 @@ body:
         - Not tunnel-specific
     validations:
       required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: "Paste Copy Diagnostics output (Portkeep 0.4 or later): **⋯** on the tunnel's row › **Copy Diagnostics**. It's Markdown, so paste it as is."
   - type: textarea
     id: what-happened
     attributes:
