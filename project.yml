@@ -28,3 +28,26 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "-"
+  BurrowUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: Burrow
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rattamnoon.burrow.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        TEST_TARGET_NAME: Burrow
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+schemes:
+  Burrow:
+    build:
+      targets:
+        Burrow: all
+    test:
+      targets:
+        - BurrowUITests

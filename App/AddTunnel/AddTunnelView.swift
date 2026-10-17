@@ -50,6 +50,7 @@ struct AddTunnelView: View {
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(draft.tunnel == nil)
+                .accessibilityIdentifier("add.confirm")
             }
             .padding(12)
         }

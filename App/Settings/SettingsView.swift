@@ -36,14 +36,14 @@ struct SettingsView: View {
             .safeAreaInset(edge: .bottom) {
                 HStack(spacing: 2) {
                     Button { navigation.showingAdd = true } label: { Image(systemName: "plus") }
-                        .accessibilityLabel("Add Tunnel")
+                        .accessibilityLabel("Add Tunnel").accessibilityIdentifier("sidebar.add")
                     Button {
                         if case .tunnel(let id) = navigation.selection {
                             navigation.selection = nil
                             Task { await store.delete(id) }
                         }
                     } label: { Image(systemName: "minus") }
-                        .accessibilityLabel("Remove Tunnel")
+                        .accessibilityLabel("Remove Tunnel").accessibilityIdentifier("sidebar.remove")
                         .disabled(selectedID == nil)
                     Spacer()
                 }
@@ -116,6 +116,7 @@ struct TunnelDetailView: View {
                 }
                 .keyboardShortcut("s")
                 .disabled(draft.tunnel == nil || draft == TunnelDraft(tunnel))
+                .accessibilityIdentifier("detail.save")
             }
             .padding(12)
         }
@@ -132,7 +133,7 @@ struct TunnelDetailView: View {
             .frame(width: 32, height: 32)
             VStack(alignment: .leading, spacing: 2) {
                 TimelineView(.periodic(from: .now, by: 30)) { context in
-                    Text(store.statusText(tunnel.id, now: context.date)).fontWeight(.semibold)
+                    Text(store.statusText(tunnel.id, now: context.date)).fontWeight(.semibold).accessibilityIdentifier("detail.status")
                 }
                 Text("127.0.0.1:\(String(tunnel.localPort)) · \(tunnel.methodName)")
                     .font(.caption).foregroundStyle(.secondary)
@@ -144,6 +145,7 @@ struct TunnelDetailView: View {
                 set: { _ in Task { await store.toggle(tunnel.id) } }))
                 .toggleStyle(.switch)
                 .labelsHidden()
+                .accessibilityIdentifier("detail.toggle")
         }
         .padding(12)
         .background(RoundedRectangle(cornerRadius: 10).fill(.background))

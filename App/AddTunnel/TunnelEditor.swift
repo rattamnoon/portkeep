@@ -12,7 +12,7 @@ struct TunnelEditor: View {
     var body: some View {
         Form {
             Section {
-                TextField("Name", text: $draft.name, prompt: Text("Dashboard MySQL"))
+                TextField("Name", text: $draft.name, prompt: Text("Dashboard MySQL")).accessibilityIdentifier("editor.name")
                 Picker("Group", selection: $draft.group) {
                     ForEach(groupChoices, id: \.self) { Text($0).tag($0) }
                 }
@@ -28,7 +28,7 @@ struct TunnelEditor: View {
                 LabeledContent("Local port") {
                     HStack {
                         Text(portStatus.text).font(.caption).foregroundStyle(portStatus.color)
-                        TextField("Local port", text: $draft.localPort, prompt: Text("3306"))
+                        TextField("Local port", text: $draft.localPort, prompt: Text("3306")).accessibilityIdentifier("editor.localPort")
                             .labelsHidden()
                             .frame(width: 80)
                             .multilineTextAlignment(.trailing)
@@ -113,7 +113,7 @@ struct TunnelEditor: View {
         case .cloudflare:
             TextField("Hostname", text: $draft.hostname, prompt: Text("db.example.com"))
         case .custom:
-            TextField("Command", text: $draft.command, prompt: Text("tsh proxy db --port {port} mydb"), axis: .vertical)
+            TextField("Command", text: $draft.command, prompt: Text("tsh proxy db --port {port} mydb"), axis: .vertical).accessibilityIdentifier("editor.command")
                 .font(.system(size: 12, design: .monospaced))
             Text("Use {port} where the local port goes.").font(.caption).foregroundStyle(.secondary)
         }

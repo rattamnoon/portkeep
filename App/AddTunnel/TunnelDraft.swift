@@ -187,7 +187,7 @@ struct TunnelDraft: Equatable {
     var preview: Tunnel {
         var draft = self
         if draft.name.isEmpty { draft.name = "preview" }
-        if port(draft.localPort) == nil { draft.localPort = "0" }
+        if port(draft.localPort) == nil { draft.localPort = "1" }
         for keyPath in [\TunnelDraft.sshHost, \.destHost, \.region, \.target, \.remoteHost, \.context,
                         \.resource, \.project, \.zone, \.instance, \.hostname, \.command]
         where draft[keyPath: keyPath].isEmpty {

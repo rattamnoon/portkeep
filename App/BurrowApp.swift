@@ -100,8 +100,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             window.title = "Burrow"
             if name == "menu" { window.styleMask = [.borderless]; window.hasShadow = true }
             window.isReleasedWhenClosed = false
-            window.center()
             window.makeKeyAndOrderFront(nil)
+            // Always on the menu-bar screen, so captures and UI tests find it. After ordering front:
+            // with "Displays have separate Spaces" AppKit moves new windows to the active display.
+            // SwiftUI sizes the window after the first layout pass, so place it once that has happened.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                guard let screen = NSScreen.screens.first?.visibleFrame else { return }
+                window.setFrameOrigin(NSPoint(x: screen.midX - window.frame.width / 2,
+                                              y: screen.midY - window.frame.height / 2))
+            }
             previewWindows.append(window)
             if let dir = environment["BURROW_DATA_DIR"] {
                 try? "\(window.windowNumber)".write(toFile: "\(dir)/window-\(name).txt", atomically: true, encoding: .utf8)
