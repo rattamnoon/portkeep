@@ -103,3 +103,9 @@
 "Settings" = "設定";
 "%lld of %lld connected" = "%2$lld 件中 %1$lld 件接続中";
 "Start or stop every tunnel" = "すべてのトンネルを開始・停止";
+"Change Local Port…" = "ローカルポートを変更…";
+"Local port for %@" = "%@ のローカルポート";
+"A running tunnel restarts on the new port." = "実行中のトンネルは新しいポートで再起動します。";
+"Change" = "変更";
+"Enter a port from 1 to 65535." = "1〜65535 のポートを入力してください。";
+"Port %@ is already used by %@." = "ポート %1$@ は %2$@ がすでに使用しています。";

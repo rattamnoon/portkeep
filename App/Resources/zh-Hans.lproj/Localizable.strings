@@ -103,3 +103,9 @@
 "Settings" = "设置";
 "%lld of %lld connected" = "已连接 %1$lld / %2$lld";
 "Start or stop every tunnel" = "启动或停止所有隧道";
+"Change Local Port…" = "更改本地端口…";
+"Local port for %@" = "%@ 的本地端口";
+"A running tunnel restarts on the new port." = "正在运行的隧道会在新端口上重新启动。";
+"Change" = "更改";
+"Enter a port from 1 to 65535." = "请输入 1 到 65535 之间的端口。";
+"Port %@ is already used by %@." = "端口 %1$@ 已被 %2$@ 使用。";

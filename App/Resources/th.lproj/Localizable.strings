@@ -103,3 +103,9 @@
 "Settings" = "การตั้งค่า";
 "%lld of %lld connected" = "เชื่อมต่อแล้ว %1$lld จาก %2$lld";
 "Start or stop every tunnel" = "เริ่มหรือหยุด tunnel ทั้งหมด";
+"Change Local Port…" = "เปลี่ยนพอร์ตในเครื่อง…";
+"Local port for %@" = "พอร์ตในเครื่องของ %@";
+"A running tunnel restarts on the new port." = "ถ้า tunnel ทำงานอยู่ จะเริ่มใหม่บนพอร์ตใหม่";
+"Change" = "เปลี่ยน";
+"Enter a port from 1 to 65535." = "ใส่พอร์ตระหว่าง 1 ถึง 65535";
+"Port %@ is already used by %@." = "พอร์ต %1$@ ถูกใช้โดย %2$@ อยู่แล้ว";
