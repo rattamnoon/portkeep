@@ -5,3 +5,8 @@ DerivedData/
 build/
 .swiftpm/
 .claude/
+
+# Local design notes and plans (README screenshots in docs/images stay tracked).
+docs/*
+!docs/images/
+.impeccable/
