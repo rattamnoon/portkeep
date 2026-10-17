@@ -1,4 +1,5 @@
 import SwiftUI
+import TunnelKit
 import UserNotifications
 
 /// App language. macOS reads `AppleLanguages` at launch, so a change applies after relaunching.
@@ -12,6 +13,7 @@ struct GeneralView: View {
     @AppStorage("restoreTunnelsOnLaunch") private var restoreTunnels = true
     @AppStorage("notifyOnDrop") private var notifyOnDrop = true
     @State private var notificationsDenied = false
+    @State private var sshForwards: [SSHConfigForward]?
     @State private var launched = GeneralView.current
 
     var body: some View {
@@ -44,6 +46,20 @@ struct GeneralView: View {
             } footer: {
                 Text("When a tunnel has been down for 30 seconds or needs you, such as an expired sign-in, and again when it’s back.")
                     .font(.caption).foregroundStyle(.secondary)
+            }
+            Section("Tunnels") {
+                LabeledContent("Back up or move to another Mac") {
+                    HStack {
+                        Button("Export Tunnels…", action: exportTunnels)
+                            .disabled(store.tunnels.isEmpty)
+                        Button("Import Tunnels…", action: importTunnels)
+                            .disabled(store.readOnly)
+                    }
+                }
+                LabeledContent("Forwards in ~/.ssh/config") {
+                    Button("Import from SSH Config…") { sshForwards = SSHConfigParser.forwards() }
+                        .disabled(store.readOnly)
+                }
             }
             Section {
                 LabeledContent("Command line tool") {
@@ -79,6 +95,46 @@ struct GeneralView: View {
         .formStyle(.grouped)
         .navigationTitle("General")
         .task { notificationsDenied = await DropNotifications.isDenied }
+        .sheet(isPresented: Binding(get: { sshForwards != nil }, set: { if !$0 { sshForwards = nil } })) {
+            SSHImportView(forwards: sshForwards ?? []).environment(store)
+        }
+    }
+
+    private func exportTunnels() {
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = String(localized: "Portkeep Tunnels.json")
+        panel.allowedContentTypes = [.json]
+        panel.message = String(localized: "Tunnels, groups, tags and colours. Tool paths aren’t included.")
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do {
+            try store.exportData().write(to: url, options: .atomic)
+        } catch {
+            showAlert(String(localized: "Couldn’t export tunnels"), error.localizedDescription)
+        }
+    }
+
+    private func importTunnels() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.json]
+        panel.allowsMultipleSelection = false
+        panel.message = String(localized: "Choose a file from Export Tunnels…, or a tunnels.json.")
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        guard let data = try? Data(contentsOf: url),
+              let export = try? JSONDecoder().decode(TunnelExport.self, from: data) else {
+            showAlert(String(localized: "Couldn’t import \(url.lastPathComponent)"),
+                      String(localized: "It isn’t a Portkeep export or tunnels.json."))
+            return
+        }
+        let summary = store.importTunnels(export)
+        showAlert(String(localized: "Imported \(String(summary.imported)), skipped \(String(summary.skipped))"),
+                  summary.skipped > 0 ? String(localized: "Skipped tunnels are already here with the same settings.") : "")
+    }
+
+    private func showAlert(_ title: String, _ message: String) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.runModal()
     }
 
     private static var current: String {

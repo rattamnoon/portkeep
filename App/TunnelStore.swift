@@ -335,6 +335,31 @@ final class TunnelStore {
         await supervisors[id]?.kick()
     }
 
+    // MARK: Import / export
+
+    /// Tunnels, groups, tags and colours, without tool paths.
+    func exportData() throws -> Data {
+        try TunnelExport(file).data()
+    }
+
+    /// Adds an export's tunnels under new ids, skipping ones already here with the same settings.
+    func importTunnels(_ export: TunnelExport) -> ImportSummary {
+        let (summary, added) = file.merge(export)
+        persist()
+        for tunnel in added { makeSupervisor(for: tunnel) }
+        return summary
+    }
+
+    /// New tunnels, all off (Import from SSH Config).
+    func add(_ tunnels: [Tunnel]) {
+        for tunnel in tunnels {
+            if !file.groups.contains(tunnel.group) { file.groups.append(tunnel.group) }
+            file.tunnels.append(tunnel)
+            makeSupervisor(for: tunnel)
+        }
+        persist()
+    }
+
     // MARK: Groups, tags, colours
     // Labels don't change how a tunnel runs, so these edit the file without restarting anything.
 

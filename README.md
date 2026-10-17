@@ -125,6 +125,13 @@ When editing a tunnel, type a new group or tag right in the form.
 - **Tools** shows where each CLI was found on your login shell's `PATH`, with a ✓ or ⚠. Type a path or use **Choose…** to use a different binary; **Reset** goes back to the one found.
 - **General** sets the language, whether Portkeep reopens the tunnels that were on when it quit (on by default), and whether it notifies you when a tunnel drops (on by default; macOS asks for permission the first time). Tunnels set to **Connect at login** always start, and Portkeep adds itself as a login item while any tunnel uses that setting.
 
+### Import and export
+
+In **Settings › General › Tunnels**:
+- **Export Tunnels…** saves tunnels, groups, tags and colours as JSON (no tool paths, nothing about what's running).
+- **Import Tunnels…** reads that file, or a `tunnels.json`. Tunnels are added under new ids; ones already here with the same settings are skipped, and missing groups and tags are created. It ends with "Imported N, skipped M".
+- **Import from SSH Config…** lists the `LocalForward` and `DynamicForward` lines under named `Host` blocks in `~/.ssh/config` and the files it `Include`s, to add as SSH tunnels named "<host> <port>". ssh opens every forward of a host whenever it connects to it, so tunnels from a host with several forwards run one at a time unless you remove those lines from the config.
+
 ### Command line and URLs
 
 **Settings › General › Install Command Line Tool…** links `portkeep` into `/usr/local/bin` when it can write there, otherwise `~/.local/bin` (and tells you if that isn't on your `PATH`). If neither works it shows the `sudo ln -s` line to paste.
@@ -174,7 +181,8 @@ If `tunnels.json` can't be read, Portkeep moves it aside to `tunnels.json.broken
 ## Limits in this version
 
 - Authentication must already work without typing; passwords, passphrase prompts and OTP aren't supported yet. Add passphrase keys with `ssh-add --apple-use-keychain`.
-- There is no sync between Macs, import/export or native Shortcuts actions yet; a shortcut can open a `portkeep://` URL.
+- There is no sync between Macs (export and import a file instead) or native Shortcuts actions yet; a shortcut can open a `portkeep://` URL.
+- On-demand tunnels proxy TCP on 127.0.0.1 only, and an app that holds connections open keeps the tunnel up.
 - Builds from source are ad-hoc signed. Until notarized releases are published, macOS warns when you open a copy on another Mac.
 - Portkeep is not on the Mac App Store, because the sandbox would stop it running your CLIs and reading your config.
 
